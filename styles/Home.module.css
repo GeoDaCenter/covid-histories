@@ -2,6 +2,23 @@
   padding: 0 2rem;
 }
 
+.topBar{
+  background-color: gray;
+  color:white;
+  height: 40px;
+  display:flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: end;
+  box-sizing:border-box;
+  padding: 0px 20px;
+  width:100%;
+}
+
+.topBar > *{
+  margin-left:10px
+}
+
 .main {
   min-height: 100vh;
   padding: 4rem 0;
