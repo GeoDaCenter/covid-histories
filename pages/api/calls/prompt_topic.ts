@@ -10,8 +10,11 @@ export default function handler(
   if (req.method === 'POST') {
 
     const twiml = new VoiceResponse();
-    twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3");
-    twiml.redirect({"method": "POST"}, "https://covid-histories.vercel.app/api/calls/prompt_topic")
+    twiml.say({ voice: 'alice' }, 'To begin select a category to tell us about');
+
+    let option_prompt= prompts.map((prompt,index)=>`For ${prompt.name} press ${index}`).join(", ");
+
+    twiml.gather({numDigits:1, action:"https://covid-histories.vercel.app/api/calls/selected_topic", bargeIn:true}).say({voice:"alice"}, option_prompt);
 
     // Render the response as XML in reply to the webhook request
     res.setHeader("content-type",'text/xml');
