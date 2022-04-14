@@ -12,13 +12,16 @@ export default function handler(
   
     console.log("request ", req)
 
-    const twiml = new VoiceResponse();
-    twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3");
-    twiml.redirect({"method": "POST"}, "https://covid-histories.vercel.app/api/calls/prompt_topic")
+    getOrCreateUserRecord(req.body.From).then( user=>{
+      console.log("got user ",user)
+      const twiml = new VoiceResponse();
+      twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3");
+      twiml.redirect({"method": "POST"}, "https://covid-histories.vercel.app/api/calls/prompt_topic")
 
-    // Render the response as XML in reply to the webhook request
-    res.setHeader("content-type",'text/xml');
-    res.send(twiml.toString());
+      // Render the response as XML in reply to the webhook request
+      res.setHeader("content-type",'text/xml');
+      res.send(twiml.toString());
+    })
   }
 }
 
