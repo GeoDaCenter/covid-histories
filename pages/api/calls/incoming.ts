@@ -9,7 +9,7 @@ export default function handler(
   if (req.method === 'POST') {
 
     const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'hello world!');
+    twiml.say({ voice: 'alice' }, 'hello world! THis is a test');
 
     // Render the response as XML in reply to the webhook request
     res.setHeader("content-type",'text/xml');
