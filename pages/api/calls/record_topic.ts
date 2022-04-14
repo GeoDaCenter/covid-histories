@@ -12,6 +12,7 @@ export default function handler(
     const selection = parseInt(req.query.topic_id as string);
     const category = parseInt(req.query.category_id as string);
     const section = prompts[selection];
+
     const doNext = () => {
       const twiml = new VoiceResponse();
 
@@ -44,11 +45,13 @@ export default function handler(
       if (req.body.RecordingUrl) {
         createOrUpdateUserRecord(req.body.From, {
           ...user,
-          recordings: [
-            ...user.recordings,
+          responses: [
+            ...user.responses,
             {
               topic_id: selection,
-              category: category,
+              category_id: category,
+              topic: section.name,
+              category: section.categories[category],
               url: req.body.RecordingUrl,
               ssid: req.body.RecordingSid,
               duration: req.body.RecordingDuration,

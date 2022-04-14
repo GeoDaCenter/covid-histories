@@ -9,6 +9,7 @@ export const createOrUpdateUserRecord = async (phoneNo:string, user?:any) =>{
   const initial_data = {
     phoneNo: phoneNo,
     created_at: new Date(),
+    responses: []
   }
 
   try{
