@@ -10,7 +10,7 @@ export default function handler(
 
     const twiml = new VoiceResponse();
     twiml.say({ voice: 'alice' }, 'hello world! This is a test to see if audio prompts work');
-    twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3")
+    twiml.play("https://covid-histories.vercel.app/inital_prompt.mp4")
     twiml.record({
       action:"https://covid-histories.vercel.app/api/calls/record_result",
       transcribe:true,
