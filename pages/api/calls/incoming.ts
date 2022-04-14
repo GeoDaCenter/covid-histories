@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import {prompts} from "./_prompts"
+import { getOrCreateUserRecord, createOrUpdateUserRecord } from "./_s3_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -8,6 +9,8 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
+  
+    console.log("request ", req)
 
     const twiml = new VoiceResponse();
     twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3");
