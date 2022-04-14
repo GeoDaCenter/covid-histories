@@ -16,7 +16,7 @@ export default function handler(
     
     twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3")
 
-    twiml.say({ voice: 'alice' }, `You selected ${}. You will now by asked a series of questions, after each one simply answer and press any button when your done to move on.`);
+    twiml.say({ voice: 'alice' }, `You selected ${1}. You will now by asked a series of questions, after each one simply answer and press any button when your done to move on.`);
 
 
 
