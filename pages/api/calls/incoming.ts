@@ -11,7 +11,7 @@ export default function handler(
     const twiml = new VoiceResponse();
     twiml.say({ voice: 'alice' }, 'hello world! THis is a test');
     twiml.record({
-      action:"https://covid-histories.vercel.app/api/calls/record_results",
+      action:"https://covid-histories.vercel.app/api/calls/record_result",
       transcribe:true,
       maxLength:60,
       method:"POST"
