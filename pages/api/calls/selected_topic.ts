@@ -19,7 +19,7 @@ export default function handler(
       );
       twiml.redirect(
         {method: "POST"},
-        `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${selection}`
+        `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${selection}&category_id=0`
       )
     } else {
       twiml.say("Sorry please choose one of the specified options");
