@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0";
+import Link from "next/link";
 import styles from '../styles/Home.module.css'
 
 export const TopBar: React.FC = ()=>{
@@ -9,10 +10,10 @@ export const TopBar: React.FC = ()=>{
       {user ?
         <>
           <p>Welcome {user.name}</p>
-          <a href="/api/auth/logout">logout</a>
+          <Link href="/api/auth/logout">logout</Link>
         </>
         :
-          <a href="/api/auth/login">Login</a>
+          <Link href="/api/auth/login">Login</Link>
       }
     </div>
   )
