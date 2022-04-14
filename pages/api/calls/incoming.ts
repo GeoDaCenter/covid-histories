@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
+import {prompts} from "./_prompts"
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -9,12 +10,20 @@ export default function handler(
   if (req.method === 'POST') {
 
     const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'hello world! This is a test to see if audio prompts work');
     twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3")
+
+    twiml.say({ voice: 'alice' }, 'To begin select a category to tell us about');
+
+    let option_prompt= prompts.map((prompt,index)=>{
+      `For ${prompt.name} press ${index}`
+    }).join(", ");
+
+    twiml.gather({numDigits:1, action:"https://covid-histories.vercel.app/api/calls/selected_topic", bargeIn:true}).say({voice:"alice"}, option_prompt);
+
+
     twiml.record({
       action:"https://covid-histories.vercel.app/api/calls/record_result",
-      transcribe:true,
-      transcribeCallback:"https://covid-histories.vercel.app/api/calls/transcribe_result",
+      transcribeCallback: "https://covid-histories.vercel.app/api/calls/transcription_result",
       maxLength:60,
       method:"POST"
     })
