@@ -25,7 +25,7 @@ export const createOrUpdateUserRecord = async (phoneNo:string, user?:any) =>{
   }
 }
 
-const getUserRecord = async (phoneNo:string)=>{
+export const getUserRecord = async (phoneNo:string)=>{
     try{
       const resp = await fetch(`https://${S3_BUCKET}.s3.us-west-2.amazonaws.com/histories/phone/${encodeURIComponent(phoneNo)}`);
       const user = await resp.json();
