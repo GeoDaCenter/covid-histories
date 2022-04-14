@@ -7,16 +7,10 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
+    console.log("Recording response is ", req, req.query, req.body)
 
     const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'hello world! THis is a test');
-    twiml.record({
-      action:"https://covid-histories.vercel.app/api/calls/record_results",
-      transcribe:true,
-      maxLength:60,
-      method:"POST"
-    })
-
+    twiml.say({ voice: 'alice' }, 'Thanks for submitting your experience');
     // Render the response as XML in reply to the webhook request
     res.setHeader("content-type",'text/xml');
     res.send(twiml.toString());
