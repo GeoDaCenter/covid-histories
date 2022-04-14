@@ -1,6 +1,9 @@
 import { S3Client, PutObjectCommand, GetObjectCommand} from "@aws-sdk/client-s3";
 const REGION = "us-west-2"
-const client = new S3Client({ region: REGION  });
+const client = new S3Client({ region: REGION, credentials:{
+ accessKeyId:  process.env.AWS_KEY!,
+ secretAccessKey: process.env.AWS_SECRET!
+}});
 
 const S3_BUCKET = "allofthedata"
 const BASE_FOLDER = "histories/phone"
@@ -9,7 +12,7 @@ export const createOrUpdateUserRecord = async (phoneNo:string, user?:any) =>{
   const initial_data = {
     phoneNo: phoneNo,
     created_at: new Date(),
-    responses: []
+    responses:[]
   }
 
   try{
