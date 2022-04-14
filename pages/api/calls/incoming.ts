@@ -9,10 +9,12 @@ export default function handler(
   if (req.method === 'POST') {
 
     const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'hello world! THis is a test');
+    twiml.say({ voice: 'alice' }, 'hello world! This is a test to see if audio prompts work');
+    twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3")
     twiml.record({
       action:"https://covid-histories.vercel.app/api/calls/record_result",
       transcribe:true,
+      transcribeCallback:"https://covid-histories.vercel.app/api/calls/transcribe_result",
       maxLength:60,
       method:"POST"
     })
