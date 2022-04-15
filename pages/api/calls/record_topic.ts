@@ -21,7 +21,8 @@ export default function handler(
         twiml.record({
           maxLength: 60,
           finishOnKey: "#",
-          transcribeCallback: `https://covid-histories.vercel.app/api/calls/]transcription_result?topic_id=${selection}&category_id=${category}`,
+          transcribe:true,
+          transcribeCallback: `https://covid-histories.vercel.app/api/calls/transcription_result?topic_id=${selection}&category_id=${category}`,
           action: `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${selection}&category_id=${
             category + 1
           }`,
@@ -44,13 +45,13 @@ export default function handler(
       console.log("Selected topic ", req.body, req.query, user);
 
       if (req.body.RecordingUrl) {
-        createOrUpdateUserRecord(req.body.From, {
+        const newUser = {
           ...user,
           responses: [
             ...user.responses,
             {
               topic_id: selection,
-              category_id: category,
+              category_id: category - 1,
               topic: section.name,
               category: section.categories[category],
               url: req.body.RecordingUrl,
@@ -58,7 +59,9 @@ export default function handler(
               duration: req.body.RecordingDuration,
             },
           ],
-        }).then(() => {
+        }
+        console.log("upadting user ", user, newUser)
+        createOrUpdateUserRecord(req.body.From, newUser ).then(() => {
           doNext();
         });
       } else {
