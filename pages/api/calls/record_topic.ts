@@ -21,6 +21,7 @@ export default function handler(
         twiml.record({
           maxLength: 60,
           finishOnKey: "#",
+          transcribeCallback: `https://covid-histories.vercel.app/api/calls/]transcription_result?topic_id=${selection}&category_id=${category}`,
           action: `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${selection}&category_id=${
             category + 1
           }`,
