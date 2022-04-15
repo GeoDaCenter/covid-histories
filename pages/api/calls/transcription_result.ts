@@ -23,7 +23,7 @@ export default function handler(
       const new_answer_entry   = {...previous_answer_entry, transcription_uri, transcription_sid, transcription }
       console.log("POSTING TRANSCRIPTION TO ", number)
 
-      createOrUpdateUserRecord( number, {...user, responses: user.responses.map( (r:any)=> r.topic===topic_id && r.category===category_id? new_answer_entry : r  )})
+      createOrUpdateUserRecord( number, {...user, responses: user.responses.map( (r:any)=> r.topic_id===topic_id && r.category_id===category_id ? new_answer_entry : r  )})
       res.send("ok")
     })
 
