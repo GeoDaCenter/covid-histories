@@ -29,6 +29,7 @@ function findResponse(
 }
 
 const Call: NextPage<CallProps> = ({ id, user }) => {
+  console.log("User response is ", user )
   return (
     <div className={styles.container}>
 

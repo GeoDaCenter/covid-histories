@@ -22,7 +22,7 @@ export default function handler(
       const previous_answer_entry  = user.responses.find( (r:any) => r.topic === section && r.category === category )
       const new_answer_entry   = {...previous_answer_entry, transcription_uri, transcription_sid }
 
-      createOrUpdateUserRecord( {...user, responses: user.responses.map( (r:any)=> r.topic===section && r.category===category ? new_answer_entry : r  )})
+      createOrUpdateUserRecord( number, {...user, responses: user.responses.map( (r:any)=> r.topic===section && r.category===category ? new_answer_entry : r  )})
       res.send("ok")
     })
 

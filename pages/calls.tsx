@@ -16,6 +16,7 @@ interface CallsProps {
 }
 
 const Calls: NextPage<CallsProps> = ({ numbers }) => {
+  console.log("numbers are ", numbers)
   return (
     <div className={styles.container}>
       <h1>Calls</h1>
