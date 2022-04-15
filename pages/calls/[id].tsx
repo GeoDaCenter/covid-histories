@@ -28,6 +28,7 @@ function findResponse(
   );
 }
 
+
 const Call: NextPage<CallProps> = ({ id, user }) => {
   console.log("User response is ", user )
   return (
@@ -44,13 +45,19 @@ const Call: NextPage<CallProps> = ({ id, user }) => {
               category_id,
               user.responses
             );
+            const transcription= findResponse(
+              topic_id,
+              category_id,
+              user. transcriptions
+            );
             return (
               <div key={category_id}>
                 <h4>{category}</h4>
                 {response ? (
                   <>
                     <ReactAudioPlayer src={response.url} controls />
-                    {response.transcription && <p>{response.transcription}</p>}
+                    <h5>Transcript</h5>
+                    {transcription && <p>{transcription.transcription}</p>}
                   </>
                 ) : (
                   <p>Did not respond to this question</p>
