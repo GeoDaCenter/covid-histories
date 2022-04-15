@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand} from "@aws-sdk/client-s3";
 const REGION = "us-west-2"
 const client = new S3Client({ region: REGION, credentials:{
  accessKeyId:  process.env.AWS_KEY!,
@@ -48,4 +48,16 @@ export const getOrCreateUserRecord = async (phoneNo: string) =>{
   else{
     return await createOrUpdateUserRecord(phoneNo)
   }
+}
+
+export const getListOfCalls = async ()=>{
+
+  let response = await client.send(new ListObjectsCommand({
+    Bucket:S3_BUCKET,
+    Prefix: BASE_FOLDER 
+  }))
+
+  let numbers  = response.Contents?.map(c=> c.Key?.split(BASE_FOLDER+"/")[1]).filter(c=>c);
+  return numbers 
+
 }
