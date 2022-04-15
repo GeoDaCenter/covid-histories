@@ -10,9 +10,9 @@ export default function handler(
   if (req.method === 'POST') {
 
     const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'To begin select a category to tell us about');
+    twiml.say({ voice: 'alice' }, 'What kind of story do you want to tell us ');
 
-    let option_prompt= prompts.map((prompt,index)=>`For ${prompt.name} press ${index}`).join(", ");
+    let option_prompt= prompts.map((prompt,index)=>`For a story about ${prompt.name} press ${index}`).join(", ");
 
     twiml.gather({numDigits:1, action:"https://covid-histories.vercel.app/api/calls/selected_topic", bargeIn:true}).say({voice:"alice"}, option_prompt);
 

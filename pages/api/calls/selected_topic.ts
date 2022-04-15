@@ -15,7 +15,7 @@ export default function handler(
     if (selection < prompts.length) {
       twiml.say(
         { voice: "alice" },
-        `Thanks! You selected ${prompts[selection].name}. You will now by asked a series of questions, after each one simply answer and press any button when your done to move on.`
+        `Thanks! You selected ${prompts[selection].name}. You will now be asked a series of questions, after each one simply answer and press the hash button when you are done to move on.`
       );
       twiml.redirect(
         {method: "POST"},

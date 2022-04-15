@@ -28,7 +28,7 @@ export default function handler(
         });
       } else {
         twiml.say(
-          "Thanks for submitting your entry. Select another topic to record another story or simply hangup to end your submission"
+          "Thanks for submitting your entry. To record stories under another topic stay on the line or simply hangup to end your submission"
         );
         twiml.redirect(
           { method: "POST" },
