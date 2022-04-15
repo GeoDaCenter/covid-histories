@@ -9,22 +9,22 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === "POST") {
-    const selection = parseInt(req.query.topic_id as string);
-    const category = parseInt(req.query.category_id as string);
-    const section = prompts[selection];
+    const topic_id= parseInt(req.query.topic_id as string);
+    const category_id = parseInt(req.query.category_id as string);
+    const section = prompts[topic_id];
 
     const doNext = () => {
       const twiml = new VoiceResponse();
 
-      if (category < section.categories.length) {
-        twiml.say(section.categories[category]);
+      if (category_id < section.categories.length) {
+        twiml.say(section.categories[category_id]);
         twiml.record({
           maxLength: 60,
           finishOnKey: "#",
           transcribe:true,
-          transcribeCallback: `https://covid-histories.vercel.app/api/calls/transcription_result?topic_id=${selection}&category_id=${category}`,
-          action: `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${selection}&category_id=${
-            category + 1
+          transcribeCallback: `https://covid-histories.vercel.app/api/calls/transcription_result?topic_id=${topic_id}&category_id=${category_id}`,
+          action: `https://covid-histories.vercel.app/api/calls/record_topic?topic_id=${topic_id}&category_id=${
+            category_id + 1
           }`,
         });
       } else {
@@ -50,10 +50,10 @@ export default function handler(
           responses: [
             ...user.responses,
             {
-              topic_id: selection,
-              category_id: category - 1,
+              topic_id: topic_id,
+              category_id: category_id - 1,
               topic: section.name,
-              category: section.categories[category],
+              category: section.categories[category_id],
               url: req.body.RecordingUrl,
               ssid: req.body.RecordingSid,
               duration: req.body.RecordingDuration,

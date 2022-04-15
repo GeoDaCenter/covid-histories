@@ -19,11 +19,12 @@ export default function handler(
       const transcription_uri = req.body.Uri
       const transcription_sid = req.body.Sid 
 
-      const previous_answer_entry  = user.responses.find( (r:any) => r.topic_id === topic_id && r.category_id=== category_id )
-      const new_answer_entry   = {...previous_answer_entry, transcription_uri, transcription_sid, transcription }
-      console.log("POSTING TRANSCRIPTION TO ", number)
+      const new_user = {...user, transcriptions: [...user.transcriptions, {transcription, transcription_sid, transcription_uri, topic_id, category_id}]}  
+      
+      console.log('old user ', user )
+      console.log('new user ', new_user)
 
-      createOrUpdateUserRecord( number, {...user, responses: user.responses.map( (r:any)=> r.topic_id===topic_id && r.category_id===category_id ? new_answer_entry : r  )})
+      createOrUpdateUserRecord( number, new_user)
       res.send("ok")
     })
 

@@ -13,7 +13,7 @@ export const createOrUpdateUserRecord = async (phoneNo:string, user?:any) =>{
     phoneNo: phoneNo,
     created_at: new Date(),
     responses:[],
-    transcripts:[]
+    transcriptions:[]
   }
 
   try{
