@@ -35,7 +35,7 @@ const Call: NextPage<CallProps> = ({ id, user }) => {
       <p>Called at {user.created_at}</p>
 
       {prompts.map((prompt: any, topic_id: number) => (
-        <div className="topic">
+        <div className="topic" key={topic_id}>
           <h2>{prompt.name}</h2>
           {prompt.categories.map((category: any, category_id: number) => {
             const response = findResponse(
@@ -44,7 +44,7 @@ const Call: NextPage<CallProps> = ({ id, user }) => {
               user.responses
             );
             return (
-              <>
+              <div key={category_id}>
                 <h4>{category}</h4>
                 {response ? (
                   <>
@@ -54,7 +54,7 @@ const Call: NextPage<CallProps> = ({ id, user }) => {
                 ) : (
                   <p>Did not respond to this question</p>
                 )}
-              </>
+                </div>
             );
           })}
         </div>
