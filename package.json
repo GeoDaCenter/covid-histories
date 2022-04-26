@@ -11,6 +11,10 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.7.0",
     "@aws-sdk/client-s3": "^3.67.0",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.6.3",
+    "@mui/styled-engine-sc": "^5.6.1",
     "@twilio/voice-sdk": "^2.0.1",
     "@types/styled-components": "^5.1.25",
     "next": "12.1.5",
