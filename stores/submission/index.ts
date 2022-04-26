@@ -26,7 +26,8 @@ const {
     selectCounty,
     selectTitle,
     selectConsent,
-    selectOptInResearch
+    selectOptInResearch,
+    selectId
 } = selectors;
 
 export {
@@ -52,5 +53,6 @@ export {
   selectCounty,
   selectTitle,
   selectConsent,
-  selectOptInResearch
+  selectOptInResearch,
+  selectId
 };

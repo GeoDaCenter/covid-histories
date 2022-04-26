@@ -3,4 +3,8 @@ export interface StepComponentProps {
     handleNext?: () => void;
     handleBack?: () => void;
     handleReset?: () => void;
+    handleCacheStory?: (content: string) => void;
+    handleRetrieveStory?: () => string;
+    storyId: string;
+    dbActive: any;
 }

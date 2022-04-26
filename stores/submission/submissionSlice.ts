@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { nanoid } from "@reduxjs/toolkit";
 export type SubmissionTypes = "av" | "written" | "photo" | "phone";
 export interface SubmissionState {
   step: number;
@@ -10,6 +10,7 @@ export interface SubmissionState {
   title: string;
   consent: boolean;
   optInResearch: boolean;
+  id: string;
 }
 
 const initialState: SubmissionState = {
@@ -19,6 +20,7 @@ const initialState: SubmissionState = {
   questions: [],
   county: "",
   title: "",
+  id: nanoid(),
   consent: false,
   optInResearch: false,
 };
@@ -29,7 +31,8 @@ export const submissionSlice = createSlice({
   reducers: {
     reset: (state) => {
       state = {
-        ...initialState
+        ...initialState,
+        id: nanoid()
       };
     },
     incrementStep: (state) => {
@@ -40,10 +43,14 @@ export const submissionSlice = createSlice({
     },
     setType: (state, action: PayloadAction<SubmissionTypes>) => {
       state.type = action.payload;
+      state.id = state.id === "" ? nanoid() : state.id;
     },
     setTheme: (state, action: PayloadAction<string>) => {
       state.theme = action.payload;
       state.questions = [];
+    },
+    generateId: (state) => {
+      state.id = nanoid();
     },
     addQuestions: (state, action: PayloadAction<string>) => {
       state.questions.push(action.payload);
@@ -84,4 +91,5 @@ export const selectors = {
   selectConsent: (state: SubmissionStateOuter) => state.submission.consent,
   selectOptInResearch: (state: SubmissionStateOuter) =>
     state.submission.optInResearch,
+  selectId: (state: SubmissionStateOuter) => state.submission.id,
 };
