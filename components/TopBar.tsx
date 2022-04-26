@@ -149,17 +149,17 @@ export const TopBar: React.FC = () => {
         <NavItems navOpen={navOpen}>
           <ul>
             <li>
-              <Link href="/map">
+              <Link href="/submit">
                 <a>SUBMIT</a>
               </Link>
             </li>
             <li>
-              <Link href="/map">
+              <Link href="/about">
                 <a>ABOUT</a>
               </Link>
             </li>
             <li>
-              <Link href="/map">
+              <Link href="/privacy">
                 <a>PRIVACY</a>
               </Link>
             </li>
