@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type SubmissionTypes = "av" | "written" | "photo" | "phone";
+export type SubmissionTypes = "av" | "written" | "photo" | "phone";
 export interface SubmissionState {
   step: number;
   type: SubmissionTypes;

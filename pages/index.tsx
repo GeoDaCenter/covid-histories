@@ -4,26 +4,10 @@ import styled from "styled-components";
 import { HomeSection } from "../components/HomeSection";
 import colors from "../config/colors";
 import styles from "../styles/Home.module.css";
-
-const CTAButton = styled.a`
-  background: ${colors.orange};
-  color: ${colors.darkgray};
-  padding: 0.5em 1em;
-  border-radius: 0.25em;
-  font-weight: bold;
-  margin: 4em 0;
-  transition: 250ms box-shadow;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0);
-  &:hover {
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.35);
-  }
-`;
-
-const QuietCTAButton = styled(CTAButton)`
-  background: none;
-  color: ${colors.skyblue};
-  border: 1px solid ${colors.skyblue};
-`;
+import {
+  CtaLink,
+  QuietCtaLink
+} from '../components/Interface/CTA';
 
 const Home: NextPage = () => {
   return (
@@ -41,9 +25,9 @@ const Home: NextPage = () => {
               and perspectives included aspire to represent the diversity of
               experience and opinion in the United States.
             </p>
-            <CTAButton href="/submit" className="cta-button">
+            <CtaLink href="/submit" className="cta-button">
               Share your story
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={6}>
             <p>photo here</p>
@@ -69,30 +53,30 @@ const Home: NextPage = () => {
           <Grid item xs={12} sm={3}>
             video icon
             <br />
-            <CTAButton href="/submit?type=video" className="cta-button">
+            <CtaLink href="/submit?type=video" className="cta-button">
               Video or audio diary
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={3}>
             written icon
             <br />
-            <CTAButton href="/submit?type=written" className="cta-button">
+            <CtaLink href="/submit?type=written" className="cta-button">
               Written story
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={3}>
             photo icon
             <br />
-            <CTAButton href="/submit?type=photo" className="cta-button">
+            <CtaLink href="/submit?type=photo" className="cta-button">
               Photograph or image
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={3}>
             photo icon
             <br />
-            <CTAButton href="/phone-instructions" className="cta-button">
+            <CtaLink href="/phone-instructions" className="cta-button">
               Phone-based story
-            </CTAButton>
+            </CtaLink>
           </Grid>
         </Grid>
       </HomeSection>
@@ -108,9 +92,9 @@ const Home: NextPage = () => {
               across the US, from cities, towns, suburbs, and everywhere in
               between.
             </p>
-            <CTAButton href="/submit" className="cta-button">
+            <CtaLink href="/submit" className="cta-button">
               Share your story
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={6}>
             <h2 className="h1">Keep your story</h2>
@@ -121,9 +105,9 @@ const Home: NextPage = () => {
               account, you can preview and manage your submitted stories, opt in
               to future research opportunities, and share more stories.
             </p>
-            <QuietCTAButton href="/submit" className="cta-button">
+            <QuietCtaLink href="/submit" className="cta-button">
               Read more about our privacy policy
-            </QuietCTAButton>
+            </QuietCtaLink>
           </Grid>
         </Grid>
       </HomeSection>
@@ -133,9 +117,9 @@ const Home: NextPage = () => {
             <h2 className="h1">Have more questions?</h2>
             <p>We’re here to make telling your story easy and worry-free. Contact us with any questions about how to share your story, the terms and license agreement, and how your story may be published.
             </p>
-            <CTAButton href="/submit" className="cta-button">
+            <CtaLink href="/submit" className="cta-button">
               Share your story
-            </CTAButton>
+            </CtaLink>
           </Grid>
           <Grid item xs={12} sm={6}>
             <p>

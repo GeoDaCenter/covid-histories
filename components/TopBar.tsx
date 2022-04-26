@@ -83,7 +83,6 @@ const NavItems = styled.div`
     letter-spacing: 1.75px;
     font-weight: 400;
     font-stretch: normal;
-    font-opacity: 30%;
     cursor: pointer;
     &:hover {
       background: ${colors.teal}55;
@@ -133,7 +132,6 @@ export const TopBar: React.FC = () => {
   const [navOpen, setNavOpen] = useState(false);
   const toggleNavOpen = () => setNavOpen((prev) => !prev);
   const { user } = useUser();
-  console.log(navOpen);
   return (
     <NavBarOuterContainer>
       {/* @ts-ignore */}

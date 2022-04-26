@@ -21,14 +21,14 @@ const stepsText = [
 ]
 
 const stepComponents = {
-    0: <Steps.Intro />,
-    1: <Steps.GettingStarted />,
-    2: <Steps.StoryType />,
-    3: <Steps.YourCovidExperience />,
-    4: <Steps.Login />,
-    5: <Steps.InputStory />,
-    6: <Steps.Submit />,
-    7: <Steps.Survey />
+    0: Steps.Intro,
+    1: Steps.GettingStarted,
+    2: Steps.StoryType,
+    3: Steps.YourCovidExperience,
+    4: Steps.Login,
+    5: Steps.InputStory,
+    6: Steps.Submit,
+    7: Steps.Survey
 }
 
 export const SubmissionPage: React.FC = () => {
@@ -40,10 +40,11 @@ export const SubmissionPage: React.FC = () => {
     const handleReset = () => dispatch(reset())
 
     // @ts-ignore
-    // const StepComponent = stepComponents[activeStep]
-
+    const CurrentStepComponent = stepComponents[activeStep]
     return <Box sx={{ minHeight: '100vh', maxWidth: '1140px', margin:'0 auto' }}>
         {/* <StepComponent /> */}
+        {/* {currentStepComponent} */}
+        <CurrentStepComponent handleNext={handleNext} />
         <SubmissionStepper 
             steps={stepsText} 
             activeStep={activeStep} 

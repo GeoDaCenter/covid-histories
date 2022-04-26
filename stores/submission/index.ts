@@ -1,4 +1,4 @@
-import { store } from "./store";
+import { store, persistor } from "./store";
 import {
     selectors,
     actions,
@@ -31,6 +31,7 @@ const {
 
 export {
   store, 
+  persistor,
    
   reset,
   incrementStep,
