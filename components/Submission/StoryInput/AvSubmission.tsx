@@ -84,12 +84,12 @@ export const AvSubmission: React.FC<StoryInputProps> = ({ handleCacheStory, dbAc
 		audio: audioConstraints,
 		askPermissionOnMount: true
 	})
-	const hasRecorded = (status === 'stopped' && mediaBlobUrl !== null) || cachedStory !== ''
+	const hasRecorded = status !== 'recording' && (mediaBlobUrl !== null || cachedStory !== '') 
 	const mediaInUse = status === 'media_in_use'
 	const MIMETYPE = useVideo
 		? 'video/mp4'
 		: 'audio/wav'
-
+		
 	useEffect(() => {
 		if (status === 'stopped' && mediaBlobUrl !== null){
 			const generateBlob = async () => {

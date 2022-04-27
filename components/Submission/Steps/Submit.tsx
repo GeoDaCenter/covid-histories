@@ -34,6 +34,8 @@ export const Submit: React.FC<StepComponentProps> = ({
     const handleCounty = (e: React.SyntheticEvent, text: any) => {
         if (text?.label && typeof text.label === "string") {
             dispatch(setCounty(text.label))
+        } else {
+            dispatch(setCounty(''))
         }
     }
     const handleConsent = () => dispatch(toggleConsent())
@@ -53,10 +55,11 @@ export const Submit: React.FC<StepComponentProps> = ({
                 method: 'PUT',
                 body: blob
             })
+            console.log('UPLOAD RESULT', result)
             //  on complete logic
         }
     }
-    
+    const canSubmit = consent && county?.length
     return <Grid container spacing={2}>
         <Grid item xs={12}>
             <h2>Submit your story</h2>
@@ -75,13 +78,13 @@ export const Submit: React.FC<StepComponentProps> = ({
                 You get to keep your story, and use it however you’d like. At any time you want to remove it, come back here, login, and mark the story for removal.
             </p>
             <FormGroup>
-                <FormControlLabel control={<Checkbox onChange={handleConsent} value={consent} />} label="I agree to the license terms" />
+                <FormControlLabel control={<Checkbox onChange={handleConsent} checked={consent} />} label="I agree to the license terms" />
             </FormGroup>
             <p>
                 If you’d like to be considered for paid research opportunities in the future. If I am selected to participate, I would receive $50 compensation for my time.
             </p>
             <FormGroup>
-                <FormControlLabel control={<Checkbox onChange={handleOptInResearch} value={optInResearch} />} label="I want to participate in future research" />
+                <FormControlLabel control={<Checkbox onChange={handleOptInResearch} checked={optInResearch} />} label="I want to participate in future research" />
             </FormGroup>
             <br/><br/>
         </Grid>
@@ -89,7 +92,7 @@ export const Submit: React.FC<StepComponentProps> = ({
             Story preview
             <br />
             <br />
-            <Button variant="contained" onClick={handleSubmit} disabled={!consent || !county.length}>Submit</Button>
+            <Button variant="contained" onClick={handleSubmit} disabled={!canSubmit}>Submit</Button>
         </Grid>
     </Grid>
 }

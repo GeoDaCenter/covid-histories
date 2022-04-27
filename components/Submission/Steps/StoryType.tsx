@@ -70,19 +70,24 @@ interface StoryButtonProps {
 
 const StoryButtonEl = styled(Button)<{active: boolean, onClick: Function}>`
     background:none;
-    border: 1px solid ${props => props.active ? colors.orange : colors.white};
+    border: 1px solid ${props => props.active ? colors.orange : colors.white} !important;
     border-radius:.5em;
     padding:1em;
     height: 100%;
     width: calc(100% - 2em);
     margin:0 2em;
-    color: ${props => props.active ? colors.orange : colors.white};
-    display:block;
+    color: ${props => props.active ? colors.orange : colors.white} !important;
+    display:block !important;
     transition:250ms all;
     svg {
       fill: ${props => props.active ? colors.orange : colors.white};
       transition: 250ms all;
-      max-width:60%;
+      max-width:50%;
+      display: block;
+      margin:1.5em auto;
+    }
+    p {
+      display:block;
     }
 `
 
@@ -109,7 +114,6 @@ export const StoryType: React.FC<StepComponentProps> = () => {
         <Grid item xs={12} sm={3} key={type} sx={{minHeight: '12em'}}>
           <StoryButton onClick={() => handleType(type)} active={activeType === type}>
             {icons[icon]}
-            <br />
             {label}
           </StoryButton>
         </Grid>
