@@ -8,14 +8,18 @@ const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.AWS_REGION })
 
 const URL_EXPIRATION_SECONDS = 60 * 5
-const s3 = new AWS.S3()
+const s3 = new AWS.S3({
+	accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
+	secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
+	region: process.env.APP_AWS_REGION
+})
 
 const prePath = 'uploads/'
 
 const config = {
-	REGION: 'us-east-2',
+	REGION: process.env.APP_AWS_REGION,
 	STAGE: 'dev',
-	S3_BUCKET: 'atlas-histories'
+	S3_BUCKET: process.env.APP_AWS_BUCKET
 }
 const clientParams = {
 	region: config.REGION
