@@ -8,6 +8,7 @@ const TimerContainer = styled.div`
   p {
     padding:0 .5em;
   }
+  text-align:right;
 `;
 
 const CompletionBar = styled.div<{width: number}>`

@@ -6,8 +6,7 @@ const PreviewVid = styled.video`
 	aspect-ratio: 1.78;
 `
 const PreviewCanvas = styled.canvas`
-	margin: 0 auto;
-	display: block;
+	mix-blend-mode:plus-lighter;
 `
 
 interface MediaPreviewProps {
@@ -70,28 +69,23 @@ export const AudioPreview: React.FC<MediaPreviewProps> = ({ stream }) => {
 			//@ts-ignore
 			setVisualDrawTimer(requestAnimationFrame(draw))
 			analyser.getByteTimeDomainData(dataArray)
-			ctx.fillStyle = 'white'
+			ctx.fillStyle = 'black'
 			ctx.fillRect(0, 0, WIDTH, HEIGHT)
-			ctx.lineWidth = 1
-			ctx.strokeStyle = 'black'
+			ctx.lineWidth = 3
+			ctx.strokeStyle = 'orange'
 			ctx.beginPath()
-
 			var sliceWidth = (WIDTH * 1.0) / bufferLength
 			var x = 0
-
 			for (var i = 0; i < bufferLength; i++) {
 				var v = dataArray[i] / 128.0
 				var y = (v * HEIGHT) / 2
-
 				if (i === 0) {
 					ctx.moveTo(x, y)
 				} else {
 					ctx.lineTo(x, y)
 				}
-
 				x += sliceWidth
 			}
-
 			ctx.lineTo(WIDTH, HEIGHT / 2)
 			ctx.stroke()
 		}

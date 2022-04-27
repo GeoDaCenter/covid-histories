@@ -27,7 +27,6 @@ const RichTextExample = ({
     value,
     handleChange
 }) => {
-  console.log(value, 1)
   const renderElement = useCallback(props => <Element {...props} />, [])
   const renderLeaf = useCallback(props => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
