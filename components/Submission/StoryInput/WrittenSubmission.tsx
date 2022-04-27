@@ -32,7 +32,7 @@ export const WrittenSubmission: React.FC<StoryInputProps> = ({
   const dispatch = useDispatch();
   const [text, setText] = useState<Descendant[]>(initialValue);
   const [editorLoader, setEditorLoaded] = useState<Boolean>(false);
-
+  console.log(text)
   useEffect(() => {
     if (db && storyId?.length) {
       db.submissions.get(0)
@@ -54,15 +54,17 @@ export const WrittenSubmission: React.FC<StoryInputProps> = ({
   }, [dbActive, storyId])
 
   const handleChange = (newText: Descendant[]) => {
-    setText(newText)
-    // @ts-ignore
-    const md = newText.map((v) => serialize(v)).join('')
-    handleCacheStory(md)
+    if (newText){
+      setText(newText)
+      // @ts-ignore
+      const md = newText.map((v: Descendant) => serialize(v)).join('')
+      typeof md === "string" && handleCacheStory(md)
+    }
   }
 
-  useEffect(() => {
-    const prevStory = handleRetrieveStory()
-  }, [storyId, dbActive])
+  // useEffect(() => {
+  //   const prevStory = handleRetrieveStory()
+  // }, [storyId, dbActive])
 
   return <Box sx={{ minHeight: 400, background: colors.darkgray, padding: '2em', margin: '0 0 2em 0', border: `1px solid ${colors.orange}` }}>
     {editorLoader && <Editor value={text} handleChange={handleChange} />}

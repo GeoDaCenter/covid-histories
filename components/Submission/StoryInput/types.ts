@@ -1,8 +1,11 @@
+import { SubmissionTypes } from "../../../stores/submission/submissionSlice";
+
 export interface StoryInputProps {
-    handleCacheStory: (content: string) => void;
-    handleLoadStateContent: (content: string) => void;
-    handleRetrieveStory: () => string;
-    handleNext: () => void;
-    storyId: string;
-    dbActive: any;
+    handleCacheStory: (content: any) => void;
+    handleLoadStateContent?: (content: any) => void;
+    handleRetrieveStory?: () => string;
+    handleNext?: () => void;
+    storyId?: string;
+    dbActive?: any;
+    submissionType?: SubmissionTypes;
 }

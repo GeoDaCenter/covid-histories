@@ -34,7 +34,7 @@ export const Login: React.FC<StepComponentProps> = ({
                     that you can manage or remove your stories in the future. You may create an account
                     using your email adress or your Google account.
                 </p>
-                <Link href="/api/auth/login">
+                <Link href="/api/auth/login" passHref>
                     <CtaLink>Signup / Login</CtaLink>
                 </Link>
             </Grid>

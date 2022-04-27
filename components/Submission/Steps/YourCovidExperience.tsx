@@ -63,9 +63,10 @@ export const YourCovidExperience: React.FC = () => {
         </p>
       </Grid>
       <Grid item xs={12} md={3}>
-        {Themes.map((theme) => (
+        {Themes.map((theme, i) => (
           <Button
             onClick={() => handleTheme(theme.title)}
+            key={`${theme}-${i}`}
             sx={{
               display: 'block', textTransform: 'none', margin: '0 0 1em 0',
               color: activeTheme === theme.title ? colors.orange : "white",
@@ -94,8 +95,8 @@ export const YourCovidExperience: React.FC = () => {
       <Grid item xs={12} md={9}>
         {!!activeTheme &&
           Themes.find((f) => f.title === activeTheme)?.questions.map(
-            (question) => (
-              <FormGroup>
+            (question, i) => (
+              <FormGroup key={`${question}-${i}`}>
                 <FormControlLabel
                   control={
                     <Checkbox

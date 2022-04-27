@@ -92,7 +92,7 @@ export const SubmissionPage: React.FC = () => {
                     console.log(err)
                 })
         }
-    }, [dbActive, storyId])
+    }, [dbActive, storyId]) // eslint-disable-line
 
 
     // @ts-ignore
