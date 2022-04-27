@@ -12,7 +12,7 @@ export const Login: React.FC<StepComponentProps> = ({
     
     return !!user ? (
         <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={3}>
                 <p>
                     You are logged in as { user.email }.{" "}
                     {user.email_verified 
@@ -20,11 +20,6 @@ export const Login: React.FC<StepComponentProps> = ({
                         : <>You must verify your email to submit your story. Please check your email and spam folder for a confirmation.</>
                     } 
                 </p>
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <CtaButton onClick={handleNext}>
-                    Continue
-                </CtaButton>
             </Grid>
         </Grid>
     ) : (

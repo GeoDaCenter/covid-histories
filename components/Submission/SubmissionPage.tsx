@@ -7,7 +7,6 @@ import {
     selectId, selectType, selectTheme, setTheme
 } from "../../stores/submission";
 import { db, resetDatabase } from '../../stores/indexdb/db';
-import { useLiveQuery } from "dexie-react-hooks";
 // UI
 import { Box } from "@mui/material"
 // COMPONENTS

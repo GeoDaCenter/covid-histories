@@ -1,9 +1,5 @@
 import React from "react";
-import { Grid } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { Grid, Button, colors } from "@mui/material";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -49,12 +45,12 @@ export const YourCovidExperience: React.FC = () => {
   const dispatch = useDispatch();
   const activeTheme = useSelector(selectTheme);
   const activeQuestions = useSelector(selectQuestions);
-  
+
   const handleTheme = (theme: string) => dispatch(setTheme(theme));
-  const handleQuestion = (question: string) => activeQuestions.includes(question) 
+  const handleQuestion = (question: string) => activeQuestions.includes(question)
     ? dispatch(removeQuestions(question))
     : dispatch(addQuestions(question))
-    
+
   // const handleQuestion = (event: React.ChangeEvent<{ value: unknown }>) => dispatch()
   return (
     <Grid container spacing={1}>
@@ -66,11 +62,19 @@ export const YourCovidExperience: React.FC = () => {
           telling your story.
         </p>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={3}>
         {Themes.map((theme) => (
-          <button onClick={() => handleTheme(theme.title)}>
+          <Button
+            onClick={() => handleTheme(theme.title)}
+            sx={{
+              display: 'block', textTransform: 'none', margin: '0 0 1em 0',
+              color: activeTheme === theme.title ? colors.orange : "white",
+              borderColor: activeTheme === theme.title ? colors.orange : "white"
+            }}
+            variant="outlined"
+          >
             {theme.title}
-          </button>
+          </Button>
         ))}
         {/* <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Age</InputLabel>
@@ -87,7 +91,7 @@ export const YourCovidExperience: React.FC = () => {
                 </Select>
             </FormControl> */}
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={9}>
         {!!activeTheme &&
           Themes.find((f) => f.title === activeTheme)?.questions.map(
             (question) => (
@@ -97,7 +101,6 @@ export const YourCovidExperience: React.FC = () => {
                     <Checkbox
                       checked={activeQuestions.includes(question)}
                       onChange={() => handleQuestion(question)}
-                      color="success"
                     />
                   }
                   label={question}

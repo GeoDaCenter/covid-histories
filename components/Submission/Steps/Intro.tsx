@@ -15,7 +15,6 @@ export const Intro: React.FC<StepComponentProps> = ({ handleNext }) => {
           data and spatial analysis to better understand the spread in your
           community.
         </p>
-        <CtaButton onClick={handleNext}> Get Started </CtaButton>
       </Grid>
       <Grid item xs={12} sm={6}>
         photo here

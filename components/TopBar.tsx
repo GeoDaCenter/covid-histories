@@ -5,6 +5,7 @@ import styles from "../styles/Home.module.css";
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import colors from "../config/colors";
+import { Button, Popover, Typography } from "@mui/material";
 // import { hamburger, close } from '../../config/svg';
 
 const NavBarOuterContainer = styled.div`
@@ -67,7 +68,6 @@ const NavItems = styled.div`
   a,
   button {
     margin: auto;
-    height: 100%;
     display: flex;
     align-items: center;
     flex: 1;
@@ -75,11 +75,10 @@ const NavItems = styled.div`
     padding: 10px;
     text-decoration: none;
     transition: 250ms all;
-    background: none;
     border: none;
     font-family: Lato, sans-serif;
     font-size: 0.9rem;
-    line-height: 1.5;
+    line-height: 1;
     letter-spacing: 1.75px;
     font-weight: 400;
     font-stretch: normal;
@@ -93,7 +92,7 @@ const NavItems = styled.div`
       color: #eee;
     }
   }
-  button {
+  ul.drop-down-nav li {
     display: none;
   }
   @media (max-width: 1024px) {
@@ -132,16 +131,30 @@ export const TopBar: React.FC = () => {
   const [navOpen, setNavOpen] = useState(false);
   const toggleNavOpen = () => setNavOpen((prev) => !prev);
   const { user } = useUser();
+
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   return (
     <NavBarOuterContainer>
       {/* @ts-ignore */}
       <NavbarContainer navOpen={navOpen}>
         <NavLogo>
           <Link href="/">
-          <a>
-            Atlas
-            <span>Stories</span>
-          </a></Link>
+            <a>
+              Atlas
+              <span>Stories</span>
+            </a></Link>
         </NavLogo>
         {/* @ts-ignore */}
         <NavItems navOpen={navOpen}>
@@ -161,16 +174,45 @@ export const TopBar: React.FC = () => {
                 <a>PRIVACY</a>
               </Link>
             </li>
-            <li>
-              {user ? (
-                <>
-                  <p>Welcome {user.name}</p>
-                  <Link href="/api/auth/logout"><a>logout</a></Link>
-                </>
-              ) : (
-                <Link href="/api/auth/login"><a>LOGIN</a></Link>
-              )}
-            </li>
+            {user ? (
+              <>
+                <li><Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', background: colors.orange }}>
+                  {user.name}
+                </Button>
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    usePortal={false}
+                  >
+                    <ul className="drop-down-nav">
+                      <li>
+                        <Link href="/privacy">
+                          <a>My Stories</a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/privacy">
+                          <a>Help</a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/privacy">
+                          <a>Logout</a>
+                        </Link>
+                      </li>
+                    </ul>
+                  </Popover></li>
+
+              </>
+            ) : (
+              <li><Link href="/api/auth/login"><a>LOGIN</a></Link></li>
+            )}
           </ul>
         </NavItems>
         <NavHamburger onClick={toggleNavOpen}>
