@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleAudioVideo } from '../../../stores/submission'
-import { useReactMediaRecorder } from 'react-media-recorder'
-import dynamic from 'next/dynamic'
-import styled from 'styled-components'
-import { StoryInputProps } from './types'
-import { Grid, InputLabel, MenuItem, Select } from '@mui/material'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormHelperText from '@mui/material/FormHelperText'
-import Switch from '@mui/material/Switch'
-import Link from 'next/link'
-import { db } from '../../../stores/indexdb/db'
 import { selectType } from '../../../stores/submission'
+import { db } from '../../../stores/indexdb/db'
+// @ts-ignore
+
+import dynamic from 'next/dynamic'
+import { Box, Button, Grid } from '@mui/material'
+import styled from 'styled-components'
+import colors from '../../../config/colors'
+import { StoryInputProps } from './types'
+
+import { useReactMediaRecorder } from 'react-media-recorder'
+import { useGetMediaDevices } from '../../../hooks/useGetMediaDevices'
+import { AdvancedSettingsModal } from './AvUtils/AdvancedSettingsModal'
+import { AvSwitch } from './AvUtils/AvSwitch'
 const Recorder = dynamic(() => import('./AvUtils/Recorder'), {
 	loading: () => <p>...</p>,
 	ssr: false
@@ -26,149 +26,8 @@ const RecorderContainer = styled.div`
 		aspect-ratio: 1.78;
 	}
 `
-const AvSwitch: React.FC<{ useVideo: boolean; toggleUseVideo: () => void }> = ({
-	useVideo,
-	toggleUseVideo
-}) => {
-	return (
-		<FormControl
-			component="fieldset"
-			variant="standard"
-			sx={{ marginBottom: '2em' }}
-		>
-			<FormLabel component="legend">Record video and audio?</FormLabel>
-			<FormGroup>
-				<FormControlLabel
-					control={
-						<Switch checked={useVideo} onChange={toggleUseVideo} name="gilad" />
-					}
-					label={useVideo ? 'Record Video' : 'Record Audio Only'}
-				/>
-			</FormGroup>
-			<FormHelperText>
-				For more info, see our{' '}
-				<Link href="/privacy">
-					<a
-						target="_blank"
-						rel="noreferrer"
-						style={{ textDecoration: 'underline' }}
-					>
-						Privacy Policy
-					</a>
-				</Link>
-			</FormHelperText>
-		</FormControl>
-	)
-}
-interface MediaDevices {
-	video: MediaDeviceInfo[]
-	audio: MediaDeviceInfo[]
-}
 
-interface useGetMediaProps {
-	setVideoSource: (device: MediaDeviceInfo) => void
-	setAudioSource: (device: MediaDeviceInfo) => void
-}
-const useGetMediaDevices = ({
-	setVideoSource,
-	setAudioSource
-}: useGetMediaProps) => {
-	const [availableDevices, setAvailableDevices] = useState<MediaDevices>({
-		video: [],
-		audio: []
-	})
-	useEffect(() => {
-		const getMediaDevices = async () => {
-			const devices = await navigator.mediaDevices.enumerateDevices()
-			const video = devices.filter((f) => f.kind === 'videoinput')
-			const audio = devices.filter((f) => f.kind === 'audioinput')
-			const defaultVideo =
-				video.find((f) => f.deviceId === 'default') || video[0]
-			const defaultAudio =
-				audio.find((f) => f.deviceId === 'default') || audio[0]
-			if (defaultVideo !== undefined && defaultVideo.deviceId !== undefined) {
-				setVideoSource(defaultVideo)
-			}
-			if (defaultAudio !== undefined && defaultAudio.deviceId !== undefined) {
-				setAudioSource(defaultAudio)
-			}
-
-			setAvailableDevices({
-				video,
-				audio
-			})
-		}
-		getMediaDevices()
-	}, [])
-	return availableDevices
-}
-
-interface DeviceSelectorProps {
-	availableDevices: MediaDevices
-	setVideoSource: (device: string) => void
-	setAudioSource: (device: string) => void
-	videoSource: MediaDeviceInfo
-	audioSource: MediaDeviceInfo
-}
-
-const DeviceSelector: React.FC<DeviceSelectorProps> = ({
-	videoSource,
-	audioSource,
-	setVideoSource,
-	setAudioSource,
-	availableDevices
-}) => {
-	return (
-		<Grid container spacing={1}>
-			<Grid item xs={12} md={6}>
-				<FormControl size="small" fullWidth sx={{ marginBottom: '1em' }}>
-					<InputLabel id="video-select-small">Select Video Source</InputLabel>
-					<Select
-						labelId="video-select-small"
-						id="video-select-small"
-						value={videoSource}
-						label="Video Input"
-						// @ts-ignore
-						onChange={(e) => setVideoSource(e.target.value)}
-					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
-						{availableDevices.video.map((device, i) => (
-							<MenuItem key={`video-${i}`} value={device.deviceId}>
-								{device.label}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<FormControl size="small" fullWidth sx={{ marginBottom: '1em' }}>
-					<InputLabel id="audio-select-small">Select Audio Source</InputLabel>
-					<Select
-						labelId="audio-select-small"
-						id="audio-select-small"
-						value={audioSource}
-						label="Audio Input"
-						// @ts-ignore
-						onChange={(e) => setAudioSource(e.target.value)}
-					>
-						<MenuItem value="">
-							<em>None</em>
-						</MenuItem>
-						{availableDevices.audio.map((device, i) => (
-							<MenuItem key={`audio-${i}`} value={device.deviceId}>
-								{device.label}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Grid>
-		</Grid>
-	)
-}
-
-const initialVideoConstraints: MediaStreamConstraints = {
+const initialVideoConstraints: MediaTrackConstraints = {
 	height: {
 		min: 480,
 		max: 1920,
@@ -181,7 +40,7 @@ const initialVideoConstraints: MediaStreamConstraints = {
 	}
 }
 
-const initialAudioConstraints: MediaStreamConstraints = {
+const initialAudioConstraints: MediaTrackConstraints = {
 	sampleRate: {
 		min: 22500,
 		max: 96000,
@@ -200,33 +59,27 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const useVideo = useSelector(selectType) === 'video'
 	const toggleUseVideo = () => dispatch(toggleAudioVideo())
 	const [recordingTimeout, setRecordingTimeout] = useState(null)
+	const [showAdvancedModal, setShowAdvancedModal] = useState<boolean>(false)
+	const toggleAdvancedModal = () => setShowAdvancedModal(prev => !prev)
 	const [cachedStory, setCachedStory] = useState<string>('')
 
 	const [videoConstraints, setVideoConstraints] =
-		useState<MediaStreamConstraints>(initialVideoConstraints)
-	const [audioConstrains, setAudioConstraints] =
-		useState<MediaStreamConstraints>(initialAudioConstraints)
+		useState<MediaTrackConstraints>(initialVideoConstraints)
+	const [audioConstraints, setAudioConstraints] =
+		useState<MediaTrackConstraints>(initialAudioConstraints)
 
-	const availableDevices = useGetMediaDevices({
-		setVideoConstraints,
-		setAudioConstraints,
-		initialVideoConstraints,
-		initialAudioConstraints
-	})
-
-	const handleAudioSource = (device: string) => {
+	const handleAudioSource = (deviceId: string) => {
 		setAudioConstraints({
 			...initialAudioConstraints,
-			audioSource: { "exact": device }
+			deviceId
 		})
 	}
-	const handleVideoSource = (device: string) => {
+	const handleVideoSource = (deviceId: string) => {
 		setVideoConstraints({
 			...initialVideoConstraints,
-			videoSource: { "exact": device }
+			deviceId
 		})
 	}
-	
 	const {
 		status,
 		startRecording,
@@ -239,6 +92,13 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 		audio: audioConstraints,
 		askPermissionOnMount: true
 	})
+
+	const availableDevices = useGetMediaDevices({
+		handleAudioSource,
+		handleVideoSource,
+		status
+	})
+
 	const hasRecorded =
 		status !== 'recording' && (mediaBlobUrl !== null || cachedStory !== '')
 	const mediaInUse = status === 'media_in_use'
@@ -270,23 +130,9 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 
 	return (
 		<RecorderContainer>
-			<Grid container spacing={2}>
+			<Grid container spacing={3}>
 				<Grid item xs={12} md={6}>
 					<p>Welcome! Getting started instructions...</p>
-					<AvSwitch useVideo={useVideo} toggleUseVideo={toggleUseVideo} />
-					<p>
-						If your video does not appear while recording, try changing your
-						video input below. Same for sound.
-					</p>
-					<DeviceSelector
-						availableDevices={availableDevices}
-						// @ts-ignore
-						handleVideoSource={handleVideoSource}
-						// @ts-ignore
-						handleAudioSource={handleAudioSource}
-						videoSource={videoSource}
-						audioSource={audioSource}
-					/>
 					{hasRecorded && (
 						<p>
 							Your story has been recorded! You can review your recording on
@@ -307,6 +153,16 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 					)}
 				</Grid>
 				<Grid item xs={12} md={6}>
+					<Box sx={{ padding: '1em', marginBottom: '1em', background: colors.darkgray, border: `1px solid ${colors.gray}` }}>
+					<Grid container spacing={2} alignItems="center" alignContent="center">
+						<Grid item xs={8}>
+							<AvSwitch useVideo={useVideo} toggleUseVideo={toggleUseVideo} />
+						</Grid>
+						<Grid item xs={4}>
+							<Button variant="outlined" onClick={toggleAdvancedModal}>Advanced Settings</Button>
+						</Grid>
+					</Grid>
+					</Box>
 					<Recorder
 						{...{
 							length,
@@ -323,6 +179,15 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 					/>
 				</Grid>
 			</Grid>
+			<AdvancedSettingsModal
+				open={showAdvancedModal}
+				handleClose={toggleAdvancedModal}
+				availableDevices={availableDevices}
+				handleAudioSource={handleAudioSource}
+				handleVideoSource={handleVideoSource}
+				videoConstraints={videoConstraints}
+				audioConstraints={audioConstraints}
+			/>
 		</RecorderContainer>
 	)
 }
