@@ -78,10 +78,14 @@ const useGetMediaDevices = ({
 			const devices = await navigator.mediaDevices.enumerateDevices()
 			const video = devices.filter((f) => f.kind === 'videoinput')
 			const audio = devices.filter((f) => f.kind === 'audioinput')
-			const defaultVideo = video.find(f => f.deviceId === "deviceId") || video[0]
-			const defaultAudio = audio.find(f => f.deviceId === "deviceId") || audio[0]
-			defaultVideo !== undefined && setVideoSource(defaultVideo)
-			defaultAudio !== undefined && setAudioSource(defaultAudio)
+			const defaultVideo = video.find(f => f.deviceId === "default") || video[0]
+			const defaultAudio = audio.find(f => f.deviceId === "default") || audio[0]
+			if (defaultVideo !== undefined && defaultVideo.deviceId !== undefined) {
+				setVideoSource(defaultVideo)
+			}
+			if (defaultAudio !== undefined && defaultAudio.deviceId !== undefined) {
+				setAudioSource(defaultAudio)
+			}
 			
 			setAvailableDevices({
 				video,
