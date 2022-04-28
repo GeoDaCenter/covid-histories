@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { nanoid } from "@reduxjs/toolkit";
-export type SubmissionTypes = "av" | "written" | "photo" | "phone";
+export type SubmissionTypes = "audio" | "video" | "written" | "photo" | "phone";
 export interface SubmissionState {
   step: number;
   type: SubmissionTypes;
@@ -11,11 +11,13 @@ export interface SubmissionState {
   consent: boolean;
   optInResearch: boolean;
   id: string;
+  isUploading: boolean;
+  uploadProgress: number;
 }
 
 const initialState: SubmissionState = {
   step: 0,
-  type: "av",
+  type: "video",
   theme: "",
   questions: [],
   county: "",
@@ -23,6 +25,8 @@ const initialState: SubmissionState = {
   id: nanoid(),
   consent: false,
   optInResearch: false,
+  isUploading: false,
+  uploadProgress: 0,
 };
 
 export const submissionSlice = createSlice({
@@ -44,6 +48,9 @@ export const submissionSlice = createSlice({
     setType: (state, action: PayloadAction<SubmissionTypes>) => {
       state.type = action.payload;
       state.id = state.id === "" ? nanoid() : state.id;
+    },
+    toggleAudioVideo: (state) => {
+      state.type = state.type === "video" ? "audio" : "video";
     },
     setTheme: (state, action: PayloadAction<string>) => {
       state.theme = action.payload;
@@ -70,6 +77,12 @@ export const submissionSlice = createSlice({
     toggleOptInResearch: (state) => {
       state.optInResearch = !state.optInResearch;
     },
+    toggleIsUploading: (state) => {
+      state.isUploading = !state.isUploading
+    },
+    setUploadProgress: (state, action: PayloadAction<number>) => {
+      state.uploadProgress = action.payload;
+    }
   },
 });
 
@@ -92,4 +105,6 @@ export const selectors = {
   selectOptInResearch: (state: SubmissionStateOuter) =>
     state.submission.optInResearch,
   selectId: (state: SubmissionStateOuter) => state.submission.id,
+  selectIsUploading: (state: SubmissionStateOuter) => state.submission.isUploading,
+  selectUploadProgress: (state: SubmissionStateOuter) => state.submission.uploadProgress,
 };

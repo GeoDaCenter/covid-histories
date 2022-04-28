@@ -52,7 +52,7 @@ export default withApiAuthRequired(async function handler(
 	res.end()
 })
 
-type SubmissionType = 'image' | 'video' | 'audio' | "photo"
+type SubmissionType = 'audio' | 'video' | 'written' | 'photo'
 const submissionTypeMap: {[key:string]: {fileExtension: string, ContentType: string}} = {
     "audio": {
         "fileExtension":".wav",

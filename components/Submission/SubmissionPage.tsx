@@ -19,6 +19,7 @@ import { Box } from '@mui/material'
 import { SubmissionStepper } from './SubmissionStepper'
 import * as Steps from './Steps'
 import { SubmissionDraft } from '../../stores/indexdb/SubmissionDraft'
+import { SubmissionUploadModal } from './SubmissionUploadModal'
 
 const stepsText = [
 	'',
@@ -139,6 +140,7 @@ export const SubmissionPage: React.FC = () => {
 				handleNext={handleNext}
 				handleReset={handleReset}
 			/>
+			<SubmissionUploadModal />
 		</Box>
 	)
 }

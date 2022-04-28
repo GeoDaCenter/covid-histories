@@ -15,7 +15,10 @@ const {
   setCounty,
   setTitle,
   toggleConsent,
+  toggleAudioVideo,
   toggleOptInResearch,
+  toggleIsUploading,
+  setUploadProgress
 } = actions;
 
 const {
@@ -27,7 +30,9 @@ const {
     selectTitle,
     selectConsent,
     selectOptInResearch,
-    selectId
+    selectId,
+    selectIsUploading,
+    selectUploadProgress
 } = selectors;
 
 export {
@@ -44,7 +49,10 @@ export {
   setCounty,
   setTitle,
   toggleConsent,
+  toggleAudioVideo,
   toggleOptInResearch,
+  toggleIsUploading,
+  setUploadProgress,
 
   selectStep,
   selectType,
@@ -54,5 +62,7 @@ export {
   selectTitle,
   selectConsent,
   selectOptInResearch,
-  selectId
+  selectId,
+  selectIsUploading,
+  selectUploadProgress
 };

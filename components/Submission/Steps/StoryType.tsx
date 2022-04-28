@@ -14,7 +14,7 @@ interface StoryOption {
 }
 
 const icons: { [key: string]: any } = {
-  'av': <svg width="181" height="115" viewBox="0 0 181 115" xmlns="http://www.w3.org/2000/svg">
+  'video': <svg width="181" height="115" viewBox="0 0 181 115" xmlns="http://www.w3.org/2000/svg">
     <path d="M75.0382 45.8586L56.532 36.1412V26.3579L75.0382 16.6461V45.8586Z" />
     <path d="M9.78509 96.5779H2.62756L27.5562 48.1002L50.7213 96.5779L43.712 96.6493L27.3362 62.3551L9.78509 96.5779Z" />
     <path d="M20.6726 10.8402H1.94702V0.881165H28.1103L20.6726 10.8402Z" />
@@ -41,9 +41,9 @@ const icons: { [key: string]: any } = {
 }
 const storyTypeOptions: StoryOption[] = [
   {
-    type: "av",
+    type: "video",
     label: "Video or Audio Diary",
-    icon: "av",
+    icon: "video",
   },
   {
     type: "written",
