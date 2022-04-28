@@ -62,10 +62,32 @@ export const SubmissionPage: React.FC = () => {
 	// const submissionIds = submissionDrafts?.map(entry => entry.storyId)
 	// const currSubmissionCache = submissionDrafts.find(f => f.storyId === storyId)
 	// const currentSubmissionLength = submissionDrafts?.find(f => f.storyId === storyId) //?.content.length
-
-	const handleCacheStory = (content: string) => {
+	
+	const handleCacheStory = (content: string | Blob) => {
+		if (typeof content === 'string' && !content.length) {
+			console.log('No Content')
+			return;
+		}
+		if (typeof content !== 'string' && !content?.type.length) {
+			console.log('No type')
+			return;
+		}
 		if (db) {
 			db.submissions.update(0, { content })
+		}
+	}
+	
+	const handleCacheAdditionalContent = (additionalContent: string | Blob) => {
+		if (typeof additionalContent === 'string' && !additionalContent.length) {
+			console.log('No Content')
+			return;
+		}
+		if (typeof additionalContent !== 'string' && !additionalContent?.type.length) {
+			console.log('No type')
+			return;
+		}
+		if (db) {
+			db.submissions.update(0, { additionalContent })
 		}
 	}
 
@@ -91,6 +113,7 @@ export const SubmissionPage: React.FC = () => {
 							storyId: storyId,
 							type: storyType,
 							content: '',
+							additionalContent: '',
 							completed: false
 						})
 					}
@@ -130,6 +153,7 @@ export const SubmissionPage: React.FC = () => {
 				handleNext={handleNext}
 				storyId={storyId}
 				handleCacheStory={handleCacheStory}
+				handleCacheAdditionalContent={handleCacheAdditionalContent}
 				handleRetrieveStory={handleRetrieveStory}
 				dbActive={dbActive}
 			/>

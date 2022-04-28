@@ -5,11 +5,13 @@ import CountyList from './CountyList.json'
 
 interface ComboBoxProps {
     onChange: (event: React.SyntheticEvent, newValue: any) => void;
-    value: string;
+    value: {
+      label: string
+      value: number
+    };
 }
 
-export const CountySelect: React.FC<ComboBoxProps> = ({onChange, value}) => {
-    
+export const CountySelect: React.FC<ComboBoxProps> = ({onChange, value}) => {  
   return (
     <Autocomplete
       disablePortal
@@ -17,6 +19,7 @@ export const CountySelect: React.FC<ComboBoxProps> = ({onChange, value}) => {
       id="combo-box-demo"
       options={CountyList}
       fullWidth
+      value={value}
       renderInput={(params) => <TextField {...params} label="What US county and state are you in? (type to search)" />}
     />
   );
