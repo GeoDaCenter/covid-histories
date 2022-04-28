@@ -1,4 +1,4 @@
-import { store, persistor } from "./store";
+import { store, persistor } from "../store";
 import {
     selectors,
     actions,

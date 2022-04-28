@@ -22,7 +22,7 @@ import {
 	setUploadProgress
 } from '../../../stores/submission'
 import * as StoryInput from '../StoryInput'
-import { db } from '../../../stores/indexdb/db'
+import { db, resetDatabase } from '../../../stores/indexdb/db'
 import { StepComponentProps } from './types'
 import { CountySelect } from '../SubmissionUtil/CountySelect'
 
@@ -38,7 +38,7 @@ const base64ToBlob = (base64: string, type: string) => {
 	return blob
 }
 
-export const Submit: React.FC<StepComponentProps> = ({ storyId }) => {
+export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) => {
 	const storyType = useSelector(selectType)
 	const title = useSelector(selectTitle)
 	const county = useSelector(selectCounty)
@@ -47,45 +47,59 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId }) => {
 	const dispatch = useDispatch()
 
 	const handleTitle = (text: string) => dispatch(setTitle(text))
-	const handleCounty = (e: React.SyntheticEvent, text: any) => {
-		if (text?.label && typeof text.label === 'string') {
-			dispatch(setCounty(text.label))
+	const handleCounty = (_e: React.SyntheticEvent, county: {label:string, value:number}) => {
+		if (county?.label) {
+			dispatch(setCounty(county))
 		} else {
-			dispatch(setCounty(''))
+			dispatch(setCounty({label:'', value:-1}))
 		}
 	}
 	const handleConsent = () => dispatch(toggleConsent())
 	const handleOptInResearch = () => dispatch(toggleOptInResearch())
 	const handleSuccessfulUpload = () => {
 		dispatch(toggleIsUploading())
-		console.log('did it')
-		// REMOVE CACHE
-		// set can't go back
-		//progress to next step
+		handleNext()
+		resetDatabase({
+			storyId: ""
+		})
 	}
 	const handleFailedUpload = () => {
 		dispatch(toggleIsUploading())
 		console.log('upload failed try again')
 	}
-	const handleSendFile = (blob: Blob, url: string) => {
-		dispatch(toggleIsUploading())
+	const handleSendFile = (blob: Blob, url: string, quiet:boolean=false) => {
+		!quiet && dispatch(toggleIsUploading())
 		let request: XMLHttpRequest = new XMLHttpRequest()
 		request.open('PUT', url)
 		request.upload.addEventListener('progress', function (e) {
 			let percent_completed: number = (e.loaded / e.total) * 100
-			dispatch(setUploadProgress(percent_completed))
+			!quiet && dispatch(setUploadProgress(percent_completed))
 		})
 		request.addEventListener('load', () => {
-			handleSuccessfulUpload()
+			!quiet && handleSuccessfulUpload()
 		})
 		request.send(blob)
 	}
 
 	const handleSubmit = async () => {
 		const entry = await db.submissions.get(0)
-		const response = await fetch(
-			`/api/upload/request_url?type=${storyType}&key=${storyId}`
-		).then((res) => res.json())
+		if (entry?.additionalContent) {
+			const response = await fetch(
+				`/api/upload/request_url?type=written&key=${storyId}`
+			).then((res) => res.json())
+			const { uploadURL, fileName, ContentType } = response
+			if (fileName && uploadURL) {
+				const blob = str2blob(entry.additionalContent)
+				handleSendFile(blob, uploadURL, true)
+			}
+		}
+		let fetchUrl = `/api/upload/request_url?type=${storyType}&key=${storyId}`
+		// @ts-ignore
+		if (storyType === 'photo' && entry?.content?.type) {
+			// @ts-ignore
+			fetchUrl += '&fileType=' + entry?.content?.type
+		}
+		const response = await fetch(fetchUrl).then((res) => res.json())
 		const { uploadURL, fileName, ContentType } = response
 		if (fileName && uploadURL && entry?.content) {
 			try {
@@ -101,7 +115,7 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId }) => {
 		}
 	}
 
-	const canSubmit = consent && county?.length
+	const canSubmit = consent && county?.label?.length
 
 	return (
 		<Grid container spacing={2}>

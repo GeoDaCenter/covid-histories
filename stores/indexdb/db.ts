@@ -1,3 +1,4 @@
+import { nanoid } from '@reduxjs/toolkit'
 import Dexie, { Table } from 'dexie'
 import { SubmissionTypes } from '../submission/submissionSlice'
 import { SubmissionDraft } from './SubmissionDraft'
@@ -20,15 +21,22 @@ export class SubmissionDB extends Dexie {
 
 export const db = new SubmissionDB()
 
-export function resetDatabase(storyId: string, storyType: SubmissionTypes) {
+interface ResetDbProps {
+	storyId?: string
+	storyType?: SubmissionTypes 
+}
+export function resetDatabase({
+	storyId='',
+	storyType='video'
+}: ResetDbProps ) {
 	return db.transaction('rw', db.submissions, async () => {
-		console.log(db.tables)
 		await Promise.all(db.tables.map((table) => table.clear())).then(() => {
 			db.submissions.add({
 				id: 0,
-				storyId: storyId,
+				storyId: storyId || nanoid(),
 				type: storyType,
 				content: '',
+				additionalContent: '',
 				completed: false
 			})
 		})

@@ -21,6 +21,7 @@ const config = {
 	STAGE: 'dev',
 	S3_BUCKET: process.env.APP_AWS_BUCKET
 }
+
 const clientParams = {
 	region: config.REGION
 }
@@ -30,13 +31,18 @@ export default withApiAuthRequired(async function handler(
 	res: NextApiResponse<string>
 ) {
 	const { query } = req
-	const { type, fileExtension, key } = query
+	const { type, fileType, key } = query
 
 	// @ts-ignore
 	const { user } = getSession(req, res)
 	if (user) {
 		//@ts-ignore
-		const { uploadURL, fileName, ContentType } = await getUploadURL(type, key, fileExtension)
+		const { uploadURL, fileName, ContentType } = await getUploadURL(
+			// @ts-ignore
+			type,
+			key,
+			fileType
+		)
 
 		res.status(200).json(
 			JSON.stringify({
@@ -47,44 +53,53 @@ export default withApiAuthRequired(async function handler(
 		)
 	} else {
 		// Not Signed in
-		res.status(401)
+		res.status(401).json(
+			JSON.stringify({
+				error: 'Not Signed In'
+			})
+		)
 	}
 	res.end()
 })
 
 type SubmissionType = 'audio' | 'video' | 'written' | 'photo'
-const submissionTypeMap: {[key:string]: {fileExtension: string, ContentType: string}} = {
-    "audio": {
-        "fileExtension":".wav",
-        "ContentType":"audio/wav"
-    },
-    "video": {
-        "fileExtension":".mp4",
-        "ContentType":"video/mp4"
-    },
-    "written": {
-        "fileExtension": ".md",
-        "ContentType": "text/markdown; charset=UTF-8"
-    },
-    "photo": {
-        "fileExtension": ".jpg",
-        "ContentType": "image/" // jpg, jpeg, png, tif, tiff, gif, bmp
-    }
+const submissionTypeMap: {
+	[key: string]: { fileExtension: string; ContentType: string }
+} = {
+	audio: {
+		fileExtension: '.wav',
+		ContentType: 'audio/wav'
+	},
+	video: {
+		fileExtension: '.mp4',
+		ContentType: 'video/mp4'
+	},
+	written: {
+		fileExtension: '.md',
+		ContentType: 'text/markdown; charset=UTF-8'
+	},
+	photo: {
+		fileExtension: '.jpg',
+		ContentType: 'image/' // jpg, jpeg, png, tif, tiff, gif, bmp
+	}
 }
-const imageExtensionMap: {[key:string]: string} = {
-    ".jpg": "image/jpeg",
-    ".jpeg": "image/jpeg",
-    ".png": "image/png",
-    ".tif": "image/tiff",
-    ".tiff": "image/tiff",
-    ".gif": "image/gif",
-    ".bmp": "image/bmp"
+const fileExtensionMap: { [fileType: string]: string } = {
+	'image/jpeg': '.jpg',
+	'image/png': '.png',
+	'image/tiff': '.tiff',
+	'image/gif': '.gif',
+	'image/bmp': '.bmp'
 }
 
-async function getUploadURL(type: SubmissionType, key: string, fileExtension: string) {	
-    const ext: string = fileExtension || submissionTypeMap[type].fileExtension
+async function getUploadURL(
+	type: SubmissionType,
+	key: string,
+	fileType: string
+) {
+	const ext: string =
+		fileExtensionMap[fileType] || submissionTypeMap[type].fileExtension
 	const fileName: string = `${key || nanoid()}${ext}`
-    const ContentType = type === "photo" ? imageExtensionMap[ext] : submissionTypeMap[type].ContentType 
+	const ContentType = fileType ? fileType : submissionTypeMap[type].ContentType
 
 	// Get signed URL from S3
 	const s3Params = {

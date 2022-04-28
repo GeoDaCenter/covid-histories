@@ -14,6 +14,7 @@ const inputComponentMap: { [key: string]: React.FC<StoryInputProps> } = {
 }
 export const InputStory: React.FC<StepComponentProps> = ({
 	handleCacheStory,
+	handleCacheAdditionalContent,
 	handleRetrieveStory,
 	storyId,
 	dbActive
@@ -31,6 +32,7 @@ export const InputStory: React.FC<StepComponentProps> = ({
 					<SubmissionComponent
 						submissionType={submissionType}
 						handleCacheStory={handleCacheStory}
+						handleCacheAdditionalContent={handleCacheAdditionalContent}
 						handleRetrieveStory={handleRetrieveStory}
 						storyId={storyId}
 						dbActive={dbActive}

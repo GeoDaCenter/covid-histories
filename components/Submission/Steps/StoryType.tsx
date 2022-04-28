@@ -57,7 +57,7 @@ const storyTypeOptions: StoryOption[] = [
   },
   {
     type: "phone",
-    label: "Phone-based Story",
+    label: "Phone-based Story (NOT YET IMPLEMENTED)",
     icon: "phone",
   },
 ];

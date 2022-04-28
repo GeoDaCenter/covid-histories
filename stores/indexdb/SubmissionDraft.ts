@@ -5,5 +5,6 @@ export interface SubmissionDraft {
 	storyId: string
 	type: SubmissionTypes
 	content: string
+	additionalContent: string
 	completed: boolean
 }
