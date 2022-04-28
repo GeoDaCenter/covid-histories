@@ -31,7 +31,11 @@ const AvSwitch: React.FC<{ useVideo: boolean; toggleUseVideo: () => void }> = ({
 	toggleUseVideo
 }) => {
 	return (
-		<FormControl component="fieldset" variant="standard" sx={{marginBottom:'2em'}}>
+		<FormControl
+			component="fieldset"
+			variant="standard"
+			sx={{ marginBottom: '2em' }}
+		>
 			<FormLabel component="legend">Record video and audio?</FormLabel>
 			<FormGroup>
 				<FormControlLabel
@@ -78,15 +82,17 @@ const useGetMediaDevices = ({
 			const devices = await navigator.mediaDevices.enumerateDevices()
 			const video = devices.filter((f) => f.kind === 'videoinput')
 			const audio = devices.filter((f) => f.kind === 'audioinput')
-			const defaultVideo = video.find(f => f.deviceId === "default") || video[0]
-			const defaultAudio = audio.find(f => f.deviceId === "default") || audio[0]
+			const defaultVideo =
+				video.find((f) => f.deviceId === 'default') || video[0]
+			const defaultAudio =
+				audio.find((f) => f.deviceId === 'default') || audio[0]
 			if (defaultVideo !== undefined && defaultVideo.deviceId !== undefined) {
 				setVideoSource(defaultVideo)
 			}
 			if (defaultAudio !== undefined && defaultAudio.deviceId !== undefined) {
 				setAudioSource(defaultAudio)
 			}
-			
+
 			setAvailableDevices({
 				video,
 				audio
@@ -115,7 +121,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
 	return (
 		<Grid container spacing={1}>
 			<Grid item xs={12} md={6}>
-				<FormControl size="small" fullWidth sx={{marginBottom:'1em'}}>
+				<FormControl size="small" fullWidth sx={{ marginBottom: '1em' }}>
 					<InputLabel id="video-select-small">Select Video Source</InputLabel>
 					<Select
 						labelId="video-select-small"
@@ -137,7 +143,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
 				</FormControl>
 			</Grid>
 			<Grid item xs={12} md={6}>
-				<FormControl size="small" fullWidth sx={{marginBottom:'1em'}}>
+				<FormControl size="small" fullWidth sx={{ marginBottom: '1em' }}>
 					<InputLabel id="audio-select-small">Select Audio Source</InputLabel>
 					<Select
 						labelId="audio-select-small"
@@ -162,6 +168,29 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
 	)
 }
 
+const initialVideoConstraints: MediaStreamConstraints = {
+	height: {
+		min: 480,
+		max: 1920,
+		ideal: 1080
+	},
+	width: {
+		min: 640,
+		max: 1920,
+		ideal: 1920
+	}
+}
+
+const initialAudioConstraints: MediaStreamConstraints = {
+	sampleRate: {
+		min: 22500,
+		max: 96000,
+		ideal: 48000
+	},
+	sampleSize: 16,
+	channelCount: 2
+}
+
 export const AvSubmission: React.FC<StoryInputProps> = ({
 	handleCacheStory,
 	dbActive,
@@ -172,45 +201,32 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const toggleUseVideo = () => dispatch(toggleAudioVideo())
 	const [recordingTimeout, setRecordingTimeout] = useState(null)
 	const [cachedStory, setCachedStory] = useState<string>('')
-	const [videoSource, setVideoSource] = useState<MediaDeviceInfo>({} as MediaDeviceInfo)
-	const [audioSource, setAudioSource] = useState<MediaDeviceInfo>({} as MediaDeviceInfo)
+
+	const [videoConstraints, setVideoConstraints] =
+		useState<MediaStreamConstraints>(initialVideoConstraints)
+	const [audioConstrains, setAudioConstraints] =
+		useState<MediaStreamConstraints>(initialAudioConstraints)
+
 	const availableDevices = useGetMediaDevices({
-		setAudioSource,
-		setVideoSource
+		setVideoConstraints,
+		setAudioConstraints,
+		initialVideoConstraints,
+		initialAudioConstraints
 	})
+
+	const handleAudioSource = (device: string) => {
+		setAudioConstraints({
+			...initialAudioConstraints,
+			audioSource: { "exact": device }
+		})
+	}
+	const handleVideoSource = (device: string) => {
+		setVideoConstraints({
+			...initialVideoConstraints,
+			videoSource: { "exact": device }
+		})
+	}
 	
-	const videoConstraints: MediaTrackConstraints = useMemo(
-		() => ({
-			frameRate: { max: 30 },
-			height: {
-				min: 480,
-				max: 1920,
-				ideal: 1080
-			},
-			width: {
-				min: 640,
-				max: 1920,
-				ideal: 1920
-			},
-			deviceId: videoSource ? { exact: videoSource } : undefined
-		} as MediaTrackConstraints),
-		[videoSource]
-	)
-
-	const audioConstraints: MediaTrackConstraints = useMemo(
-		() => ({
-			sampleRate: {
-			  min: 22500,
-			  max: 96000,
-			  ideal: 48000,
-			},
-			sampleSize: 16,
-			channelCount: 2,
-			deviceId: audioSource ? { exact: audioSource } : undefined
-		} as MediaTrackConstraints),
-		[audioSource]
-	)
-
 	const {
 		status,
 		startRecording,
@@ -258,16 +274,18 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 				<Grid item xs={12} md={6}>
 					<p>Welcome! Getting started instructions...</p>
 					<AvSwitch useVideo={useVideo} toggleUseVideo={toggleUseVideo} />
-					<p>If your video does not appear while recording, try changing your video input below.
-					Same for sound.</p>
+					<p>
+						If your video does not appear while recording, try changing your
+						video input below. Same for sound.
+					</p>
 					<DeviceSelector
-					availableDevices={availableDevices}
-					// @ts-ignore
-					setVideoSource={setVideoSource}
-					// @ts-ignore
-					setAudioSource={setAudioSource}
-					videoSource={videoSource}
-					audioSource={audioSource}
+						availableDevices={availableDevices}
+						// @ts-ignore
+						handleVideoSource={handleVideoSource}
+						// @ts-ignore
+						handleAudioSource={handleAudioSource}
+						videoSource={videoSource}
+						audioSource={audioSource}
 					/>
 					{hasRecorded && (
 						<p>
