@@ -51,7 +51,7 @@ export const WrittenSubmissionEditor: React.FC<WrittenSubmissionEditorProps> = (
                 }
             })
         }
-    }, [dbActive, storyId])
+    }, [dbActive, storyId])  // eslint-disable-line
 //  TODO refactor editor directly into this file, clean up components
     return (
         <Box

@@ -33,11 +33,18 @@ export const submissionSlice = createSlice({
 	name: 'submission',
 	initialState,
 	reducers: {
-		reset: (state) => {
-			state = {
-				...initialState,
-				id: nanoid()
-			}
+		resetSubmission: (state) => {
+			state.step = 0,
+			state.type = 'video',
+			state.theme = '',
+			state.questions = [],
+			state.county = { label: '', value: 0 },
+			state.title = '',
+			state.consent = false,
+			state.optInResearch = false,
+			state.isUploading = false,
+			state.uploadProgress = 0,
+			state.id = nanoid()
 		},
 		incrementStep: (state) => {
 			state.step = state.step + 1

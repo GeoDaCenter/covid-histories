@@ -5,7 +5,7 @@ import {
 } from "./submissionSlice";
 
 const {    
-  reset,
+  resetSubmission,
   incrementStep,
   decrementStep,
   setType,
@@ -39,7 +39,7 @@ export {
   store, 
   persistor,
    
-  reset,
+  resetSubmission,
   incrementStep,
   decrementStep,
   setType,

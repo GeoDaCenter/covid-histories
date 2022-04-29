@@ -6,6 +6,7 @@ import { YourCovidExperience } from "./YourCovidExperience";
 import { Login } from "./Login";
 import { Survey } from "./Survey";
 import { Submit } from "./Submit";
+import { ThankYou } from "./ThankYou";
 
 export {
     GettingStarted,
@@ -15,5 +16,6 @@ export {
     YourCovidExperience,
     Login,
     Survey,
-    Submit
+    Submit,
+    ThankYou
 }

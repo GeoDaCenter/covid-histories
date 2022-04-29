@@ -48,7 +48,7 @@ export const PhotoLoader: React.FC<PhotoLoaderProps> = ({
       });
       handleCacheStory(urlObject)      
     }
-  }, [])
+  }, [])  // eslint-disable-line
 
   useEffect(() => {
     if (db && storyId?.length) {
@@ -61,7 +61,7 @@ export const PhotoLoader: React.FC<PhotoLoaderProps> = ({
         }
       })
     }
-  }, [dbActive, storyId])
+  }, [dbActive, storyId])  // eslint-disable-line
 
   useEffect(() => {
 		if (photoSource) {
@@ -73,7 +73,7 @@ export const PhotoLoader: React.FC<PhotoLoaderProps> = ({
 			}
 			generateBlob()
 		}
-  },[photoSource])
+  },[photoSource])  // eslint-disable-line
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
 

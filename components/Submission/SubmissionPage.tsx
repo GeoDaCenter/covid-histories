@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
 	incrementStep,
 	decrementStep,
-	reset,
 	selectStep,
 	selectId,
 	selectType,
 	selectTheme,
-	setTheme
+	setTheme,
+	resetSubmission
 } from '../../stores/submission'
 import { db, resetDatabase } from '../../stores/indexdb/db'
 // UI
@@ -40,7 +40,8 @@ const stepComponents = {
 	4: Steps.Login,
 	5: Steps.InputStory,
 	6: Steps.Submit,
-	7: Steps.Survey
+	7: Steps.Survey,
+	8: Steps.ThankYou
 }
 
 // const getCanProgress = ({
@@ -55,8 +56,10 @@ export const SubmissionPage: React.FC = () => {
 	const storyType = useSelector(selectType)
 	const handleBack = () => dispatch(decrementStep())
 	const handleNext = () => dispatch(incrementStep())
-	const handleReset = () => dispatch(reset())
-
+	const handleReset = () => {
+		dispatch(resetSubmission())
+		resetDatabase({})
+	}
 	const dbActive = typeof db
 	// const submissionDrafts: SubmissionDraft[] = useLiveQuery(() => db.submissions.toArray());
 	// const submissionIds = submissionDrafts?.map(entry => entry.storyId)
@@ -101,6 +104,7 @@ export const SubmissionPage: React.FC = () => {
 		// }
 		return ''
 	}
+	console.log(activeStep)
 
 	useEffect(() => {
 		if (db && storyId.length) {
@@ -141,7 +145,7 @@ export const SubmissionPage: React.FC = () => {
 					console.log(err)
 				})
 		}
-	}, [storyType])
+	}, [storyType, storyId.length])
 
 	// @ts-ignore
 	const CurrentStepComponent = stepComponents[activeStep]
@@ -163,6 +167,7 @@ export const SubmissionPage: React.FC = () => {
 				handleBack={handleBack}
 				handleNext={handleNext}
 				handleReset={handleReset}
+				canProgress={true}
 			/>
 			<SubmissionUploadModal />
 		</Box>

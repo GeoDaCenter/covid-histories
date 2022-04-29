@@ -1,14 +1,13 @@
 import { store, persistor } from '../store'
 import { selectors, actions } from './surveySlice'
 
-const { resetSurvey, setTextProperty, setAge } = actions
+const { resetSurvey, setTextProperty, setAge, toggleRace, setRaceDescription } =
+	actions
 
 const {
 	selectUserId,
 	selectSelfIdentifiedRace,
-	selectSelfIdentifiedRaceDescription,
 	selectPerceivedIdentifiedRace,
-	selectPerceivedIdentifiedRaceDescription,
 	selectGenderIdentity,
 	selectAge,
 	selectPlaceUrbanicity,
@@ -19,11 +18,11 @@ export {
 	resetSurvey,
 	setTextProperty,
 	setAge,
+	toggleRace,
+	setRaceDescription,
 	selectUserId,
 	selectSelfIdentifiedRace,
-	selectSelfIdentifiedRaceDescription,
 	selectPerceivedIdentifiedRace,
-	selectPerceivedIdentifiedRaceDescription,
 	selectGenderIdentity,
 	selectAge,
 	selectPlaceUrbanicity,
