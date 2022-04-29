@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
 import { nanoid } from '@reduxjs/toolkit'
-
+import hash from 'object-hash'
 // AWS
 const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.AWS_REGION })
@@ -14,16 +14,16 @@ const s3 = new AWS.S3({
 	region: process.env.APP_AWS_REGION
 })
 
-const prePath = 'uploads/'
-
 const config = {
 	REGION: process.env.APP_AWS_REGION,
 	STAGE: 'dev',
 	S3_BUCKET: process.env.APP_AWS_BUCKET
 }
 
-const clientParams = {
-	region: config.REGION
+interface QueryParams {
+	type: SubmissionType
+	fileType: string
+	key: string
 }
 
 export default withApiAuthRequired(async function handler(
@@ -31,26 +31,37 @@ export default withApiAuthRequired(async function handler(
 	res: NextApiResponse<string>
 ) {
 	const { query } = req
-	const { type, fileType, key } = query
-
 	// @ts-ignore
-	const { user } = getSession(req, res)
+	const { type, fileType, key }: QueryParams = query
+
+	const session = getSession(req, res)
+	const user = session?.user
+
 	if (user) {
-		//@ts-ignore
+		const hashedEmail = hash(user.email)
+		const prePath = 'uploads/' + hashedEmail + '/'
 		const { uploadURL, fileName, ContentType } = await getUploadURL(
-			// @ts-ignore
 			type,
 			key,
-			fileType
+			fileType,
+			prePath
 		)
-
-		res.status(200).json(
-			JSON.stringify({
-				uploadURL,
-				fileName,
-				ContentType
-			})
-		)
+		const metaResult = await uploadMeta(type, key, hashedEmail)
+		if (!metaResult || !uploadURL) {
+			res.status(500).json(
+				JSON.stringify({
+					error: 'The server failed to upload, please try again.'
+				})
+			)
+		} else {
+			res.status(200).json(
+				JSON.stringify({
+					uploadURL,
+					fileName,
+					ContentType
+				})
+			)
+		}
 	} else {
 		// Not Signed in
 		res.status(401).json(
@@ -83,6 +94,7 @@ const submissionTypeMap: {
 		ContentType: 'image/' // jpg, jpeg, png, tif, tiff, gif, bmp
 	}
 }
+
 const fileExtensionMap: { [fileType: string]: string } = {
 	'image/jpeg': '.jpg',
 	'image/png': '.png',
@@ -94,7 +106,8 @@ const fileExtensionMap: { [fileType: string]: string } = {
 async function getUploadURL(
 	type: SubmissionType,
 	key: string,
-	fileType: string
+	fileType: string,
+	prePath: string
 ) {
 	const ext: string =
 		fileExtensionMap[fileType] || submissionTypeMap[type].fileExtension
@@ -116,4 +129,27 @@ async function getUploadURL(
 		fileName,
 		ContentType
 	}
+}
+
+async function uploadMeta(
+	type: SubmissionType,
+	key: string,
+	hashedEmail: string
+) {
+	const now = new Date()
+	const uploadTimestamp = now.toISOString()
+	const uploadResult = await s3
+		.upload({
+			Bucket: config.S3_BUCKET,
+			ACL: 'private',
+			Key: `meta/${hashedEmail}/${key}.json`,
+			Body: JSON.stringify({
+				type,
+				uploadTimestamp
+			}),
+			ContentType: 'application/json'
+		})
+		.promise()
+
+	return uploadResult
 }
