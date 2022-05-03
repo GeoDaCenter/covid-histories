@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import colors from "../config/colors";
 import { Button, Popover, Typography } from "@mui/material";
-// import { hamburger, close } from '../../config/svg';
+import { signOut } from "next-auth/react"
 
 const NavBarOuterContainer = styled.div`
   width: 100%;
@@ -127,6 +127,16 @@ const NavHamburger = styled.button`
   }
 `;
 
+const DropDownNav = styled.ul`
+  list-style: none;
+  margin-left:0;
+  padding:0 1em;
+  li {
+    text-decoration:underline;  
+    padding: 0.25em;
+  }
+`
+
 export const TopBar: React.FC = () => {
   const [navOpen, setNavOpen] = useState(false);
   const toggleNavOpen = () => setNavOpen((prev) => !prev);
@@ -152,8 +162,9 @@ export const TopBar: React.FC = () => {
         <NavLogo>
           <Link href="/">
             <a>
-              Atlas
-              <span>Stories</span>
+              <Typography fontSize="1.5rem">
+              Atlas <span className="cursive">Stories</span>
+              </Typography>
             </a></Link>
         </NavLogo>
         {/* @ts-ignore */}
@@ -169,14 +180,14 @@ export const TopBar: React.FC = () => {
                 <a>ABOUT</a>
               </Link>
             </li>
-            <li>
+            <li style={{marginRight:'.25em'}}> 
               <Link href="/privacy">
                 <a>PRIVACY</a>
               </Link>
             </li>
             {user ? (
               <>
-                <li><Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', background: colors.orange }}>
+                <li><Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', marginLeft:'0.5em', background: colors.orange }}>
                   {user.name}
                 </Button>
                   <Popover
@@ -190,7 +201,7 @@ export const TopBar: React.FC = () => {
                     }}
                     usePortal={false}
                   >
-                    <ul className="drop-down-nav">
+                    <DropDownNav>
                       <li>
                         <Link href="/privacy">
                           <a>My Stories</a>
@@ -202,11 +213,11 @@ export const TopBar: React.FC = () => {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/privacy">
+                        <Link href="/api/auth/logout">
                           <a>Logout</a>
                         </Link>
                       </li>
-                    </ul>
+                    </DropDownNav>
                   </Popover></li>
 
               </>

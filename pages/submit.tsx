@@ -11,7 +11,11 @@ export default function Submit() {
       <Head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons&family=Kalam:wght@300"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
         />
       </Head>
       <Provider store={store}>

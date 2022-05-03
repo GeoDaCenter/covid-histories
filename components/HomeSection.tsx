@@ -16,7 +16,7 @@ export const HomeSection: React.FC<{
         ...sx
       }}
     >
-      <Box sx={{maxWidth: '1140px', margin:'0 auto', display:'block'}}>{children}</Box>
+      <Box sx={{maxWidth: '1140px', margin:'0 auto', padding:'1em', display:'block'}}>{children}</Box>
     </Box>
   );
 };

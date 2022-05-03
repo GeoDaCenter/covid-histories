@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectType } from '../../../stores/submission'
@@ -25,7 +25,7 @@ export const InputStory: React.FC<StepComponentProps> = ({
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>
-				<h2>Make your story</h2>
+				<Typography variant="h2">Make your story</Typography>
 			</Grid>
 			<Grid item xs={12}>
 				{SubmissionComponent !== undefined && (

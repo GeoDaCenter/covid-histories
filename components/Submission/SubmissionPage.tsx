@@ -104,7 +104,6 @@ export const SubmissionPage: React.FC = () => {
 		// }
 		return ''
 	}
-	console.log(activeStep)
 
 	useEffect(() => {
 		if (db && storyId.length) {
@@ -150,7 +149,7 @@ export const SubmissionPage: React.FC = () => {
 	// @ts-ignore
 	const CurrentStepComponent = stepComponents[activeStep]
 	return (
-		<Box sx={{ minHeight: '100vh', maxWidth: '1140px', margin: '0 auto' }}>
+		<Box sx={{ minHeight: '100vh', maxWidth: '1140px', margin: '1.5em auto' }}>
 			{/* <StepComponent /> */}
 			{/* {currentStepComponent} */}
 			<CurrentStepComponent

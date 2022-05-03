@@ -1,10 +1,14 @@
 import {
+	Box,
 	Button,
 	Checkbox,
 	FormControlLabel,
 	FormGroup,
 	Grid,
-	TextField
+	TextField,
+	Typography,
+	Tabs,
+	Tab
 } from '@mui/material'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,8 +29,15 @@ import * as StoryInput from '../StoryInput'
 import { db, resetDatabase } from '../../../stores/indexdb/db'
 import { StepComponentProps } from './types'
 import { CountySelect } from '../SubmissionUtil/CountySelect'
+import { StoryPreview } from '../StoryPreview'
+import dynamic from 'next/dynamic'
 
-const str2blob = (txt: string): Blob => new Blob([txt], { type: 'text/markdown' })
+const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
+	ssr: false
+})
+
+const str2blob = (txt: string): Blob =>
+	new Blob([txt], { type: 'text/markdown' })
 const base64ToBlob = (base64: string, type: string) => {
 	const byteCharacters = atob(base64)
 	const byteNumbers = new Array(byteCharacters.length)
@@ -38,20 +49,31 @@ const base64ToBlob = (base64: string, type: string) => {
 	return blob
 }
 
-export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) => {
+export const Submit: React.FC<StepComponentProps> = ({
+	storyId,
+	handleNext
+}) => {
 	const storyType = useSelector(selectType)
 	const title = useSelector(selectTitle)
 	const county = useSelector(selectCounty)
 	const consent = useSelector(selectConsent)
 	const optInResearch = useSelector(selectOptInResearch)
 	const dispatch = useDispatch()
+	const [tab, setTab] = React.useState(0)
+
+	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+		setTab(newValue)
+	}
 
 	const handleTitle = (text: string) => dispatch(setTitle(text))
-	const handleCounty = (_e: React.SyntheticEvent, county: {label:string, value:number}) => {
+	const handleCounty = (
+		_e: React.SyntheticEvent,
+		county: { label: string; value: number }
+	) => {
 		if (county?.label) {
 			dispatch(setCounty(county))
 		} else {
-			dispatch(setCounty({label:'', value:-1}))
+			dispatch(setCounty({ label: '', value: -1 }))
 		}
 	}
 	const handleConsent = () => dispatch(toggleConsent())
@@ -60,14 +82,14 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) =>
 		dispatch(toggleIsUploading())
 		handleNext()
 		resetDatabase({
-			storyId: ""
+			storyId: ''
 		})
 	}
 	const handleFailedUpload = () => {
 		dispatch(toggleIsUploading())
 		console.log('upload failed try again')
 	}
-	const handleSendFile = (blob: Blob, url: string, quiet:boolean=false) => {
+	const handleSendFile = (blob: Blob, url: string, quiet: boolean = false) => {
 		!quiet && dispatch(toggleIsUploading())
 		let request: XMLHttpRequest = new XMLHttpRequest()
 		request.open('PUT', url)
@@ -103,12 +125,11 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) =>
 		const { uploadURL, fileName, ContentType } = response
 		if (fileName && uploadURL && entry?.content) {
 			try {
-                const blob = entry.type === "written"
-                    ? str2blob(entry.content)
-                    : entry.content
-                if (typeof blob === 'object'){
-                    handleSendFile(blob, uploadURL)
-                }
+				const blob =
+					entry.type === 'written' ? str2blob(entry.content) : entry.content
+				if (typeof blob === 'object') {
+					handleSendFile(blob, uploadURL)
+				}
 			} catch {
 				handleFailedUpload()
 			}
@@ -119,41 +140,44 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) =>
 
 	return (
 		<Grid container spacing={2}>
-			<Grid item xs={12}>
-				<h2>Submit your story</h2>
-			</Grid>
 			<Grid item xs={12} md={6}>
+				<Typography variant="h2" sx={{marginBottom:'.5em'}}>Submit Your Story</Typography>
 				<CountySelect onChange={handleCounty} value={county} />
-				<br />
-				<br />
 				<TextField
 					label="What would you like to title your story? (optional)"
 					value={title}
 					onChange={(e) => handleTitle(e.target.value)}
 					fullWidth
+					sx={{ margin: '1rem 0' }}
 				/>
-				<p>
-					By submitting your story, you agree that:
-					<ul>
-						<li>You are over 18</li>
-						<li>We can publish your story</li>
-						<li>You agree to the full license terms [here]</li>
-					</ul>
+				<Typography>By submitting your story, you agree that:</Typography>
+				<ul>
+					<li>
+						<Typography>You are over 18</Typography>
+					</li>
+					<li>
+						<Typography>We can publish your story</Typography>
+					</li>
+					<li>
+						<Typography>You agree to the full license terms [here]</Typography>
+					</li>
+				</ul>
+				<Typography>
 					You get to keep your story, and use it however you’d like. At any time
 					you want to remove it, come back here, login, and mark the story for
 					removal.
-				</p>
+				</Typography>
 				<FormGroup>
 					<FormControlLabel
 						control={<Checkbox onChange={handleConsent} checked={consent} />}
 						label="I agree to the license terms"
 					/>
 				</FormGroup>
-				<p>
+				<Typography>
 					If you’d like to be considered for paid research opportunities in the
 					future. If I am selected to participate, I would receive $50
 					compensation for my time.
-				</p>
+				</Typography>
 				<FormGroup>
 					<FormControlLabel
 						control={
@@ -165,21 +189,67 @@ export const Submit: React.FC<StepComponentProps> = ({ storyId, handleNext }) =>
 						label="I want to participate in future research"
 					/>
 				</FormGroup>
-				<br />
-				<br />
-			</Grid>
-			<Grid item xs={12} md={6}>
-				Story preview
-				<br />
-				<br />
 				<Button
 					variant="contained"
 					onClick={handleSubmit}
 					disabled={!canSubmit}
+					sx={{ marginTop: '1rem', textTransform: 'none' }}
 				>
 					Submit
 				</Button>
 			</Grid>
+			<Grid item xs={12} md={6}>
+				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+					<Tabs
+						value={tab}
+						onChange={handleChangeTab}
+						aria-label="basic tabs example"
+					>
+						<Tab label="Preview Your Story" {...a11yProps(0)} />
+						<Tab label="Preview Your County" {...a11yProps(1)} />
+					</Tabs>
+				</Box>
+
+				<TabPanel value={tab} index={0}>
+					<Box sx={{ marginBottom: '2em' }}>
+						<StoryPreview type={storyType} />
+					</Box>
+				</TabPanel>
+				<TabPanel value={tab} index={1}>
+					{county && (
+						<Box>
+							<CountyPreview county={county} />
+						</Box>
+					)}
+				</TabPanel>
+			</Grid>
 		</Grid>
 	)
+}
+// @ts-ignore
+function TabPanel(props) {
+	const { children, value, index, ...other } = props
+
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && (
+				<Box sx={{ p: 3 }}>
+					<Typography>{children}</Typography>
+				</Box>
+			)}
+		</div>
+	)
+}
+
+function a11yProps(index: number) {
+	return {
+		id: `simple-tab-${index}`,
+		'aria-controls': `simple-tabpanel-${index}`
+	}
 }

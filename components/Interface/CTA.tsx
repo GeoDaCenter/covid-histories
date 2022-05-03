@@ -22,7 +22,8 @@ export const CtaLink = styled.a`
   padding: 0.5em 1em;
   border-radius: 0.25em;
   font-weight: bold;
-  margin: 4em 0;
+  margin: 2em 0;
+  display:inline-block;
   transition: 250ms box-shadow;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0);
   &:hover {
