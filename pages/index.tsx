@@ -71,7 +71,8 @@ const Home: NextPage = () => {
 								aspectRatio: '1.778'
 							}}
 						>
-							<Image layout="fill" src="/images/person-recording.jpg" />
+							photo(s) here
+							{/* <Image layout="fill" src="/images/person-recording.jpg" /> */}
 						</Box>
 					</Grid>
 				</Grid>

@@ -23,7 +23,8 @@ import {
 	toggleConsent,
 	toggleOptInResearch,
 	toggleIsUploading,
-	setUploadProgress
+	setUploadProgress,
+	selectTheme
 } from '../../../stores/submission'
 import * as StoryInput from '../StoryInput'
 import { db, resetDatabase } from '../../../stores/indexdb/db'
@@ -38,15 +39,12 @@ const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 
 const str2blob = (txt: string): Blob =>
 	new Blob([txt], { type: 'text/markdown' })
-const base64ToBlob = (base64: string, type: string) => {
-	const byteCharacters = atob(base64)
-	const byteNumbers = new Array(byteCharacters.length)
-	for (let i = 0; i < byteCharacters.length; i++) {
-		byteNumbers[i] = byteCharacters.charCodeAt(i)
-	}
-	const byteArray = new Uint8Array(byteNumbers)
-	const blob = new Blob([byteArray], { type })
-	return blob
+
+const getSubmissionUrl = async (storyId: string, type: string, additionalParams?: string): Promise<string> => {
+	const response = await fetch(
+		`/api/upload/request_url?type=${type}&key=${storyId}${additionalParams||''}`
+	).then((res) => res.json())
+	return response?.uploadURL
 }
 
 export const Submit: React.FC<StepComponentProps> = ({
@@ -58,6 +56,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 	const county = useSelector(selectCounty)
 	const consent = useSelector(selectConsent)
 	const optInResearch = useSelector(selectOptInResearch)
+	const theme = useSelector(selectTheme)
 	const dispatch = useDispatch()
 	const [tab, setTab] = React.useState(0)
 
@@ -106,27 +105,42 @@ export const Submit: React.FC<StepComponentProps> = ({
 	const handleSubmit = async () => {
 		const entry = await db.submissions.get(0)
 		if (entry?.additionalContent) {
-			const response = await fetch(
-				`/api/upload/request_url?type=written&key=${storyId}`
-			).then((res) => res.json())
-			const { uploadURL, fileName, ContentType } = response
-			if (fileName && uploadURL) {
+			const additionalContentURL = await getSubmissionUrl(storyId, 'written')
+			if (additionalContentURL) {
 				const blob = str2blob(entry.additionalContent)
-				handleSendFile(blob, uploadURL, true)
+				handleSendFile(blob, additionalContentURL, true)
 			}
 		}
-		let fetchUrl = `/api/upload/request_url?type=${storyType}&key=${storyId}`
-		// @ts-ignore
-		if (storyType === 'photo' && entry?.content?.type) {
-			// @ts-ignore
-			fetchUrl += '&fileType=' + entry?.content?.type
+		const metaUploadURL = await getSubmissionUrl(storyId + "_meta", 'meta')
+		if (metaUploadURL) {
+			const meta = {
+				title,
+				county,
+				consent,
+				storyId,
+				storyType,
+				theme,
+				date: new Date().toISOString(),
+				// additionalTags
+			}
+			const blob = str2blob(JSON.stringify(meta))
+			handleSendFile(blob, metaUploadURL, true)
 		}
-		const response = await fetch(fetchUrl).then((res) => res.json())
-		const { uploadURL, fileName, ContentType } = response
-		if (fileName && uploadURL && entry?.content) {
+
+		// @ts-ignore
+		const additionalParams = storyType === 'photo' && entry?.content?.type
+			// @ts-ignore
+			? '&fileType=' + entry?.content?.type
+			: ''
+
+		const uploadURL = await getSubmissionUrl(storyId, storyType, additionalParams)
+
+		if (uploadURL && entry?.content) {
 			try {
-				const blob =
-					entry.type === 'written' ? str2blob(entry.content) : entry.content
+				const blob = entry.type === 'written'
+					? str2blob(entry.content)
+					: entry.content
+
 				if (typeof blob === 'object') {
 					handleSendFile(blob, uploadURL)
 				}
@@ -141,7 +155,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12} md={6}>
-				<Typography variant="h2" sx={{marginBottom:'.5em'}}>Submit Your Story</Typography>
+				<Typography variant="h2" sx={{ marginBottom: '.5em' }}>Submit Your Story</Typography>
 				<CountySelect onChange={handleCounty} value={county} />
 				<TextField
 					label="What would you like to title your story? (optional)"
