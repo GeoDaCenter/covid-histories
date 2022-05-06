@@ -38,16 +38,17 @@ export const submissionSlice = createSlice({
 	initialState,
 	reducers: {
 		resetSubmission: (state) => {
-			state.step = 0,
-			state.type = 'video',
-			state.theme = '',
-			state.questions = [],
-			state.county = { label: '', value: 0 },
-			state.title = '',
-			state.consent = false,
-			state.optInResearch = false,
-			state.isUploading = false,
-			state.uploadProgress = 0,
+			state.step = 0
+			state.type = 'video'
+			state.theme = ''
+			state.questions = []
+			state.county = { label: '', value: 0 }
+			state.title = ''
+			state.consent = false
+			state.optInResearch = false
+			state.isUploading = false
+			state.uploadProgress = 0
+			state.tags = []
 			state.id = nanoid()
 		},
 		incrementStep: (state) => {

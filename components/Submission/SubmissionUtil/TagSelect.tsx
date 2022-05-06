@@ -36,7 +36,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
           labelId="demo-multiple-name-label"
           id="demo-multiple-name"
           multiple
-          value={tags}
+          value={tags||['']}
           onChange={(e) => onChange(e?.target?.value)}
         >
           {allTags.map((tag) => (
@@ -44,7 +44,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
               key={tag}
               value={tag}
               style={{
-                fontWeight: tags.includes(tag) ? 'bold' : 'normal',
+                fontWeight: tags?.includes(tag) ? 'bold' : 'normal',
               }}
             >
               {tag}

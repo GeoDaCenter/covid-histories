@@ -87,7 +87,7 @@ const StoryPreviews: React.FC<StoryPreviewProps> = ({ stories }) => {
 								A {storyType} story about {theme?.toLowerCase()}
 							</Typography>
 							<Typography>In {county.label}</Typography>
-							<Typography>Tags: {tags.join(', ')}</Typography>
+							<Typography>Tags: {tags?.join(', ')}</Typography>
 							<Button
 								variant="contained"
 								sx={{ my: 2 }}

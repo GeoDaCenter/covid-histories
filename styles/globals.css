@@ -20,3 +20,15 @@ a {
 h1, h2, h3, h4, h5, h6, .cursive {
   font-family: 'Kalam', cursive;
 }
+
+
+/* MARKDOWN PAGES */
+.md-content {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding:2em;
+}
+
+.md-content a {
+  color: #00bcd4;
+}
