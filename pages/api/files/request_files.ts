@@ -23,11 +23,11 @@ export default withApiAuthRequired(async function handler(
 ) {
 	// @ts-ignore
 	const { user } = getSession(req, res)
-	if (user) {			
+	if (user) {
 		const encrypted = hash(user.email)
 		const prefix = `uploads/${encrypted}`
 		const currentFiles: FileListReturn | undefined = await getFileList(s3, S3_BUCKET, prefix)
-		const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').at(-1), LastModified}))
+		const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified}))
 		
 		const presignedGets = await Promise.all(
 			fileNames?.map(({Key, LastModified}) => 
@@ -44,7 +44,7 @@ export default withApiAuthRequired(async function handler(
 				{...meta, 
 					content: presignedGets
 						.filter(f => f.fileName?.includes(meta.storyId) && !f.fileName?.includes('_meta.json'))
-						.map(f => ({...f, fileType: f.fileName?.split('.').at(-1)}))
+						.map(f => ({...f, fileType: f.fileName?.split('.').slice(-1)[0]}))
 				}
 			))
 		

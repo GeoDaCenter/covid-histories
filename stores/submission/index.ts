@@ -18,7 +18,8 @@ const {
   toggleAudioVideo,
   toggleOptInResearch,
   toggleIsUploading,
-  setUploadProgress
+  setUploadProgress,
+  setTags
 } = actions;
 
 const {
@@ -32,7 +33,8 @@ const {
     selectOptInResearch,
     selectId,
     selectIsUploading,
-    selectUploadProgress
+    selectUploadProgress,
+    selectTags
 } = selectors;
 
 export {
@@ -53,6 +55,7 @@ export {
   toggleOptInResearch,
   toggleIsUploading,
   setUploadProgress,
+  setTags,
 
   selectStep,
   selectType,
@@ -64,5 +67,6 @@ export {
   selectOptInResearch,
   selectId,
   selectIsUploading,
-  selectUploadProgress
+  selectUploadProgress,
+  selectTags
 };

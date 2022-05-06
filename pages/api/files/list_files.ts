@@ -26,7 +26,7 @@ export default withApiAuthRequired(async function handler(
 		const encrypted = hash(user.email)
 		const prefix = `uploads/${encrypted}`
 		const currentFiles: FileListReturn | undefined = await getFileList(s3, S3_BUCKET, prefix)
-		const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').at(-1), LastModified}))
+		const fileNames = currentFiles ? currentFiles?.Contents?.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified})) : []
 		const numberOfSubmissions = fileNames?.filter(f => f.Key?.includes('_meta.json')).length
 
 		res.status(200).json(

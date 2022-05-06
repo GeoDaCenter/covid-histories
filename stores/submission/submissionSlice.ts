@@ -13,6 +13,7 @@ export interface SubmissionState {
 	id: string
 	isUploading: boolean
 	uploadProgress: number
+	tags: string[]
 }
 
 const initialState: SubmissionState = {
@@ -26,8 +27,11 @@ const initialState: SubmissionState = {
 	consent: false,
 	optInResearch: false,
 	isUploading: false,
-	uploadProgress: 0
+	uploadProgress: 0,
+	tags: []
 }
+
+const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
 
 export const submissionSlice = createSlice({
 	name: 'submission',
@@ -71,6 +75,9 @@ export const submissionSlice = createSlice({
 		},
 		removeQuestions: (state, action: PayloadAction<string>) => {
 			state.questions = state.questions.filter((q) => q !== action.payload)
+		},
+		setTags: (state, action: PayloadAction<string[]>) => {
+			state.tags = action.payload
 		},
 		setCounty: (
 			state,
@@ -118,5 +125,6 @@ export const selectors = {
 	selectIsUploading: (state: SubmissionStateOuter) =>
 		state.submission.isUploading,
 	selectUploadProgress: (state: SubmissionStateOuter) =>
-		state.submission.uploadProgress
+		state.submission.uploadProgress,
+	selectTags: (state: SubmissionStateOuter) => state.submission.tags
 }

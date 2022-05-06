@@ -85,10 +85,9 @@ export async function getPresignedUrl(
 			ContentType
 			// ACL: 'public-read'
 		}
-		const uploadURL = await s3.getSignedUrlPromise(operation, s3Params)
-
+		const url = await s3.getSignedUrlPromise(operation, s3Params)
 		return {
-			uploadURL,
+			url,
 			fileName,
 			ContentType
 		}

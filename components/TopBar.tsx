@@ -7,6 +7,7 @@ import styled, { keyframes } from "styled-components";
 import colors from "../config/colors";
 import { Button, Popover, Typography } from "@mui/material";
 import { signOut } from "next-auth/react"
+import { useRouter } from "next/router";
 
 const NavBarOuterContainer = styled.div`
   width: 100%;
@@ -138,6 +139,8 @@ const DropDownNav = styled.ul`
 `
 
 export const TopBar: React.FC = () => {
+  const {pathname} = useRouter();
+  const pathName = ''
   const [navOpen, setNavOpen] = useState(false);
   const toggleNavOpen = () => setNavOpen((prev) => !prev);
   const { user } = useUser();
@@ -203,12 +206,12 @@ export const TopBar: React.FC = () => {
                   >
                     <DropDownNav>
                       <li>
-                        <Link href="/privacy">
+                        <Link href="/mystories">
                           <a>My Stories</a>
                         </Link>
                       </li>
                       <li>
-                        <Link href="/privacy">
+                        <Link href="/help">
                           <a>Help</a>
                         </Link>
                       </li>
@@ -222,7 +225,7 @@ export const TopBar: React.FC = () => {
 
               </>
             ) : (
-              <li><Link href="/api/auth/login"><a>LOGIN</a></Link></li>
+              <li><Link href={`/api/auth/login?redirect=${pathname}`}><a>LOGIN</a></Link></li>
             )}
           </ul>
         </NavItems>

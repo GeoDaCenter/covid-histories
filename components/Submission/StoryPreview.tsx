@@ -12,41 +12,9 @@ const Container = styled(Box)`
 	}
 `
 // @ts-ignore
-export const StoryPreview: React.FC<{ type: SubmissionTypes }> = ({ type }) => {
-	const [content, setContent] = useState<any | null>(null)
-	const [additionalContent, setAdditionalContent] = useState<any | null>(null)
-	useEffect(() => {
-		const getContent = async () => {
-			const entry = await db.submissions.get(0)
-
-			if (entry?.content) {
-				switch (type) {
-					case 'written':{
-						setContent(entry.content)
-						return
-                    }
-					case 'photo':{
-						// @ts-ignore
-						const tempUrl = URL.createObjectURL(entry.content)
-						setContent(tempUrl)
-                        setAdditionalContent(entry.additionalContent)
-						return
-                    }
-					case 'video': {
-						// @ts-ignore
-						const tempUrl = URL.createObjectURL(entry.content)
-						setContent(tempUrl)
-						return
-                    }
-					default:
-						return
-				}
-			}
-		}
-		getContent()
-	}, [type])
+export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, additionalContent: any|null }> = ({ type, content, additionalContent }) => {
 	if (!content) return null
-
+	
 	switch (type) {
 		case 'video':
 			return (

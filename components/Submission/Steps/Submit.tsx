@@ -10,7 +10,7 @@ import {
 	Tabs,
 	Tab
 } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	selectConsent,
@@ -24,7 +24,9 @@ import {
 	toggleOptInResearch,
 	toggleIsUploading,
 	setUploadProgress,
-	selectTheme
+	selectTheme,
+	selectTags,
+	setTags
 } from '../../../stores/submission'
 import * as StoryInput from '../StoryInput'
 import { db, resetDatabase } from '../../../stores/indexdb/db'
@@ -32,6 +34,7 @@ import { StepComponentProps } from './types'
 import { CountySelect } from '../SubmissionUtil/CountySelect'
 import { StoryPreview } from '../StoryPreview'
 import dynamic from 'next/dynamic'
+import { TagSelect } from '../SubmissionUtil/TagSelect'
 
 const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 	ssr: false
@@ -42,7 +45,7 @@ const str2blob = (txt: string): Blob =>
 
 const getSubmissionUrl = async (storyId: string, type: string, additionalParams?: string): Promise<string> => {
 	const response = await fetch(
-		`/api/upload/request_url?type=${type}&key=${storyId}${additionalParams||''}`
+		`/api/files/request_url?type=${type}&key=${storyId}${additionalParams||''}`
 	).then((res) => res.json())
 	return response?.uploadURL
 }
@@ -57,13 +60,45 @@ export const Submit: React.FC<StepComponentProps> = ({
 	const consent = useSelector(selectConsent)
 	const optInResearch = useSelector(selectOptInResearch)
 	const theme = useSelector(selectTheme)
+	const tags = useSelector(selectTags)
 	const dispatch = useDispatch()
 	const [tab, setTab] = React.useState(0)
+	const [content, setContent] = useState<any | null>(null)
+	const [additionalContent, setAdditionalContent] = useState<any | null>(null)
+
+	useEffect(() => {
+		const getContent = async () => {
+			const entry = await db.submissions.get(0)
+			if (entry?.content) {
+				switch (storyType) {
+					case 'written':{
+						setContent(entry.content)
+						return
+                    }
+					case 'photo':{
+						// @ts-ignore
+						const tempUrl = URL.createObjectURL(entry.content)
+						setContent(tempUrl)
+                        setAdditionalContent(entry.additionalContent)
+						return
+                    }
+					case 'video': {
+						// @ts-ignore
+						const tempUrl = URL.createObjectURL(entry.content)
+						setContent(tempUrl)
+						return
+                    }
+					default:
+						return
+				}
+			}
+		}
+		getContent()
+	}, [storyType])
 
 	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
 		setTab(newValue)
 	}
-
 	const handleTitle = (text: string) => dispatch(setTitle(text))
 	const handleCounty = (
 		_e: React.SyntheticEvent,
@@ -101,6 +136,9 @@ export const Submit: React.FC<StepComponentProps> = ({
 		})
 		request.send(blob)
 	}
+	const handleTag = (tags: string[]) => {
+		dispatch(setTags(tags))
+	}
 
 	const handleSubmit = async () => {
 		const entry = await db.submissions.get(0)
@@ -120,6 +158,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 				storyId,
 				storyType,
 				theme,
+				tags,
 				date: new Date().toISOString(),
 				// additionalTags
 			}
@@ -164,6 +203,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 					fullWidth
 					sx={{ margin: '1rem 0' }}
 				/>
+				<TagSelect onChange={handleTag} tags={tags} />
 				<Typography>By submitting your story, you agree that:</Typography>
 				<ul>
 					<li>
@@ -226,7 +266,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 
 				<TabPanel value={tab} index={0}>
 					<Box sx={{ marginBottom: '2em' }}>
-						<StoryPreview type={storyType} />
+						<StoryPreview type={storyType} content={content} additionalContent={additionalContent} />
 					</Box>
 				</TabPanel>
 				<TabPanel value={tab} index={1}>

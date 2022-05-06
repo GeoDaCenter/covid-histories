@@ -38,6 +38,7 @@ export default withApiAuthRequired(async function handler(
 		)
 		const metaResult = await uploadMeta(s3, type, key, hashedEmail)
 		if (!metaResult || !uploadURL) {
+			console.log(metaResult, uploadURL)
 			res.status(500).json(
 				JSON.stringify({
 					error: 'The server failed to upload, please try again.'
