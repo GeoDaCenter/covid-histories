@@ -147,7 +147,7 @@ const MyStories: NextPage = () => {
 				{user?.email ? (
 					<Grid container sx={{ width: '100%' }}>
 						<Typography variant="h1">My Stories</Typography>
-						{!data?.length ? (
+						{data?.length ? (
 							<StoryPreviews stories={data} />
 						) : (
 							<Grid item xs={12}>
