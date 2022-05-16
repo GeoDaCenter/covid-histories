@@ -81,7 +81,7 @@ const SurveyForm: React.FC<{ handleNext: () => void }> = ({
         autoComplete="off"
         noValidate
     >
-        <Typography variant="h1">Tell us about yourself</Typography>
+        <Typography variant="h3">Tell us about yourself</Typography>
         <PaddedFormGroup>
             <Typography variant="h6">
                 What is your self-identified race and/or ethnicity? <i>Select all that apply:</i>

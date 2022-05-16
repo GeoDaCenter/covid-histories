@@ -206,7 +206,7 @@ export const TopBar: React.FC = () => {
                   >
                     <DropDownNav>
                       <li>
-                        <Link href="/mystories">
+                        <Link href="/my-stories">
                           <a>My Stories</a>
                         </Link>
                       </li>

@@ -134,3 +134,16 @@ export async function uploadMeta(
 
 	return uploadResult
 }
+
+export async function deleteObject(
+	s3: any,
+	Bucket: string,
+	Key: string
+){
+	return s3
+		.deleteObject({
+			Bucket,
+			Key
+		})
+		.promise()
+}

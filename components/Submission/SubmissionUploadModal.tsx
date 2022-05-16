@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Modal, Box, Typography, LinearProgress } from '@mui/material'
 import { selectIsUploading, selectUploadProgress } from '../../stores/submission'
 import colors from '../../config/colors'
+import { Survey } from './Steps'
 
 const style = {
     position: 'fixed',
@@ -11,7 +12,9 @@ const style = {
     transform: 'translate(-50%, -50%)',
     background: colors.darkgray,
     padding: '2em',
-    maxWidth: '90vw'
+    maxWidth: '90vw',
+	maxHeight: '90vh',
+	overflowY: 'auto',
 }
 
 export const SubmissionUploadModal: React.FC = () => {
@@ -21,7 +24,6 @@ export const SubmissionUploadModal: React.FC = () => {
 	return (
 		<Modal
 			open={open}
-			// onClose={handleClose}
 			aria-labelledby="modal-modal-title"
 			aria-describedby="modal-modal-description"
 		>
@@ -36,6 +38,8 @@ export const SubmissionUploadModal: React.FC = () => {
 				<Typography id="form-modal-description" sx={{padding:'1em 0'}}>
                     While you wait, please tell us a bit about yourself!
 				</Typography>
+				{/* @ts-ignore */}
+				<Survey />
 			</Box>
 		</Modal>
 	)
