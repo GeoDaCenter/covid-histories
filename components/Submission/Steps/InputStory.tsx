@@ -21,7 +21,7 @@ export const InputStory: React.FC<StepComponentProps> = ({
 }) => {
 	const submissionType = useSelector(selectType)
 	const SubmissionComponent = inputComponentMap[submissionType]
-
+	
 	return (
 		<Grid container spacing={2}>
 			<Grid item xs={12}>

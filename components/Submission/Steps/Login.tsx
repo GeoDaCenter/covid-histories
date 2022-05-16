@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CtaButton, CtaLink } from "../../Interface/CTA";
 import Link from "next/link";
 import { Grid, Typography } from "@mui/material";
 import { useUser } from "@auth0/nextjs-auth0";
 import { StepComponentProps } from "./types";
+import { useDispatch } from "react-redux";
+import { setEmailVerified } from "../../../stores/submission";
 
 export const Login: React.FC<StepComponentProps> = ({
     handleNext
 }) => {
     const { user } = useUser();
+    const dispatch = useDispatch();
+    
+    useEffect(() => {
+        if (user?.email?.length && user?.email_verified){
+            dispatch(setEmailVerified())   
+        }
+    },[user?.email, user?.email_verified])
 
     return !!user ? (
         <Grid container>

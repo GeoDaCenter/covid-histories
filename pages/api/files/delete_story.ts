@@ -49,29 +49,6 @@ export default withApiAuthRequired(async function handler(
                 })
             )
         }
-        // console.log(currentFiles)
-		// const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified}))
-		
-		// const presignedGets = await Promise.all(
-		// 	fileNames?.map(({Key, LastModified}) => 
-		// 		getPresignedUrl(s3, '', Key||'', '', `uploads/${encrypted}/`, 'getObject')
-		// 	)||[])	
-				
-		// const metaData = await Promise.all(
-		// 	presignedGets
-		// 		.filter(f => f.fileName?.includes('_meta.json'))
-		// 		.map(f => fetch(f.url).then(r => r.json()))
-		// )
-		// const mergedData = metaData
-		// 	.map((meta) => (
-		// 		{...meta, 
-		// 			content: presignedGets
-		// 				.filter(f => f.fileName?.includes(meta.storyId) && !f.fileName?.includes('_meta.json'))
-		// 				.map(f => ({...f, fileType: f.fileName?.split('.').slice(-1)[0]}))
-		// 		}
-		// 	))
-		
-
 	} else {
 		// Not Signed in
 		res.status(401).json(

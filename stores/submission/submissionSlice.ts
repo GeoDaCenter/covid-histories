@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { nanoid } from '@reduxjs/toolkit'
+import { CustomerProfilesEntityAssignmentsPage } from 'twilio/lib/rest/trusthub/v1/customerProfiles/customerProfilesEntityAssignments';
+import { canProgressFns, canGoBackFns } from '../../components/Submission/SubmissionPage';
+
 export type SubmissionTypes = 'audio' | 'video' | 'written' | 'photo' | 'phone'
 export interface SubmissionState {
 	step: number
@@ -14,6 +17,10 @@ export interface SubmissionState {
 	isUploading: boolean
 	uploadProgress: number
 	tags: string[]
+	emailVerified: boolean
+	hasEnteredContent: boolean
+	canProgress: boolean
+	canGoBack: boolean
 }
 
 const initialState: SubmissionState = {
@@ -28,7 +35,11 @@ const initialState: SubmissionState = {
 	optInResearch: false,
 	isUploading: false,
 	uploadProgress: 0,
-	tags: []
+	tags: [],
+	hasEnteredContent: false,
+	emailVerified:false,
+	canProgress: true,
+	canGoBack: true
 }
 
 const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
@@ -49,13 +60,21 @@ export const submissionSlice = createSlice({
 			state.isUploading = false
 			state.uploadProgress = 0
 			state.tags = []
+			state.emailVerified = false
+			state.hasEnteredContent = false
+			state.canProgress = true
+			state.canGoBack = true
 			state.id = nanoid()
 		},
 		incrementStep: (state) => {
 			state.step = state.step + 1
+			state.canProgress = canProgressFns[state.step](state)
+			state.canGoBack = canProgressFns[state.step](state)
 		},
 		decrementStep: (state) => {
 			state.step = state.step - 1
+			state.canProgress = canProgressFns[state.step](state)
+			state.canGoBack = canProgressFns[state.step](state)
 		},
 		setType: (state, action: PayloadAction<SubmissionTypes>) => {
 			state.type = action.payload
@@ -67,6 +86,8 @@ export const submissionSlice = createSlice({
 		setTheme: (state, action: PayloadAction<string>) => {
 			state.theme = action.payload
 			state.questions = []
+			state.canProgress = canProgressFns[state.step](state)
+			state.canGoBack = canProgressFns[state.step](state)
 		},
 		generateId: (state) => {
 			state.id = nanoid()
@@ -100,7 +121,17 @@ export const submissionSlice = createSlice({
 		},
 		setUploadProgress: (state, action: PayloadAction<number>) => {
 			state.uploadProgress = action.payload
-		}
+		},
+		setEmailVerified: (state) => {
+			state.emailVerified = true
+			state.canProgress = canProgressFns[state.step](state)
+			state.canGoBack = canProgressFns[state.step](state)
+		},
+		setHasEnteredContent: (state) => {
+			state.hasEnteredContent = true
+			state.canProgress = canProgressFns[state.step](state)
+			state.canGoBack = canProgressFns[state.step](state)
+		},
 	}
 })
 
@@ -108,7 +139,7 @@ export const submissionSlice = createSlice({
 export const actions = submissionSlice.actions
 export default submissionSlice.reducer
 
-interface SubmissionStateOuter {
+export interface SubmissionStateOuter {
 	submission: SubmissionState
 }
 
@@ -127,5 +158,7 @@ export const selectors = {
 		state.submission.isUploading,
 	selectUploadProgress: (state: SubmissionStateOuter) =>
 		state.submission.uploadProgress,
-	selectTags: (state: SubmissionStateOuter) => state.submission.tags
+	selectTags: (state: SubmissionStateOuter) => state.submission.tags,
+	selectCanProgress: (state: SubmissionStateOuter) => state.submission.canProgress,
+	selectCanGoBack: (state: SubmissionStateOuter) => state.submission.canGoBack,
 }

@@ -44,15 +44,17 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 
 	const additionalContentUrl =
 		content.length > 1 ? content.find((f) => f.fileType === 'md')?.url : null
+
 	const contentFetcher = storyType === 'written' ? mdFetcher : () => contentUrl
-	const additionalContentFetcher = mdFetcher
+	
 	const { data: storyContent, error } = useSWR(contentUrl, contentFetcher)
+	const { data: additionalContent, error: additionalContentError } = useSWR(additionalContentUrl, mdFetcher)
 
 	return (
 		<StoryPreview
 			type={story.storyType}
 			content={storyContent}
-			additionalContent={undefined}
+			additionalContent={additionalContent}
 		/>
 	)
 }
@@ -108,7 +110,7 @@ const StoryManager: React.FC<{ story: StoryProps }> = ({ story }) => {
 			</Grid>
 		</Grid>
 	}
-	
+
 	return <Grid
 		container
 		spacing={4}

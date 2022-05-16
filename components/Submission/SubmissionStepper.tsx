@@ -6,13 +6,14 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import colors from '../../config/colors';
+import { useSelector } from 'react-redux';
+import { selectCanGoBack, selectCanProgress } from '../../stores/submission';
 interface SubmissionStepperProps {
   activeStep: number;
   steps: Array<string>;
   handleNext: () => void;
   handleBack: () => void;
   handleReset: () => void;
-  canProgress: boolean;
 }
 
 export const SubmissionStepper: React.FC<SubmissionStepperProps> = ({
@@ -20,10 +21,11 @@ export const SubmissionStepper: React.FC<SubmissionStepperProps> = ({
   activeStep,
   handleNext,
   handleBack,
-  handleReset,
-  canProgress
+  handleReset
 }) => {
-  console.log(steps.length, activeStep)
+  const canProgress = useSelector(selectCanProgress)
+  const canGoBack = useSelector(selectCanGoBack)
+  
   return (
     <Box sx={{ width: '600px', maxWidth: '90vw', position: 'fixed', bottom: '0', left: '50%', transform: 'translateX(-50%)', background: colors.darkgray, padding: '0 1em em 1em' }}>
       <MobileStepper activeStep={activeStep} sx={{ marginTop: '1em', padding: '1em' }}
@@ -37,7 +39,7 @@ export const SubmissionStepper: React.FC<SubmissionStepperProps> = ({
           </Button>
         }
         backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+          <Button size="small" onClick={handleBack} disabled={!canGoBack || activeStep === 0}>
             <span className="material-icons">arrow_back_ios</span>
             Back
           </Button>

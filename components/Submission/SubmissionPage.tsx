@@ -10,7 +10,8 @@ import {
 	selectType,
 	selectTheme,
 	setTheme,
-	resetSubmission
+	resetSubmission,
+	setHasEnteredContent
 } from '../../stores/submission'
 import { db, resetDatabase } from '../../stores/indexdb/db'
 // UI
@@ -20,6 +21,7 @@ import { SubmissionStepper } from './SubmissionStepper'
 import * as Steps from './Steps'
 import { SubmissionDraft } from '../../stores/indexdb/SubmissionDraft'
 import { SubmissionUploadModal } from './SubmissionUploadModal'
+import { SubmissionState, SubmissionStateOuter } from '../../stores/submission/submissionSlice'
 
 const stepsText = [
 	'',
@@ -43,6 +45,30 @@ const stepComponents = {
 	7: Steps.Survey,
 	8: Steps.ThankYou
 }
+
+export const canProgressFns = {
+	0: (state: SubmissionState) => true,
+	1: (state: SubmissionState) => true,
+	2: (state: SubmissionState) => true,
+	3: (state: SubmissionState) => !!(state?.theme.length > 0),
+	4: (state: SubmissionState) => !!(state?.emailVerified === true),
+	5: (state: SubmissionState) => !!(state?.hasEnteredContent === true),
+	6: (state: SubmissionState) => false,
+	7: (state: SubmissionState) => false,
+	8: (state: SubmissionState) => false
+} as { [key: number]: (state: SubmissionState) => boolean }
+
+export const canGoBackFns = {
+	0: () => true,
+	1: () => true,
+	2: () => true,
+	3: () => true,
+	4: () => true,
+	5: () => true,
+	6: () => true,
+	7: () => false,
+	8: () => false
+} as { [key: number]: () => boolean }
 
 // const getCanProgress = ({
 //     step,
@@ -78,6 +104,7 @@ export const SubmissionPage: React.FC = () => {
 		if (db) {
 			db.submissions.update(0, { content })
 		}
+		dispatch(setHasEnteredContent())
 	}
 	
 	const handleCacheAdditionalContent = (additionalContent: string | Blob) => {
@@ -166,7 +193,6 @@ export const SubmissionPage: React.FC = () => {
 				handleBack={handleBack}
 				handleNext={handleNext}
 				handleReset={handleReset}
-				canProgress={true}
 			/>
 			<SubmissionUploadModal />
 		</Box>

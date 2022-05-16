@@ -19,7 +19,9 @@ const {
   toggleOptInResearch,
   toggleIsUploading,
   setUploadProgress,
-  setTags
+  setTags,
+  setEmailVerified,
+  setHasEnteredContent
 } = actions;
 
 const {
@@ -34,7 +36,9 @@ const {
     selectId,
     selectIsUploading,
     selectUploadProgress,
-    selectTags
+    selectTags,
+    selectCanProgress,
+    selectCanGoBack
 } = selectors;
 
 export {
@@ -56,6 +60,8 @@ export {
   toggleIsUploading,
   setUploadProgress,
   setTags,
+  setEmailVerified,
+  setHasEnteredContent,
 
   selectStep,
   selectType,
@@ -68,5 +74,7 @@ export {
   selectId,
   selectIsUploading,
   selectUploadProgress,
-  selectTags
+  selectTags,
+  selectCanProgress,
+  selectCanGoBack
 };

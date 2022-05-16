@@ -1,16 +1,12 @@
 import React from 'react'
 import { Grid, Button, colors, Typography } from '@mui/material'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
 import { useDispatch, useSelector } from 'react-redux'
 import {
 	selectTheme,
 	selectQuestions,
-	addQuestions,
-	removeQuestions,
 	setTheme
 } from '../../../stores/submission'
+import { SubmissionStateOuter } from '../../../stores/submission/submissionSlice'
 
 const Themes = [
 	{
@@ -50,34 +46,28 @@ const Themes = [
 export const YourCovidExperience: React.FC = () => {
 	const dispatch = useDispatch()
 	const activeTheme = useSelector(selectTheme)
-	const activeQuestions = useSelector(selectQuestions)
-
 	const handleTheme = (theme: string) => dispatch(setTheme(theme))
-	const handleQuestion = (question: string) =>
-		activeQuestions.includes(question)
-			? dispatch(removeQuestions(question))
-			: dispatch(addQuestions(question))
 
-	// const handleQuestion = (event: React.ChangeEvent<{ value: unknown }>) => dispatch()
 	return (
 		<Grid container spacing={1}>
 			<Grid item xs={12}>
 				<Typography variant="h2">Your COVID Experience</Typography>
 				<Typography>
-					Choose on of the five themes to get started. We’ve provided a few
+					Choose one of the four themes to get started. We’ve provided a few
 					prompts to think about. Feel free to any of these to get started
 					telling your story.
 				</Typography>
 			</Grid>
-			<Grid item xs={12} md={3}>
+			<Grid item xs={12} md={12}>
 				{Themes.map((theme, i) => (
 					<Button
 						onClick={() => handleTheme(theme.title)}
 						key={`${theme}-${i}`}
 						sx={{
-							display: 'block',
+							display: 'inline-block',
 							textTransform: 'none',
-							margin: '0 0 1em 0',
+							mr: 1,
+							mt: 1,
 							color: activeTheme === theme.title ? colors.orange : 'white',
 							borderColor: activeTheme === theme.title ? colors.orange : 'white'
 						}}
@@ -86,20 +76,6 @@ export const YourCovidExperience: React.FC = () => {
 						{theme.title}
 					</Button>
 				))}
-				{/* <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                label="Age"
-                onChange={handleChange}
-                >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-            </FormControl> */}
 			</Grid>
 			<Grid item xs={12} md={9}>
 				{!!activeTheme && (
@@ -113,22 +89,6 @@ export const YourCovidExperience: React.FC = () => {
 						)}
 					</ul>
 				)}
-				{/* {!!activeTheme &&
-          Themes.find((f) => f.title === activeTheme)?.questions.map(
-            (question, i) => (
-              <FormGroup key={`${question}-${i}`}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={activeQuestions.includes(question)}
-                      onChange={() => handleQuestion(question)}
-                    />
-                  }
-                  label={question}
-                />
-              </FormGroup>
-            )
-          )} */}
 			</Grid>
 		</Grid>
 	)
