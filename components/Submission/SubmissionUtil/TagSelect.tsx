@@ -4,18 +4,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 const allTags = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
+  'family',
+  'community',
+  'work',
+  'equity',
+  'education',
+  'children'
 ];
 
 interface TagSelectProps {
@@ -27,31 +24,28 @@ export const TagSelect: React.FC<TagSelectProps> = ({
     tags,
     onChange
 }) => {
+  
+  const removeTag = (tag: string) => {
+    onChange(tags.filter(t => t !== tag))
+  }
+  const addTag = (tag: string) => {
+    onChange([...tags, tag])
+  }
 
   return (
-    <div>
-      <FormControl fullWidth>
-        <InputLabel id="demo-multiple-name-label">Would you like to tag your story?</InputLabel>
-        <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          value={tags||['']}
-          onChange={(e) => onChange(e?.target?.value)}
-        >
-          {allTags.map((tag) => (
-            <MenuItem
-              key={tag}
-              value={tag}
-              style={{
-                fontWeight: tags?.includes(tag) ? 'bold' : 'normal',
-              }}
-            >
-              {tag}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <Grid container spacing={1} sx={{mb:2}}>
+      <Grid item xs={12} md={6}>
+        <Typography>
+          Add additional tags to your story
+        </Typography>
+        {allTags.filter(tag => !tags.includes(tag)).map((Tag, i) => <Button key={i} onClick={() => addTag(Tag)} sx={{color:'chartreuse', textTransform:'none'}}>#{Tag} +</Button>)}
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Typography>
+          Remove Tag
+        </Typography>
+        {tags.map((Tag, i) => <Button key={i} onClick={() => removeTag(Tag)}>#{Tag} &times;</Button>)}
+      </Grid>
+    </Grid>
   );
 }
