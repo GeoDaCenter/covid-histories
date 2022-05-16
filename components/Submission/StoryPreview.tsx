@@ -14,12 +14,18 @@ const Container = styled(Box)`
 // @ts-ignore
 export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, additionalContent: any|null }> = ({ type, content, additionalContent }) => {
 	if (!content) return null
-	
 	switch (type) {
 		case 'video':
 			return (
 				<Container>
 					<video src={content} controls />
+				</Container>
+			)
+			break
+		case 'audio':
+			return (
+				<Container>
+					<audio src={content} controls />
 				</Container>
 			)
 			break

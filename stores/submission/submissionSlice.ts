@@ -69,7 +69,7 @@ export const submissionSlice = createSlice({
 		incrementStep: (state) => {
 			state.step = state.step + 1
 			state.canProgress = canProgressFns[state.step](state)
-			state.canGoBack = canProgressFns[state.step](state)
+			state.canGoBack = canGoBackFns[state.step]()
 		},
 		decrementStep: (state) => {
 			state.step = state.step - 1
@@ -87,7 +87,7 @@ export const submissionSlice = createSlice({
 			state.theme = action.payload
 			state.questions = []
 			state.canProgress = canProgressFns[state.step](state)
-			state.canGoBack = canProgressFns[state.step](state)
+			state.canGoBack = canGoBackFns[state.step]()
 		},
 		generateId: (state) => {
 			state.id = nanoid()

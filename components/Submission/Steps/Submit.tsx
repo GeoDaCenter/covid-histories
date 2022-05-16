@@ -35,6 +35,7 @@ import { CountySelect } from '../SubmissionUtil/CountySelect'
 import { StoryPreview } from '../StoryPreview'
 import dynamic from 'next/dynamic'
 import { TagSelect } from '../SubmissionUtil/TagSelect'
+import Link from 'next/link'
 
 const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 	ssr: false
@@ -83,6 +84,12 @@ export const Submit: React.FC<StepComponentProps> = ({
 						return
                     }
 					case 'video': {
+						// @ts-ignore
+						const tempUrl = URL.createObjectURL(entry.content)
+						setContent(tempUrl)
+						return
+                    }
+					case 'audio': {
 						// @ts-ignore
 						const tempUrl = URL.createObjectURL(entry.content)
 						setContent(tempUrl)
@@ -213,7 +220,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 						<Typography>We can publish your story</Typography>
 					</li>
 					<li>
-						<Typography>You agree to the full license terms [here]</Typography>
+						<Typography>You agree to the <Link href="/privacy"><a target="_blank" style={{textDecoration: 'underline'}}>full license terms</a></Link></Typography>
 					</li>
 				</ul>
 				<Typography>

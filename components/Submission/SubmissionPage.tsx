@@ -80,8 +80,16 @@ export const SubmissionPage: React.FC = () => {
 	const activeStep = useSelector(selectStep)
 	const storyId = useSelector(selectId)
 	const storyType = useSelector(selectType)
-	const handleBack = () => dispatch(decrementStep())
-	const handleNext = () => dispatch(incrementStep())
+	const handleBack = () => {
+		typeof window !== undefined && window.scrollTo(0, 0)
+		dispatch(decrementStep())
+	}
+
+	const handleNext = () => {
+		typeof window !== undefined && window.scrollTo(0, 0)
+		dispatch(incrementStep())
+	}
+	
 	const handleReset = () => {
 		dispatch(resetSubmission())
 		resetDatabase({})

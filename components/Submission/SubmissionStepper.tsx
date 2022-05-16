@@ -25,6 +25,9 @@ export const SubmissionStepper: React.FC<SubmissionStepperProps> = ({
 }) => {
   const canProgress = useSelector(selectCanProgress)
   const canGoBack = useSelector(selectCanGoBack)
+  if (!canProgress && !canGoBack) {
+    return null
+  }
   
   return (
     <Box sx={{ width: '600px', maxWidth: '90vw', position: 'fixed', bottom: '0', left: '50%', transform: 'translateX(-50%)', background: colors.darkgray, padding: '0 1em em 1em' }}>
