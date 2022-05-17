@@ -81,9 +81,9 @@ const Home: NextPage = () => {
 								aspectRatio: '.9'
 							}}
 						>
-							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:0, top:0, animationDelay:'250ms' }} src="/images/hero-2.jpg" />
-							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:'25%', top:'25%', animationDelay:'500ms' }} src="/images/hero-1.jpg" />
-							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:'5%', top:'50%', animationDelay:'750ms' }} src="/images/hero-3.jpg" />
+							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: 0, animationDelay: '250ms' }} src="/images/hero-2.jpg" />
+							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '25%', top: '25%', animationDelay: '500ms' }} src="/images/hero-1.jpg" />
+							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '5%', top: '50%', animationDelay: '750ms' }} src="/images/hero-3.jpg" />
 						</Box>
 					</Grid>
 				</Grid>
@@ -106,41 +106,49 @@ const Home: NextPage = () => {
 					information.
 				</Typography>
 				<Grid container>
-					 <Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn}>
-						<StoryTypeContainer>
-							<Icons.video />
-							<br />
-							<CtaLink href="/submit?type=video" className="cta-button">
-								Video or audio diary
-							</CtaLink>
-						</StoryTypeContainer>
+					<Grid item xs={12} sm={6} md={3}>
+						<span className={currInView === 2 ? styles.fadeIn : ''}>
+							<StoryTypeContainer>
+								<Icons.video />
+								<br />
+								<CtaLink href="/submit?type=video" className="cta-button">
+									Video or audio diary
+								</CtaLink>
+							</StoryTypeContainer>
+						</span>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"250ms"}}>
-						<StoryTypeContainer>
-							<Icons.written />
-							<br />
-							<CtaLink href="/submit?type=written" className="cta-button">
-								Written story
-							</CtaLink>
-						</StoryTypeContainer>
+					<Grid item xs={12} sm={6} md={3}>
+						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "250ms" }}>
+							<StoryTypeContainer>
+								<Icons.written />
+								<br />
+								<CtaLink href="/submit?type=written" className="cta-button">
+									Written story
+								</CtaLink>
+							</StoryTypeContainer>
+						</span>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"500ms"}}>
-						<StoryTypeContainer>
-							<Icons.photo />
-							<br />
-							<CtaLink href="/submit?type=photo" className="cta-button">
-								Photograph or image
-							</CtaLink>
-						</StoryTypeContainer>
+					<Grid item xs={12} sm={6} md={3}>
+						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "500ms" }}>
+							<StoryTypeContainer>
+								<Icons.photo />
+								<br />
+								<CtaLink href="/submit?type=photo" className="cta-button">
+									Photograph or image
+								</CtaLink>
+							</StoryTypeContainer>
+						</span>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"750ms"}}>
-						<StoryTypeContainer hideBorder={true}>
-							<Icons.phone />
-							<br />
-							<CtaLink href="/phone-instructions" className="cta-button">
-								Phone-based story
-							</CtaLink>
-						</StoryTypeContainer>
+					<Grid item xs={12} sm={6} md={3}>
+						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "750ms" }}>
+							<StoryTypeContainer hideBorder={true}>
+								<Icons.phone />
+								<br />
+								<CtaLink href="/phone-instructions" className="cta-button">
+									Phone-based story
+								</CtaLink>
+							</StoryTypeContainer>
+						</span>
 					</Grid>
 				</Grid>
 			</HomeSection>
@@ -160,7 +168,7 @@ const Home: NextPage = () => {
 							Share your story
 						</CtaLink>
 					</Grid>
-					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{animationDelay:'750ms'}}>
+					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{ animationDelay: '750ms' }}>
 						<Typography variant="h3">Keep your story</Typography>
 						<Typography>
 							By sharing your story with us, you keep all the rights to use your

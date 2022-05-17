@@ -4,8 +4,8 @@ import { Box, Container, useMediaQuery, useTheme } from "@mui/material";
 interface HomeSectionProps {
   sx?: {[key:string]: any};
   children?: React.ReactChild[] | React.ReactChild;
-  fadeout: number;
-  currInView: number;
+  fadeout?: number;
+  currInView?: number;
 }
 export const HomeSection = React.forwardRef((props: HomeSectionProps, ref: any) => {
   const { sx, children, fadeout, currInView } = props;
@@ -28,7 +28,7 @@ export const HomeSection = React.forwardRef((props: HomeSectionProps, ref: any) 
         minHeight: lg ? '150vh' : '100vh',
         transition:'250ms opacity',
         transitionDelay: '250ms visibility',
-        opacity: fadeout < currInView ? 0 : 1,
+        opacity: (fadeout && currInView) && fadeout < currInView ? 0 : 1,
         // visibility: fadeout < currInView ? 'hidden' : 'visible',
         ...sx
       }}
@@ -37,3 +37,5 @@ export const HomeSection = React.forwardRef((props: HomeSectionProps, ref: any) 
     </Box>
   );
 })
+
+HomeSection.displayName = 'HomeSection';
