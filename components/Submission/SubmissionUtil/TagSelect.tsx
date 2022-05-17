@@ -36,7 +36,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
     <Grid container spacing={1} sx={{mb:2}}>
       <Grid item xs={12} md={6}>
         <Typography>
-          Add additional tags to your story
+          Click to add additional tags
         </Typography>
         {allTags.filter(tag => !tags.includes(tag)).map((Tag, i) => <Button key={i} onClick={() => addTag(Tag)} sx={{color:'chartreuse', textTransform:'none'}}>#{Tag} +</Button>)}
       </Grid>

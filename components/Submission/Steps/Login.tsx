@@ -4,26 +4,57 @@ import Link from "next/link";
 import { Grid, Typography } from "@mui/material";
 import { useUser } from "@auth0/nextjs-auth0";
 import { StepComponentProps } from "./types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import useSWR from 'swr'
 import { setEmailVerified } from "../../../stores/submission";
+import { selectType } from '../../../stores/submission'
+
+// @ts-ignore
+const jsonFetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export const Login: React.FC<StepComponentProps> = ({
     handleNext
 }) => {
     const { user } = useUser();
     const dispatch = useDispatch();
-    
+    const { data: storyCounts } = useSWR('/api/files/submission_counts', jsonFetcher);
+    const storyType = useSelector(selectType);
+    const hasExceededSubmissions = storyCounts && storyCounts[storyType] >= 3
+
     useEffect(() => {
-        if (user?.email?.length && user?.email_verified){
-            dispatch(setEmailVerified())   
+        if (user?.email?.length && user?.email_verified && hasExceededSubmissions === false){
+            dispatch(setEmailVerified(true)) 
+        } else {
+            dispatch(setEmailVerified(false)) 
         }
-    },[user?.email, user?.email_verified])
+    },[user?.email, user?.email_verified, hasExceededSubmissions])
+
+    if (hasExceededSubmissions) {
+        return <Grid container maxWidth={"80ch"} display="block" margin="0 auto">
+            <Grid item xs={12}>
+                <Typography variant="h3">
+                    Warning: You have exceeded the maximum number of submissions for this type of story.
+                </Typography>
+                <Typography variant="h4">
+                    You may only submit 3 stories of each type at this time.
+                </Typography>
+                <Typography paddingTop={"1em"}>
+                    You have previously submitted {storyCounts?.video} audio/video stories, {storyCounts?.written} written stories, and {storyCounts?.photo} photo stories.
+                </Typography>
+                <Typography paddingTop={"1em"}>
+                    If you're like, please return to the "Choose your story type" step and select a different type of content. 
+                    You may delete an already submitted story of this type from the 'My Stories' page.
+                </Typography>
+            </Grid>
+        </Grid>
+    }
 
     return !!user ? (
-        <Grid container>
-            <Grid item xs={12} md={6}>
-                <Typography>
+        <Grid container maxWidth={"80ch"} display="block" margin="0 auto">
+            <Grid item xs={12}>
+                <Typography textAlign={"center"}>
                     You are logged in as { user.email }.{" "}
+                    <br/>
                     {user.email_verified 
                         ? <>Your email has been verified, and you may now submit your story.</>
                         : <>You must verify your email to submit your story. Please check your email and spam folder for a confirmation.</>
@@ -32,7 +63,7 @@ export const Login: React.FC<StepComponentProps> = ({
             </Grid>
         </Grid>
     ) : (
-        <Grid container>
+        <Grid container maxWidth={"80ch"} display="block" margin="0 auto">
             <Grid item xs={12}>
                 <Typography variant="h2">Signup or Login</Typography>
             </Grid>

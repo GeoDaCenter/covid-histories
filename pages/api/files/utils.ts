@@ -18,8 +18,8 @@ export const getFileList = async (
 	}
 }
 
-import { SubmissionType } from "./types";
-import { nanoid } from "@reduxjs/toolkit";
+import { SubmissionType } from './types'
+import { nanoid } from '@reduxjs/toolkit'
 
 const submissionTypeMap: {
 	[key: string]: { fileExtension: string; ContentType: string }
@@ -54,29 +54,29 @@ const fileExtensionMap: { [fileType: string]: string } = {
 	'image/bmp': '.bmp'
 }
 
-
 const config = {
 	REGION: process.env.APP_AWS_REGION,
 	STAGE: 'dev',
 	S3_BUCKET: process.env.APP_AWS_BUCKET
 }
 
-
 const URL_EXPIRATION_SECONDS = 60 * 5
 
 export async function getPresignedUrl(
-    s3: any,
+	s3: any,
 	type: SubmissionType,
 	key: string,
 	fileType: string,
 	prePath: string,
 	operation: string
 ) {
-	if (operation === 'putObject'){
+	if (operation === 'putObject') {
 		const ext: string =
 			fileExtensionMap[fileType] || submissionTypeMap[type].fileExtension
 		const fileName: string = `${key || nanoid()}${ext}`
-		const ContentType = fileType ? fileType : submissionTypeMap[type].ContentType
+		const ContentType = fileType
+			? fileType
+			: submissionTypeMap[type].ContentType
 		// Get signed URL from S3
 		const s3Params = {
 			Bucket: config.S3_BUCKET,
@@ -100,7 +100,6 @@ export async function getPresignedUrl(
 		}
 		const url = await s3.getSignedUrlPromise(operation, s3Params)
 
-		
 		return {
 			url,
 			fileName: key,
@@ -112,7 +111,7 @@ export async function getPresignedUrl(
 }
 
 export async function uploadMeta(
-    s3: any,
+	s3: any,
 	type: SubmissionType,
 	key: string,
 	hashedEmail: string
@@ -135,15 +134,66 @@ export async function uploadMeta(
 	return uploadResult
 }
 
-export async function deleteObject(
-	s3: any,
-	Bucket: string,
-	Key: string
-){
+export async function deleteObject(s3: any, Bucket: string, Key: string) {
 	return s3
 		.deleteObject({
 			Bucket,
 			Key
 		})
 		.promise()
+}
+
+export async function getSubmissionCounts(
+	s3: any,
+	Bucket: string,
+	prefix: string
+) {
+	const currentFiles: FileListReturn | undefined = await getFileList(
+		s3,
+		Bucket,
+		prefix
+	)
+	const fileNames = currentFiles
+		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
+				Key: Key.split('/').slice(-1)[0],
+				LastModified
+		  }))
+		: []
+	const filteredSubmissions = fileNames?.filter(
+		(f) => !f.Key?.includes('_meta.json') && !f.Key.includes('survey.json')
+	)
+	const metaResponse = await Promise.all(
+		filteredSubmissions?.map((f) =>
+			s3.getObject({ Bucket, Key: `${prefix}/${f.Key}` }).promise()
+		)
+	)
+	const allMeta = metaResponse.map((r) => JSON.parse(r.Body.toString()))
+	const metaCounts = allMeta.reduce(
+		(acc, cur) => {
+			switch (cur.type) {
+				case 'written':
+					acc.written++
+					break
+				case 'audio':
+					acc['audio']++
+					break
+				case 'video':
+					acc['video']++
+					break
+				case 'photo':
+					acc.photo++
+					break
+				default:
+					break
+			}
+			return acc
+		},
+		{
+			written: 0,
+			video: 0,
+			audio: 0,
+			photo: 0
+		}
+	)
+	return metaCounts
 }

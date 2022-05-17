@@ -5316,6 +5316,16 @@ react-dropzone@^12.1.0:
     file-selector "^0.5.0"
     prop-types "^15.8.1"
 
+react-intersection-observer@^8.31.0:
+  version "8.34.0"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-8.34.0.tgz#6f6e67831c52e6233f6b6cc7eb55814820137c42"
+  integrity sha512-TYKh52Zc0Uptp5/b4N91XydfSGKubEhgZRtcg1rhTKABXijc4Sdr1uTp5lJ8TN27jwUsdXxjHXtHa0kPj704sw==
+
+react-intersection-observer@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/react-intersection-observer/-/react-intersection-observer-9.1.0.tgz#27e66be9113fdf6fc6d745e849e1ad6ef20f97f1"
+  integrity sha512-XSDWQGzgJ4/B4eW39+qa3S+uc4Gb+m6lxXR54m/uD5lqeL5sLrgYdntbjl4BlTYAblgUhz+JB5obINhZaD+c0Q==
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -5400,6 +5410,13 @@ react-redux@^8.0.1:
     hoist-non-react-statics "^3.3.2"
     react-is "^18.0.0"
     use-sync-external-store "^1.0.0"
+
+react-scrollama@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-scrollama/-/react-scrollama-2.3.0.tgz#27d3199cba4779458b8d5fe54214421eeca71da6"
+  integrity sha512-9oHmtfyKg0MaOBem2ctrxk7bzU8CvjD+NZtz78HyGCzXw9JaNpSSHpW/y33qOebRzrDMzUotK+Cad5vrBWJQjQ==
+  dependencies:
+    react-intersection-observer "^8.31.0"
 
 react-transition-group@^4.4.2:
   version "4.4.2"

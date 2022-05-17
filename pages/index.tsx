@@ -8,15 +8,17 @@ import { CtaLink, QuietCtaLink } from '../components/Interface/CTA'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Icons } from '../components/Icons'
+import { useInView } from 'react-intersection-observer';
+import { color } from '@mui/system'
 
-const StoryTypeContainer = styled(Box)<{hideBorder?: boolean}>`
+const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	padding-top:2em;
 	margin-top:2em;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	border-right:${props => props.hideBorder ? 'none' : '1px solid black'};
+	// border-right:${props => props.hideBorder ? 'none' : '1px solid black'};
 	svg {
 		height:80px;
 		margin:0 auto;
@@ -33,8 +35,16 @@ const StoryTypeContainer = styled(Box)<{hideBorder?: boolean}>`
 `
 
 const Home: NextPage = () => {
+	const [homeRef, homeInView] = useInView({ threshold: 0.25 });
+	const [experiencesRef, experiencesInView] = useInView({ threshold: 0.375 });
+	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: 0.375 });
+	const [questionsRef, questionsInView] = useInView({ threshold: 0.375 });
+
+	const background = questionsInView ? colors.skyblue : moreThanDataInView ? colors.gray : experiencesInView ? '#FFF3B4' : 'none'
+	const currInView = questionsInView ? 4 : moreThanDataInView ? 3 : experiencesInView ? 2 : 1
+
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} style={{ background }}>
 			<Head>
 				<link
 					rel="stylesheet"
@@ -45,7 +55,7 @@ const Home: NextPage = () => {
 					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
 				/>
 			</Head>
-			<HomeSection sx={{ minHeight: '100vh' }}>
+			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
 					<Grid item xs={12} md={7}>
 						<Typography variant="h1">Tell <span className="cursive" >your story</span> about COVID</Typography>
@@ -65,24 +75,27 @@ const Home: NextPage = () => {
 					<Grid item xs={12} md={5}>
 						<Box
 							sx={{
-								width: '90%',
+								width: '100%',
 								margin: '0 auto',
 								position: 'relative',
-								aspectRatio: '1.778'
+								aspectRatio: '.9'
 							}}
 						>
-							photo(s) here
-							{/* <Image layout="fill" src="/images/person-recording.jpg" /> */}
+							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:0, top:0, animationDelay:'250ms' }} src="/images/hero-2.jpg" />
+							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:'25%', top:'25%', animationDelay:'500ms' }} src="/images/hero-1.jpg" />
+							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{position:'absolute', boxShadow:'0px 0px 5px rgba(0,0,0,0.5)', left:'5%', top:'50%', animationDelay:'750ms' }} src="/images/hero-3.jpg" />
 						</Box>
 					</Grid>
 				</Grid>
 			</HomeSection>
 			<HomeSection
+				ref={experiencesRef}
 				sx={{
-					background: '#FFF3B4',
 					color: colors.darkgray,
 					minHeight: '100vh'
 				}}
+				fadeout={2}
+				currInView={currInView}
 			>
 				<Typography variant="h2">Your experiences, your medium</Typography>
 				<Typography>
@@ -93,7 +106,7 @@ const Home: NextPage = () => {
 					information.
 				</Typography>
 				<Grid container>
-					<Grid item xs={12} sm={6} md={3}>
+					 <Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn}>
 						<StoryTypeContainer>
 							<Icons.video />
 							<br />
@@ -102,7 +115,7 @@ const Home: NextPage = () => {
 							</CtaLink>
 						</StoryTypeContainer>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"250ms"}}>
 						<StoryTypeContainer>
 							<Icons.written />
 							<br />
@@ -111,7 +124,7 @@ const Home: NextPage = () => {
 							</CtaLink>
 						</StoryTypeContainer>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"500ms"}}>
 						<StoryTypeContainer>
 							<Icons.photo />
 							<br />
@@ -120,7 +133,7 @@ const Home: NextPage = () => {
 							</CtaLink>
 						</StoryTypeContainer>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={3} className={currInView === 2 && styles.fadeIn} style={{animationDelay:"750ms"}}>
 						<StoryTypeContainer hideBorder={true}>
 							<Icons.phone />
 							<br />
@@ -131,7 +144,7 @@ const Home: NextPage = () => {
 					</Grid>
 				</Grid>
 			</HomeSection>
-			<HomeSection sx={{ minHeight: '100vh', background: colors.gray }}>
+			<HomeSection sx={{ minHeight: '100vh' }} ref={moreThanDataRef} fadeout={3} currInView={currInView}>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="h3">More than just data</Typography>
@@ -147,7 +160,7 @@ const Home: NextPage = () => {
 							Share your story
 						</CtaLink>
 					</Grid>
-					<Grid item xs={12} sm={6}>
+					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{animationDelay:'750ms'}}>
 						<Typography variant="h3">Keep your story</Typography>
 						<Typography>
 							By sharing your story with us, you keep all the rights to use your
@@ -165,9 +178,12 @@ const Home: NextPage = () => {
 			<HomeSection
 				sx={{
 					minHeight: '50vh',
-					background: colors.skyblue,
+					paddingBottom: '0',
 					color: colors.darkgray
 				}}
+				ref={questionsRef}
+				fadeout={4}
+				currInView={currInView}
 			>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6}>

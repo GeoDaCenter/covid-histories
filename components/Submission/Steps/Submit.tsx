@@ -44,9 +44,9 @@ const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 const str2blob = (txt: string): Blob =>
 	new Blob([txt], { type: 'text/markdown' })
 
-const getSubmissionUrl = async (storyId: string, type: string, additionalParams?: string): Promise<string> => {
+const getSubmissionUrl = async (storyType: string, storyId: string, type: string, additionalParams?: string): Promise<string> => {
 	const response = await fetch(
-		`/api/files/request_url?type=${type}&key=${storyId}${additionalParams||''}`
+		`/api/files/request_url?storyType=${storyType}&type=${type}&key=${storyId}${additionalParams||''}`
 	).then((res) => res.json())
 	return response?.uploadURL
 }
@@ -149,14 +149,14 @@ export const Submit: React.FC<StepComponentProps> = ({
 
 	const handleSubmit = async () => {
 		const entry = await db.submissions.get(0)
+		const metaUploadURL = await getSubmissionUrl(storyType, storyId + "_meta", 'meta')
 		if (entry?.additionalContent) {
-			const additionalContentURL = await getSubmissionUrl(storyId, 'written')
+			const additionalContentURL = await getSubmissionUrl(storyType, storyId, 'written')
 			if (additionalContentURL) {
 				const blob = str2blob(entry.additionalContent)
 				handleSendFile(blob, additionalContentURL, true)
 			}
 		}
-		const metaUploadURL = await getSubmissionUrl(storyId + "_meta", 'meta')
 		if (metaUploadURL) {
 			const meta = {
 				title,
@@ -179,7 +179,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 			? '&fileType=' + entry?.content?.type
 			: ''
 
-		const uploadURL = await getSubmissionUrl(storyId, storyType, additionalParams)
+		const uploadURL = await getSubmissionUrl(storyType, storyId, storyType, additionalParams)
 
 		if (uploadURL && entry?.content) {
 			try {

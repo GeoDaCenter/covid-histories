@@ -1,5 +1,6 @@
 .container {
   padding: 0;
+  transition:500ms all;
 }
 
 .topBar{
@@ -123,6 +124,18 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+}
+
+.fadeIn {
+  opacity:0;
+  animation: fadeIn 2s linear 1;
+  animation-fill-mode: forwards;
+  animation-timing-function:cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@keyframes fadeIn {
+  0% {opacity:0;transform:translateY(30px);}
+  100% {opacity:1;transform:translateY(0px);}
 }
 
 @media (max-width: 600px) {
