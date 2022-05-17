@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Box, Grid, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import styled from 'styled-components'
@@ -35,16 +36,27 @@ const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 `
 
 const Home: NextPage = () => {
+	const containerRef = useRef(null);
 	const [homeRef, homeInView] = useInView({ threshold: 0.25 });
 	const [experiencesRef, experiencesInView] = useInView({ threshold: 0.375 });
 	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: 0.375 });
 	const [questionsRef, questionsInView] = useInView({ threshold: 0.375 });
+	const [currScroll, setCurrScroll] = useState<number>(0);
+	const [maxHeight, setMaxHeight] = useState<number>(0);
 
 	const background = questionsInView ? colors.skyblue : moreThanDataInView ? colors.gray : experiencesInView ? '#FFF3B4' : 'none'
 	const currInView = questionsInView ? 4 : moreThanDataInView ? 3 : experiencesInView ? 2 : 1
 
+	useLayoutEffect(() => {
+		if (typeof window !== "undefined"){
+			window.addEventListener('scroll', () => setCurrScroll(window.scrollY))
+			window.addEventListener('resize', () => setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2))
+			setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2)
+		}
+	})
+	console.log(currScroll/maxHeight)
 	return (
-		<div className={styles.container} style={{ background }}>
+		<div className={styles.container} style={{ background }} ref={containerRef}>
 			<Head>
 				<link
 					rel="stylesheet"
@@ -58,8 +70,8 @@ const Home: NextPage = () => {
 			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
 					<Grid item xs={12} md={7}>
-						<Typography variant="h1">Tell <span className="cursive" >your story</span> about COVID</Typography>
-						<Typography>
+						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br/>of the pandemic</Typography>
+						<Typography paddingTop="1em">
 							The COVID-19 pandemic in the US has highlighted communities’
 							capacity for resilience, impacted different people in unexpected
 							ways, and changed everyday life. Atlas Stories curates experiences
