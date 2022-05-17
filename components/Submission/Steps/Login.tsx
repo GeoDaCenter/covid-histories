@@ -42,8 +42,8 @@ export const Login: React.FC<StepComponentProps> = ({
                     You have previously submitted {storyCounts?.video} audio/video stories, {storyCounts?.written} written stories, and {storyCounts?.photo} photo stories.
                 </Typography>
                 <Typography paddingTop={"1em"}>
-                    If you're like, please return to the "Choose your story type" step and select a different type of content. 
-                    You may delete an already submitted story of this type from the 'My Stories' page.
+                    If you&apos;re like, please return to the &quot;Choose your story type&quot; step and select a different type of content. 
+                    You may delete an already submitted story of this type from the &quot;My Stories&quot; page.
                 </Typography>
             </Grid>
         </Grid>
