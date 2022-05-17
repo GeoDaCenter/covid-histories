@@ -49,9 +49,9 @@ export const YourCovidExperience: React.FC = () => {
 	const handleTheme = (theme: string) => dispatch(setTheme(theme))
 
 	return (
-		<Grid container spacing={1}>
+		<Grid container spacing={1} minHeight="75vh"  alignContent="center" alignItems="center">
 			<Grid item xs={12}>
-				<Typography variant="h2">Your COVID Experience</Typography>
+				<Typography variant="h2">Your Pandemic Experience</Typography>
 				<Typography>
 					Choose one of the four themes to get started. We’ve provided a few
 					prompts to think about. Feel free to any of these to get started

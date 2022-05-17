@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { CtaButton, CtaLink } from "../../Interface/CTA";
 import Link from "next/link";
-import { Grid, Typography } from "@mui/material";
+import { Alert, Grid, Typography } from "@mui/material";
 import { useUser } from "@auth0/nextjs-auth0";
 import { StepComponentProps } from "./types";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from 'swr'
 import { setEmailVerified } from "../../../stores/submission";
 import { selectType } from '../../../stores/submission'
+import { useRouter } from "next/router";
 
 // @ts-ignore
 const jsonFetcher = (...args) => fetch(...args).then((res) => res.json())
@@ -16,6 +17,7 @@ export const Login: React.FC<StepComponentProps> = ({
     handleNext
 }) => {
     const { user } = useUser();
+    const {pathname} = useRouter();
     const dispatch = useDispatch();
     const { data: storyCounts } = useSWR('/api/files/submission_counts', jsonFetcher);
     const storyType = useSelector(selectType);
@@ -50,22 +52,22 @@ export const Login: React.FC<StepComponentProps> = ({
     }
 
     return !!user ? (
-        <Grid container maxWidth={"80ch"} display="block" margin="0 auto">
+        <Grid container minHeight="75vh"  alignItems="center">
             <Grid item xs={12}>
-                <Typography textAlign={"center"}>
+                <Typography>
                     You are logged in as { user.email }.{" "}
                     <br/>
                     {user.email_verified 
-                        ? <>Your email has been verified, and you may now submit your story.</>
-                        : <>You must verify your email to submit your story. Please check your email and spam folder for a confirmation.</>
+                        ? <Alert severity="success" sx={{mt: 2}}>Your email has been verified, and you may now submit your story.</Alert>
+                        : <Alert severity="warning" sx={{mt: 2}}>You must verify your email to submit your story. Please check your email and spam folder for a confirmation.</Alert>
                     } 
                 </Typography>
             </Grid>
         </Grid>
     ) : (
-        <Grid container maxWidth={"80ch"} display="block" margin="0 auto">
+        <Grid container minHeight="75vh"  alignItems="center">
             <Grid item xs={12}>
-                <Typography variant="h2">Signup or Login</Typography>
+                <Typography variant="h2" component="h1">Signup or Login</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
                 <Typography>
@@ -74,7 +76,7 @@ export const Login: React.FC<StepComponentProps> = ({
                     that you can manage or remove your stories in the future. You may create an account
                     using your email adress or your Google account.
                 </Typography>
-                <Link href="/api/auth/login" passHref>
+                <Link href={`/api/auth/login?redirect=${pathname}`} passHref>
                     <CtaLink>Signup / Login</CtaLink>
                 </Link>
             </Grid>

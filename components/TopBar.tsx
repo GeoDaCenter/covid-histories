@@ -8,6 +8,7 @@ import colors from "../config/colors";
 import { Button, Popover, Typography } from "@mui/material";
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const NavBarOuterContainer = styled.div`
   width: 100%;
@@ -140,7 +141,6 @@ const DropDownNav = styled.ul`
 
 export const TopBar: React.FC = () => {
   const {pathname} = useRouter();
-  const pathName = ''
   const [navOpen, setNavOpen] = useState(false);
   const toggleNavOpen = () => setNavOpen((prev) => !prev);
   const { user } = useUser();
@@ -191,7 +191,7 @@ export const TopBar: React.FC = () => {
             {user ? (
               <>
                 <li><Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', marginLeft:'0.5em', background: colors.orange }}>
-                  {user.name}
+                  {user.name} <img src="/down-arrow.svg" width="10px" height="10px" style={{margin:'0 2px'}} alt="" />
                 </Button>
                   <Popover
                     id={id}

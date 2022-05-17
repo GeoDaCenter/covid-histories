@@ -10,7 +10,7 @@ const initialValue: Descendant[] = [
 	{
 		// @ts-ignore
 		type: 'paragraph',
-		children: [{ text: 'Write your story here...' }]
+		children: [{ text: '' }]
 	}
 ]
 

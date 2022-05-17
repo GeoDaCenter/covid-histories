@@ -34,14 +34,12 @@ const RichTextExample = ({
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
       <Toolbar>
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <p style={{paddingLeft:'1em', marginLeft:'1em'}}>Write your story below. Progress will save on this device.</p>
+        <p>Write your story below. <br/>Progress will automatically save on this device.</p>
       </Toolbar>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
+        placeholder="Write your story here…"
         spellCheck
         autoFocus
         onKeyDown={event => {
@@ -52,6 +50,10 @@ const RichTextExample = ({
               toggleMark(editor, mark)
             }
           }
+        }}
+        style={{
+          maxHeight:'50vh',
+          overflowY:'auto'
         }}
       />
     </Slate>

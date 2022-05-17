@@ -76,10 +76,10 @@ export const PhotoLoader: React.FC<PhotoLoaderProps> = ({
   },[photoSource])  // eslint-disable-line
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, maxFiles: 1 })
-
+  
   return (
     <Box sx={{ background: colors.darkgray, padding: '1em', border: `1px solid ${colors.gray}` }}>
-      {photoSource && <Box>
+      {!!photoSource?.url && <Box>
         <PreviewImage src={photoSource.url} alt="story photo" />
         <p>
           <b>Preview your image.</b> If you would like to submit a different image, please click the button below.

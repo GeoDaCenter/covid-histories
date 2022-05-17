@@ -4,9 +4,9 @@ import { StepComponentProps } from "./types";
 
 export const GettingStarted: React.FC<StepComponentProps> = () => {
   return (
-    <Grid container spacing={5}>
+    <Grid container spacing={5} minHeight="75vh" alignContent="center" alignItems="center">
       <Grid item xs={12}>
-        <Typography variant="h2">Getting Started</Typography>
+        <Typography variant="h2" component="h1">Getting Started</Typography>
       </Grid>
       <Grid item xs={12} sm={6}>
         <Typography>

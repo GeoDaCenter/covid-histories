@@ -8,7 +8,7 @@ import { StepComponentProps } from "./types";
 export const ThankYou: React.FC<StepComponentProps> = () => {
     const dispatch = useDispatch();
     const handleReset = () => {
-        dispatch(resetSubmission())        
+        dispatch(resetSubmission('video'))        
         resetDatabase({})
     }
 

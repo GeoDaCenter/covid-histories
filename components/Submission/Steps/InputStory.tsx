@@ -23,7 +23,7 @@ export const InputStory: React.FC<StepComponentProps> = ({
 	const SubmissionComponent = inputComponentMap[submissionType]
 	
 	return (
-		<Grid container spacing={2}>
+		<Grid container spacing={2} minHeight="75vh" alignContent="center" justifyContent="center" >
 			<Grid item xs={12}>
 				<Typography variant="h2">Make your story</Typography>
 			</Grid>

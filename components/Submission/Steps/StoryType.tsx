@@ -84,7 +84,7 @@ export const StoryType: React.FC<StepComponentProps> = () => {
 	}
 	const activeType = useSelector(selectType)
 	return (
-		<Grid container spacing={1}>
+		<Grid container spacing={1} minHeight="75vh"  alignContent="center" alignItems="center">
 			<Grid item xs={12} sx={{marginBottom:'2em'}}>
 				<Typography variant="h2">Choose your story type</Typography>
 			</Grid>

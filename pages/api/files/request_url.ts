@@ -30,7 +30,6 @@ export default withApiAuthRequired(async function handler(
 		const hashedEmail = hash(user.email)
 		const prefix = `meta/${hashedEmail}`
         const metaCounts = await getSubmissionCounts(s3, S3_BUCKET, prefix)
-		console.log(metaCounts[storyType])
 		if (metaCounts[storyType] !== undefined && metaCounts[storyType] < 3) {
 			const prePath = 'uploads/' + hashedEmail + '/'
 			const { url: uploadURL, fileName, ContentType } = await getPresignedUrl(
@@ -43,7 +42,6 @@ export default withApiAuthRequired(async function handler(
 			)
 			const metaResult = await uploadMeta(s3, type, key, hashedEmail)
 			if (!metaResult || !uploadURL) {
-				console.log(metaResult, uploadURL)
 				res.status(500).json(
 					JSON.stringify({
 						error: 'The server failed to upload, please try again.'

@@ -1,5 +1,5 @@
 // BASE
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 // STORE
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -15,13 +15,14 @@ import {
 } from '../../stores/submission'
 import { db, resetDatabase } from '../../stores/indexdb/db'
 // UI
-import { Box } from '@mui/material'
+import { Alert, Box, Button, Snackbar } from '@mui/material'
 // COMPONENTS
 import { SubmissionStepper } from './SubmissionStepper'
 import * as Steps from './Steps'
 import { SubmissionDraft } from '../../stores/indexdb/SubmissionDraft'
 import { SubmissionUploadModal } from './SubmissionUploadModal'
-import { SubmissionState, SubmissionStateOuter } from '../../stores/submission/submissionSlice'
+import { SubmissionState, SubmissionStateOuter, SubmissionTypes } from '../../stores/submission/submissionSlice'
+import { useRouter } from 'next/router'
 
 const stepsText = [
 	'',
@@ -70,36 +71,45 @@ export const canGoBackFns = {
 	8: () => false
 } as { [key: number]: () => boolean }
 
-// const getCanProgress = ({
-//     step,
-
-// })
-
 export const SubmissionPage: React.FC = () => {
+	// state interaction
 	const dispatch = useDispatch()
 	const activeStep = useSelector(selectStep)
 	const storyId = useSelector(selectId)
 	const storyType = useSelector(selectType)
+	const [unfinished, setUnfinished] = useState<boolean>(false)
+	const handleCloseToast = () => setUnfinished(false)
 	const handleBack = () => {
 		typeof window !== undefined && window.scrollTo(0, 0)
 		dispatch(decrementStep())
 	}
-
 	const handleNext = () => {
 		typeof window !== undefined && window.scrollTo(0, 0)
 		dispatch(incrementStep())
-	}
-	
+	}	
 	const handleReset = () => {
-		dispatch(resetSubmission())
+		dispatch(resetSubmission('video'))
 		resetDatabase({})
+		handleCloseToast()
 	}
-	const dbActive = typeof db
-	// const submissionDrafts: SubmissionDraft[] = useLiveQuery(() => db.submissions.toArray());
-	// const submissionIds = submissionDrafts?.map(entry => entry.storyId)
-	// const currSubmissionCache = submissionDrafts.find(f => f.storyId === storyId)
-	// const currentSubmissionLength = submissionDrafts?.find(f => f.storyId === storyId) //?.content.length
+
 	
+	// handle query params
+	const router = useRouter()
+	const { type } = router.query	
+	useEffect(() => {
+		if (type && storyType !== type && typeof type === 'string') {
+			dispatch(resetSubmission(type as SubmissionTypes))
+		}
+	},[type])
+
+	useEffect(() => {
+		if (activeStep !== 0){
+			setUnfinished(true)
+		}
+	},[])
+
+	const dbActive = typeof db	
 	const handleCacheStory = (content: string | Blob) => {
 		if (typeof content === 'string' && !content.length) {
 			console.log('No Content')
@@ -130,16 +140,10 @@ export const SubmissionPage: React.FC = () => {
 	}
 
 	const handleRetrieveStory = () => {
-		// if (db && submissionIds && submissionIds.includes(storyId)) {
-		//     const entry = submissionDrafts.find(f => f.storyId === storyId)
-		//     console.log(entry)
-		//     if (entry && entry.id) {
-		//         return entry.content
-		//     }
-		// }
 		return ''
 	}
 
+	// handle cache story in dexie / indexedbd
 	useEffect(() => {
 		if (db && storyId.length) {
 			db.submissions
@@ -185,8 +189,6 @@ export const SubmissionPage: React.FC = () => {
 	const CurrentStepComponent = stepComponents[activeStep]
 	return (
 		<Box sx={{ minHeight: '100vh', maxWidth: '1140px', margin: '1.5em auto' }}>
-			{/* <StepComponent /> */}
-			{/* {currentStepComponent} */}
 			<CurrentStepComponent
 				handleNext={handleNext}
 				storyId={storyId}
@@ -203,6 +205,13 @@ export const SubmissionPage: React.FC = () => {
 				handleReset={handleReset}
 			/>
 			<SubmissionUploadModal />
+			<Snackbar open={unfinished} autoHideDuration={10000} onClose={handleCloseToast}>
+				<Alert onClose={handleCloseToast} severity="warning" sx={{ width: '100%', maxWidth:'400px' }}>
+					You started a submission, but didn&apos;t finish it. This story is only saved to this device.
+					<br/><br/>
+					You can continue where you left off, or <Button onClick={handleReset} sx={{padding:0, textTransform:'none'}}>click here to start over.</Button>
+				</Alert>
+			</Snackbar>
 		</Box>
 	)
 }

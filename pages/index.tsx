@@ -35,26 +35,40 @@ const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	}
 `
 
+const ProgressIndicatorBar = styled.span<{Progress: number}>`
+	position:fixed;
+	bottom:0;
+	left:0;
+	width: ${props => props.Progress * 100}%;
+	max-width:100%;
+	height:.25em;
+	background:#F37E44;
+`
+
+const ProgressIndicator: React.FC<{containerRef: any}> = ({containerRef}) => {
+	const [currScroll, setCurrScroll] = useState<number>(0);
+	const [maxHeight, setMaxHeight] = useState<number>(0);
+	useLayoutEffect(() => {
+		if (typeof window !== "undefined" && containerRef?.current) {
+			window.addEventListener('scroll', () => setCurrScroll(window.scrollY))
+			window.addEventListener('resize', () => setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2))
+			setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2)
+		}
+	})
+
+	return <ProgressIndicatorBar Progress={currScroll/maxHeight}/>
+}
+
 const Home: NextPage = () => {
 	const containerRef = useRef(null);
 	const [homeRef, homeInView] = useInView({ threshold: 0.25 });
 	const [experiencesRef, experiencesInView] = useInView({ threshold: 0.375 });
 	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: 0.375 });
 	const [questionsRef, questionsInView] = useInView({ threshold: 0.375 });
-	const [currScroll, setCurrScroll] = useState<number>(0);
-	const [maxHeight, setMaxHeight] = useState<number>(0);
-
+	
 	const background = questionsInView ? colors.skyblue : moreThanDataInView ? colors.gray : experiencesInView ? '#FFF3B4' : 'none'
 	const currInView = questionsInView ? 4 : moreThanDataInView ? 3 : experiencesInView ? 2 : 1
 
-	useLayoutEffect(() => {
-		if (typeof window !== "undefined"){
-			window.addEventListener('scroll', () => setCurrScroll(window.scrollY))
-			window.addEventListener('resize', () => setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2))
-			setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2)
-		}
-	})
-	console.log(currScroll/maxHeight)
 	return (
 		<div className={styles.container} style={{ background }} ref={containerRef}>
 			<Head>
@@ -67,6 +81,7 @@ const Home: NextPage = () => {
 					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
 				/>
 			</Head>
+			<ProgressIndicator containerRef={containerRef} />
 			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
 					<Grid item xs={12} md={7}>
@@ -83,6 +98,9 @@ const Home: NextPage = () => {
 						<CtaLink href="/submit" className="cta-button">
 							Share your story
 						</CtaLink>
+						<Typography fontStyle="italic" fontSize=".75em">
+							Scroll down to learn more.
+						</Typography>
 					</Grid>
 					<Grid item xs={12} md={5}>
 						<Box
@@ -93,9 +111,9 @@ const Home: NextPage = () => {
 								aspectRatio: '.9'
 							}}
 						>
-							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: 0, animationDelay: '250ms' }} src="/images/hero-2.jpg" />
-							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '25%', top: '25%', animationDelay: '500ms' }} src="/images/hero-1.jpg" />
-							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '5%', top: '50%', animationDelay: '750ms' }} src="/images/hero-3.jpg" />
+							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: '10%', animationDelay: '250ms' }} src="/images/hero-2.jpg" />
+							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '25%', top: '35%', animationDelay: '500ms' }} src="/images/hero-1.jpg" />
+							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '5%', top: '60%', animationDelay: '750ms' }} src="/images/hero-3.jpg" />
 						</Box>
 					</Grid>
 				</Grid>
@@ -180,7 +198,7 @@ const Home: NextPage = () => {
 							Share your story
 						</CtaLink>
 					</Grid>
-					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{ animationDelay: '750ms' }}>
+					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{ animationDelay: '250ms' }}>
 						<Typography variant="h3">Keep your story</Typography>
 						<Typography>
 							By sharing your story with us, you keep all the rights to use your
@@ -189,7 +207,7 @@ const Home: NextPage = () => {
 							account, you can preview and manage your submitted stories, opt in
 							to future research opportunities, and share more stories.
 						</Typography>
-						<QuietCtaLink href="/submit" className="cta-button">
+						<QuietCtaLink href="/privacy" className="cta-button">
 							Read more about our privacy policy
 						</QuietCtaLink>
 					</Grid>
@@ -213,12 +231,10 @@ const Home: NextPage = () => {
 							us with any questions about how to share your story, the terms and
 							license agreement, and how your story may be published.
 						</Typography>
-						<CtaLink href="/submit" className="cta-button">
-							Share your story
-						</CtaLink>
 					</Grid>
-					<Grid item xs={12} sm={6}>
-						<p>theuscovidatlas@gmail.com</p>
+					<Grid item xs={12} sm={6} display="flex" alignContent="center" alignItems="center" justifyContent="center" textAlign="center">
+						<Image width="40px" height="40px" src={'/email-icon.svg'} />
+						<Typography variant="h6" sx={{ml: 2}}>theuscovidatlas@gmail.com</Typography>
 					</Grid>
 				</Grid>
 			</HomeSection>
