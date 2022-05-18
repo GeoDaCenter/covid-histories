@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { Icons } from '../components/Icons'
 import { useInView } from 'react-intersection-observer';
 import { color } from '@mui/system'
+import Script from 'next/script';
 
 const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	padding-top:2em;
@@ -51,8 +52,8 @@ const ProgressIndicator: React.FC<{containerRef: any}> = ({containerRef}) => {
 	useLayoutEffect(() => {
 		if (typeof window !== "undefined" && containerRef?.current) {
 			window.addEventListener('scroll', () => setCurrScroll(window.scrollY))
-			window.addEventListener('resize', () => setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2))
-			setMaxHeight(containerRef.current.getBoundingClientRect().height - window.innerHeight/2)
+			window.addEventListener('resize', () => setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight/2))
+			setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight/2)
 		}
 	})
 
@@ -80,8 +81,8 @@ const Home: NextPage = () => {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
 				/>
-				<script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
 			</Head>
+			<Script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
 			
 			<ProgressIndicator containerRef={containerRef} />
 			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
