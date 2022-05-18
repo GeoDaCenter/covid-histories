@@ -235,7 +235,7 @@ export const TopBar: React.FC = () => {
                 <a>ABOUT</a>
               </Link>
             </li>
-            <li style={{ marginRight: '.25em' }}>
+            <li style={{ marginRight: '.25em'}}>
               <Link href="/privacy">
                 <a>PRIVACY</a>
               </Link>
@@ -298,7 +298,7 @@ export const TopBar: React.FC = () => {
             ) : (
               <li><Link href={`/api/auth/login?redirect=${pathname}`}><a>LOGIN</a></Link></li>
             )}
-            <li>
+            <li style={{alignItems: 'flex-start'}}>
               {!translateOpen && <Button onClick={invokeGoogleTranslate} sx={{color:'black', whiteSpace: 'nowrap'}}>Translate</Button>}
               <GoogleTranslateDiv style={{visibility: translateOpen ? 'visible' : 'hidden'}} id="google_translate_element"></GoogleTranslateDiv>
             </li>
