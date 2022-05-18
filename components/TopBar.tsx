@@ -164,10 +164,10 @@ const DropDownNav = styled.ul`
 
 const GoogleTranslateDiv = styled.div`
   font-size:.75rem;
-  margin:0 .5em;
-  background:${colors.lightgray};
-  border-radius:.5em;
-  padding:.5rem;
+  margin:.5em .5em;
+  background:rgb(245,245,245);
+  border-radius:.25em;
+  padding:.25rem .5rem 0 .5rem;
   box-shadow:0 0 5px rgba(0,0,0,0.5);
   a {
     font-size:.75rem;
