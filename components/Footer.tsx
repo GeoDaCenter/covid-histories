@@ -1,5 +1,6 @@
 import { useUser } from "@auth0/nextjs-auth0";
 import { Grid, Box, Typography } from "@mui/material";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
@@ -34,8 +35,15 @@ export const Footer: React.FC = () => {
     >
       <Box>
         <Grid container spacing={5} maxWidth="1140px">
+          <Grid item xs={12} md={6}>
+            <Typography fontWeight={"bold"} variant="h4">
+              Atlas <span className="cursive">Stories</span>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Image src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="253px" height="50px" />
+          </Grid>
           <Grid item xs={12} md={3} alignContent="center" justifyContent="center">
-            <Typography fontWeight={"bold"}>Atlas Stories</Typography>
             <NavUl>
               <li>
                 <Link href="/">
@@ -59,7 +67,6 @@ export const Footer: React.FC = () => {
             </NavUl>
           </Grid>
           <Grid item xs={12} md={3}>
-            <Typography fontWeight={"bold"}>User</Typography>
             {!!user ?
               <NavUl><li>
                 <Link href="/my-stories">

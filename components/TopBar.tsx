@@ -299,7 +299,9 @@ export const TopBar: React.FC = () => {
               <li><Link href={`/api/auth/login?redirect=${pathname}`}><a>LOGIN</a></Link></li>
             )}
             <li style={{alignItems: 'flex-start'}}>
-              {!translateOpen && <Button onClick={invokeGoogleTranslate} sx={{color:'black', whiteSpace: 'nowrap'}}>Translate</Button>}
+              {!translateOpen && <Button title="Translate this page" onClick={invokeGoogleTranslate} sx={{color:'black', whiteSpace: 'nowrap'}}>
+                <Image src="/translate.svg" alt="Translate this page" width="20px" height="20px" />
+                </Button>}
               <GoogleTranslateDiv style={{visibility: translateOpen ? 'visible' : 'hidden'}} id="google_translate_element"></GoogleTranslateDiv>
             </li>
           </ul>
