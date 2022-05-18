@@ -80,11 +80,13 @@ const Home: NextPage = () => {
 					rel="stylesheet"
 					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
 				/>
+				<script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
 			</Head>
+			
 			<ProgressIndicator containerRef={containerRef} />
 			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
-					<Grid item xs={12} md={7}>
+					<Grid item xs={12} md={6}>
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br/>of the pandemic</Typography>
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic in the US has highlighted communities’
@@ -102,7 +104,7 @@ const Home: NextPage = () => {
 							Scroll down to learn more.
 						</Typography>
 					</Grid>
-					<Grid item xs={12} md={5}>
+					<Grid item xs={12} md={6}>
 						<Box
 							sx={{
 								width: '100%',

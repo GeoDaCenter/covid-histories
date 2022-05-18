@@ -32,3 +32,11 @@ h1, h2, h3, h4, h5, h6, .cursive {
 .md-content a {
   color: #00bcd4;
 }
+
+div.skiptranslate {
+  display: none;
+}
+
+div.goog-te-gadget {
+  display: initial;
+}

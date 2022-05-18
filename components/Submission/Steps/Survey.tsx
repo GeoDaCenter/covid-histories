@@ -29,8 +29,9 @@ const raceOptions = [
 const PaddedFormGroup = styled(FormGroup)`
     padding: 1rem 0;
 `
-const SurveyForm: React.FC<{ handleNext: () => void }> = ({
-    handleNext
+const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = ({
+    handleNext,
+    allowSubmit=true
 }) => {
     const dispatch = useDispatch();
 
@@ -55,7 +56,7 @@ const SurveyForm: React.FC<{ handleNext: () => void }> = ({
             handleTextChange("userId", user.email || '')
         }
     }, [user]) // eslint-disable-line
-    
+
     const handleSubmit = async () => {
         const response = await fetch("/api/survey", {
             method: "POST",
@@ -75,7 +76,6 @@ const SurveyForm: React.FC<{ handleNext: () => void }> = ({
             handleNext()
         }
     }
-
     return (<Box
         component="form"
         autoComplete="off"
@@ -160,16 +160,19 @@ const SurveyForm: React.FC<{ handleNext: () => void }> = ({
             {/* <Typography variant="h6">
             How would you describe the place where you live? 
             </Typography> */}
-            <Select
-                id="demo-simple-select"
-                value={placeUrbanicity}
-                label="How would you describe the place where you live? "
-                onChange={(e: SelectChangeEvent) => handleTextChange("placeUrbanicity", e.target.value)}
-            >
-                <MenuItem value={'Urban'}>Urban</MenuItem>
-                <MenuItem value={'Suburban'}>Suburban</MenuItem>
-                <MenuItem value={'Rural'}>Rural</MenuItem>
-            </Select>
+            <FormControl>
+                <InputLabel id="urbanicity-label">How would you describe the place where you live?</InputLabel>
+                <Select
+                    id="urbanicity-label-select"
+                    value={placeUrbanicity}
+                    labelId="urbanicity-label"
+                    onChange={(e: SelectChangeEvent) => handleTextChange("placeUrbanicity", e.target.value)}
+                >
+                    <MenuItem value={'Urban'}>Urban</MenuItem>
+                    <MenuItem value={'Suburban'}>Suburban</MenuItem>
+                    <MenuItem value={'Rural'}>Rural</MenuItem>
+                </Select>
+            </FormControl>
         </PaddedFormGroup>
         <PaddedFormGroup>
             {/* <Typography variant="h6">
@@ -185,14 +188,19 @@ const SurveyForm: React.FC<{ handleNext: () => void }> = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleTextChange('additionalDescription', e.target.value)}
             />
         </PaddedFormGroup>
-        <Button onClick={handleSubmit} variant="contained" color="primary" >
+        {allowSubmit && <Button onClick={handleSubmit} variant="contained" color="primary">
             Submit
-        </Button>
+        </Button>}
     </Box>)
 }
 
-export const Survey: React.FC<StepComponentProps> = ({
-    handleNext
+interface SurveyProps extends StepComponentProps {
+    allowSubmit?: boolean
+}
+
+export const Survey: React.FC<SurveyProps> = ({
+    handleNext,
+    allowSubmit=true
 }) => {
-    return <SurveyForm handleNext={handleNext} />
+    return <SurveyForm handleNext={handleNext} allowSubmit={allowSubmit} />
 }

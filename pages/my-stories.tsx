@@ -200,9 +200,14 @@ const MyStories: NextPage = () => {
 				{user?.email ? (
 					<Grid container sx={{ width: '100%' }}>
 						<Typography variant="h1">My Stories</Typography>
-						{data?.length ? (
+						{!data && 
+							<Grid item xs={12}>
+								<Typography variant="h2">Loading, please wait.</Typography>
+							</Grid>}
+						{(!!data && !!data?.length) && (
 							data.map((story: StoryProps, i: number) => <StoryManager story={story} key={`${story.title}-${story.date}-${i}`} />)
-						) : (
+						)}
+						{(!!data && !data?.length) && (
 							<Grid item xs={12}>
 								<Typography variant="h2">(No stories yet)</Typography>
 								<br />

@@ -39,7 +39,7 @@ export const SubmissionUploadModal: React.FC = () => {
                     While you wait, please tell us a bit about yourself!
 				</Typography>
 				{/* @ts-ignore */}
-				<Survey />
+				<Survey allowSubmit={false} />
 			</Box>
 		</Modal>
 	)

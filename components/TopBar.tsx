@@ -5,7 +5,7 @@ import styles from "../styles/Home.module.css";
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import colors from "../config/colors";
-import { Button, Popover, Typography } from "@mui/material";
+import { Button, Popover, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -20,6 +20,9 @@ const NavbarContainer = styled.nav`
   display: flex;
   margin: 0 auto;
   color: ${colors.darkgray};
+  ul {
+    padding-inline-start:0;
+  }
 
   button.close-mobile {
     display: ${(props) => (props.navOpen ? "block" : "none")};
@@ -35,6 +38,19 @@ const NavbarContainer = styled.nav`
       display: none;
     }
   }
+  .mobile {
+    display:none;
+  }
+
+  @media (max-width:1024px){ 
+    
+    .desktop {
+      display:none; 
+    }
+    .mobile {
+      display:initial;
+    }
+  }
 `;
 
 const NavLogo = styled.div`
@@ -45,6 +61,7 @@ const NavLogo = styled.div`
   display: flex;
   /* justify-content: center; */
   align-items: center;
+  padding-left:1em;
 `;
 
 const NavItems = styled.div`
@@ -114,18 +131,24 @@ const NavItems = styled.div`
   }
 `;
 
-const NavHamburger = styled.button`
+const NavHamburger = styled(Button)`
   margin: 0 0 0 auto !important;
   max-height: 50px;
   max-width: 50px;
   padding: 0.125em !important;
   pointer-events: all;
   overflow: hidden;
+  background:none;
+  border:none;
   &::after {
     display: none;
   }
   @media (min-width: 1025px) {
     display: none;
+  }
+  img {
+    width:100%;
+    height:100%;
   }
 `;
 
@@ -139,12 +162,27 @@ const DropDownNav = styled.ul`
   }
 `
 
+const GoogleTranslateDiv = styled.div`
+  font-size:.75rem;
+  margin:0 .5em;
+  background:${colors.lightgray};
+  border-radius:.5em;
+  padding:.5rem;
+  box-shadow:0 0 5px rgba(0,0,0,0.5);
+  a {
+    font-size:.75rem;
+  }
+`
+
 export const TopBar: React.FC = () => {
-  const {pathname} = useRouter();
-  const [navOpen, setNavOpen] = useState(false);
-  const toggleNavOpen = () => setNavOpen((prev) => !prev);
+  const { pathname } = useRouter();
   const { user } = useUser();
 
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.up('md'));
+  
+  const [navOpen, setNavOpen] = useState<boolean>(false);
+  const [translateOpen, setTranslateOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -154,6 +192,20 @@ export const TopBar: React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const toggleNavOpen = () => setNavOpen((prev) => !prev);
+
+  const invokeGoogleTranslate = () => {
+    try {
+      new window.google.translate.TranslateElement(
+        {pageLanguage: 'en'}, 
+        'google_translate_element'
+      ); 
+      setTranslateOpen(true)
+    } catch {
+      console.log("Google translate failed to load");
+    }
+  }
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -166,7 +218,7 @@ export const TopBar: React.FC = () => {
           <Link href="/">
             <a>
               <Typography fontSize="1.5rem">
-              Atlas <span className="cursive">Stories</span>
+                Atlas <span className="cursive">Stories</span>
               </Typography>
             </a></Link>
         </NavLogo>
@@ -183,15 +235,16 @@ export const TopBar: React.FC = () => {
                 <a>ABOUT</a>
               </Link>
             </li>
-            <li style={{marginRight:'.25em'}}> 
+            <li style={{ marginRight: '.25em' }}>
               <Link href="/privacy">
                 <a>PRIVACY</a>
               </Link>
             </li>
             {user ? (
               <>
-                <li><Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', marginLeft:'0.5em', background: colors.orange }}>
-                  {user.name} <img src="/down-arrow.svg" width="10px" height="10px" style={{margin:'0 2px'}} alt="" />
+              <li className="desktop">
+                <Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', marginLeft: '0.5em', background: colors.orange }}>
+                  {user.name} <img src="/down-arrow.svg" width="10px" height="10px" style={{ margin: '0 2px' }} alt="" />
                 </Button>
                   <Popover
                     id={id}
@@ -221,19 +274,41 @@ export const TopBar: React.FC = () => {
                         </Link>
                       </li>
                     </DropDownNav>
-                  </Popover></li>
-
+                  </Popover>
+              </li>
+                <span className="mobile">
+                  <hr/>
+                <li>
+                  <Link href="/my-stories">
+                    <a>My Stories</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/help">
+                    <a>Help</a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/api/auth/logout">
+                    <a>Logout</a>
+                  </Link>
+                </li>
+                </span>
               </>
             ) : (
               <li><Link href={`/api/auth/login?redirect=${pathname}`}><a>LOGIN</a></Link></li>
             )}
+            <li>
+              {!translateOpen && <Button onClick={invokeGoogleTranslate} sx={{color:'black', whiteSpace: 'nowrap'}}>Translate</Button>}
+              <GoogleTranslateDiv style={{visibility: translateOpen ? 'visible' : 'hidden'}} id="google_translate_element"></GoogleTranslateDiv>
+            </li>
           </ul>
         </NavItems>
-        <NavHamburger onClick={toggleNavOpen}>
-          {navOpen ? "Close" : "Open"}
+        <NavHamburger onClick={toggleNavOpen} className="mobile">
+          <img src="/menu.svg" alt="" />
         </NavHamburger>
         <button className="close-mobile" onClick={toggleNavOpen}>
-          ×
+          &times;
         </button>
       </NavbarContainer>
     </NavBarOuterContainer>
