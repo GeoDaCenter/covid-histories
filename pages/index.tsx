@@ -82,7 +82,6 @@ const Home: NextPage = () => {
 					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
 				/>
 			</Head>
-			<Script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
 			
 			<ProgressIndicator containerRef={containerRef} />
 			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
