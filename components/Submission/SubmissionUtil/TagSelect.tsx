@@ -29,7 +29,11 @@ export const TagSelect: React.FC<TagSelectProps> = ({
     onChange(tags.filter(t => t !== tag))
   }
   const addTag = (tag: string) => {
-    onChange([...tags, tag])
+    if (!tags || !tags.length){
+      onChange([tag])
+    } else {
+      onChange([...tags, tag])
+    }
   }
 
   return (
@@ -38,7 +42,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
         <Typography>
           Click to add additional tags
         </Typography>
-        {allTags.filter(tag => !tags.includes(tag)).map((Tag, i) => <Button key={i} onClick={() => addTag(Tag)} sx={{color:'chartreuse', textTransform:'none'}}>#{Tag} +</Button>)}
+        {allTags.filter(tag => !(tags?.includes(tag))).map((Tag, i) => <Button key={i} onClick={() => addTag(Tag)} sx={{color:'chartreuse', textTransform:'none'}}>#{Tag} +</Button>)}
       </Grid>
       <Grid item xs={12} md={6}>
         <Typography>

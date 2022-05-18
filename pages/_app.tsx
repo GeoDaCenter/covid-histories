@@ -6,6 +6,7 @@ import { TopBar } from '../components/TopBar'
 import { Footer } from '../components/Footer'
 import { createTheme } from '@mui/material/styles'
 import colors from '../config/colors'
+import Script from 'next/script'
 
 const theme = createTheme({
 	palette: {
@@ -53,6 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<UserProvider>
 			<ThemeProvider theme={theme}>
 				<TopBar />
+				<Script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
 				<Component {...pageProps} />
 				<Footer />
 			</ThemeProvider>
