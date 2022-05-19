@@ -90,7 +90,12 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	} = useReactMediaRecorder({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
-		askPermissionOnMount: true
+		askPermissionOnMount: true,
+		mediaRecorderOptions: { 
+			mimeType: 'video/webm;codecs=h264',
+			videoBitsPerSecond: 5000000,
+			audioBitsPerSecond: 128000
+		}
 	})
 
 	const availableDevices = useGetMediaDevices({
