@@ -95,9 +95,7 @@ export const PhotoLoader: React.FC<PhotoLoaderProps> = ({
 	}, [photoSource]) // eslint-disable-line
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
-		onDrop,
-		maxFiles: 1,
-		maxSize: 5
+		onDrop
 	})
 
 	return (
