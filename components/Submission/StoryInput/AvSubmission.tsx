@@ -61,7 +61,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const toggleUseVideo = () => dispatch(toggleAudioVideo())
 	const [recordingTimeout, setRecordingTimeout] = useState(null)
 	const [showAdvancedModal, setShowAdvancedModal] = useState<boolean>(false)
-	const toggleAdvancedModal = () => setShowAdvancedModal(prev => !prev)
+	const toggleAdvancedModal = () => setShowAdvancedModal((prev) => !prev)
 	const [cachedStory, setCachedStory] = useState<string>('')
 
 	const [videoConstraints, setVideoConstraints] =
@@ -91,8 +91,8 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	} = useReactMediaRecorder({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
-		askPermissionOnMount: true,
-		// mediaRecorderOptions: { 
+		askPermissionOnMount: true
+		// mediaRecorderOptions: {
 		// 	mimeType: 'video/webm; codecs=vp9',
 		// 	videoBitsPerSecond: 5000000,
 		// 	audioBitsPerSecond: 128000,
@@ -141,33 +141,50 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 			<Grid container spacing={3}>
 				<Grid item xs={12} md={6}>
 					<Typography>
-						We know getting in front of a camera or recording your voice can be intimidating. 
-						Take some deep breaths before you hit record and imagine you are talking to a family member or friend.  
 						Here are some tips to help you share your story:
 					</Typography>
 					<br />
-						{useVideo && (
-							<Typography>
-								Video tips:
-								<ul>
-									<li>Try to record in an area with good lighting &amp; minimal background noise</li>
-									<li>Raise your camera to eye-level. You can use a stack of books or other sturdy objects to lift up your device</li>
-									<li>If you are using your phone or handheld device, make sure to set your camera on a sturdy surface or use a tripod if you have one </li>
-									<li>Look directly into the camera. Imagine you are talking to a good friend</li>
-								</ul> 
-							</Typography>
-						)}
-						
+					{useVideo && (
 						<Typography>
-							Audio tips:
+							Video tips:
 							<ul>
-								<li>Listen to the room, and try to find a quiet area</li>
-								<li>Avoid distracting noises, like other people talking, clothes or jewelry rustling, or chip bags crackling</li>
-								<li>Place your device on a steady surface, and try not to move it too much</li>
+								<li>
+									Try to record in an area with good lighting and minimal
+									background noise. Avoid sunny windows or bright lights shining
+									behind you.
+								</li>
+								<li>
+									Raise your camera to eye-level. You can use a stack of books
+									or other sturdy objects to lift up your device.
+								</li>
+								<li>
+									If you are using your phone or handheld device, make sure to
+									set your camera on a sturdy surface or use a tripod.
+								</li>
+								<li>
+									Look directly into the camera. Imagine you are talking to a
+									good friend or family member.
+								</li>
 							</ul>
-							</Typography>
+						</Typography>
+					)}
+
+					<Typography>
+						Audio tips:
+						<ul>
+							<li>Listen to the room, and try to find a quiet area.</li>
+							<li>
+								Avoid distracting noises, like other people talking, clothes or
+								jewelry rustling, or chip bags crackling.
+							</li>
+							<li>
+								Place your device on a steady surface, and try not to move it
+								too much.
+							</li>
+						</ul>
+					</Typography>
 					{hasRecorded && (
-						<Alert severity="success" sx={{my: 2}}>
+						<Alert severity="success" sx={{ my: 2 }}>
 							Your story has been recorded! You can review your recording on
 							this page, and when you are happy with it please proceed to the
 							next step.
@@ -183,15 +200,29 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 					)}
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<Box sx={{ padding: '1em', marginBottom: '1em', background: colors.darkgray, border: `1px solid ${colors.gray}` }}>
-					<Grid container spacing={2} alignItems="center" alignContent="center">
-						<Grid item xs={8}>
-							<AvSwitch useVideo={useVideo} toggleUseVideo={toggleUseVideo} />
+					<Box
+						sx={{
+							padding: '1em',
+							marginBottom: '1em',
+							background: colors.darkgray,
+							border: `1px solid ${colors.gray}`
+						}}
+					>
+						<Grid
+							container
+							spacing={2}
+							alignItems="center"
+							alignContent="center"
+						>
+							<Grid item xs={8}>
+								<AvSwitch useVideo={useVideo} toggleUseVideo={toggleUseVideo} />
+							</Grid>
+							<Grid item xs={4}>
+								<Button variant="outlined" onClick={toggleAdvancedModal}>
+									Advanced Settings
+								</Button>
+							</Grid>
 						</Grid>
-						<Grid item xs={4}>
-							<Button variant="outlined" onClick={toggleAdvancedModal}>Advanced Settings</Button>
-						</Grid>
-					</Grid>
 					</Box>
 					<Recorder
 						{...{

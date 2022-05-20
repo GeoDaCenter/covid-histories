@@ -100,7 +100,11 @@ const Recorder: React.FC<RecorderProps> = ({
 			)}
 			<Grid container spacing={1} alignItems="center" alignContent="center">
 				<Grid item xs={12}>
-					{hasRecorded ? <Alert severity='warning'>Warning: Recording a new story will delete your previous draft!</Alert> : null}
+					{hasRecorded ? (
+						<Alert severity="warning">
+							Warning: Recording a new story will delete your previous draft!
+						</Alert>
+					) : null}
 				</Grid>
 				<Grid item xs={12} md={6}>
 					<RecordingButton
@@ -118,7 +122,11 @@ const Recorder: React.FC<RecorderProps> = ({
 		<>
 			<Grid container spacing={1} alignItems="center" alignContent="center">
 				<Grid item xs={12}>
-					{hasRecorded ? <Alert severity='warning'>Warning: Recording a new story will delete your previous draft!</Alert> : null}
+					{hasRecorded ? (
+						<Alert severity="warning">
+							Warning: Recording a new story will delete your previous draft!
+						</Alert>
+					) : null}
 				</Grid>
 				<Grid item xs={12} md={4}>
 					<RecordingButton

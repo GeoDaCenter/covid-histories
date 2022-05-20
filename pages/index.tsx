@@ -10,8 +10,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Icons } from '../components/Icons'
 import { useInView } from 'react-intersection-observer';
-import { color } from '@mui/system'
-import Script from 'next/script';
 
 const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	padding-top:2em;
