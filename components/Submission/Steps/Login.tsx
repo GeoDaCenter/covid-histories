@@ -28,7 +28,7 @@ export const Login: React.FC<StepComponentProps> = ({
             dispatch(setEmailVerified(true)) 
         } else {
             dispatch(setEmailVerified(false)) 
-        }
+        } // eslint-disable-next-line
     },[user?.email, user?.email_verified, hasExceededSubmissions])
 
     if (hasExceededSubmissions) {
