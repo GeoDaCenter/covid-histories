@@ -40,7 +40,7 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 	const contentUrl =
 		content.length === 1
 			? content[0].url // @ts-ignore
-			: content.find((f) => f.fileType !== 'md').url
+			: content.find((f) => f.fileType !== 'md')?.url
 
 	const additionalContentUrl =
 		content.length > 1 ? content.find((f) => f.fileType === 'md')?.url : null

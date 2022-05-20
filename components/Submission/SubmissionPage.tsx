@@ -204,7 +204,6 @@ export const SubmissionPage: React.FC = () => {
 				handleNext={handleNext}
 				handleReset={handleReset}
 			/>
-			<SubmissionUploadModal />
 			<Snackbar open={unfinished} autoHideDuration={10000} onClose={handleCloseToast}>
 				<Alert onClose={handleCloseToast} severity="warning" sx={{ width: '100%', maxWidth:'400px' }}>
 					You started a submission, but didn&apos;t finish it. This story is only saved to this device.

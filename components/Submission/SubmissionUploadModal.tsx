@@ -17,8 +17,9 @@ const style = {
 	overflowY: 'auto',
 }
 
-export const SubmissionUploadModal: React.FC = () => {
-    const open = useSelector(selectIsUploading)
+export const SubmissionUploadModal: React.FC<{open: boolean}> = ({
+	open
+}) => {
     const uploadProgress = useSelector(selectUploadProgress)
     
 	return (

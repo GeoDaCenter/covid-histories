@@ -37,7 +37,8 @@ const initialVideoConstraints: MediaTrackConstraints = {
 		min: 640,
 		max: 1920,
 		ideal: 1920
-	}
+	},
+	frameRate: 30
 }
 
 const initialAudioConstraints: MediaTrackConstraints = {
@@ -91,11 +92,12 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
 		askPermissionOnMount: true,
-		mediaRecorderOptions: { 
-			mimeType: 'video/webm;codecs=h264',
-			videoBitsPerSecond: 5000000,
-			audioBitsPerSecond: 128000
-		}
+		// mediaRecorderOptions: { 
+		// 	mimeType: 'video/webm; codecs=vp9',
+		// 	videoBitsPerSecond: 5000000,
+		// 	audioBitsPerSecond: 128000,
+		// 	bitsPerSecond: 5000000
+		// }
 	})
 
 	const availableDevices = useGetMediaDevices({
@@ -111,6 +113,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 
 	useEffect(() => {
 		if (status === 'stopped' && mediaBlobUrl !== null) {
+			console.log('mediaBlobUrl', mediaBlobUrl)
 			const generateBlob = async () => {
 				const data = await fetch(mediaBlobUrl).then((r) => r.blob())
 				const blob = new Blob([data], { type: MIMETYPE })

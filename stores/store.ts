@@ -17,12 +17,19 @@ import surveyReducer from './survey/surveySlice'
 const persistConfig = {
 	key: 'root',
 	version: 1,
-	storage
+	storage,
 }
+const submissionConfig = {
+	key: 'submission',
+	storage,
+	blacklist: ['isUploading']
+}
+
 const rootReducer = combineReducers({
-	submission: submissionReducer,
+	submission: persistReducer(submissionConfig, submissionReducer),
 	survey: surveyReducer
 })
+
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
