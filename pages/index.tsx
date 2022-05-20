@@ -89,12 +89,11 @@ const Home: NextPage = () => {
 					<Grid item xs={12} md={6}>
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br/>of the pandemic</Typography>
 						<Typography paddingTop="1em">
-							The COVID-19 pandemic in the US has highlighted communities’
-							capacity for resilience, impacted different people in unexpected
-							ways, and changed everyday life. Atlas Stories curates experiences
-							behind the statistical trends. We’re working to build a more
-							holistic and human audio-visual archive on the Atlas. The voices
-							and perspectives included aspire to represent the diversity of
+							The COVID-19 pandemic in the US highlighted community
+							capacity for resilience and unexpected changes everyday life. 
+							This project collects stories behind the statistical trends. 
+							We are building a more holistic and human audio-visual experience of the pandemic. 
+							The voices and perspectives included aspire to represent the diversity of
 							experience and opinion in the United States.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">

@@ -84,7 +84,7 @@ const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = (
         <Typography variant="h3">Tell us about yourself</Typography>
         <PaddedFormGroup>
             <Typography variant="h6">
-                What is your self-identified race and/or ethnicity? <i>Select all that apply:</i>
+                What is your <u>self-identified</u> race and/or ethnicity? <i>Select all that apply:</i>
             </Typography>
             {raceOptions.map((name, i) => <Grid
                 key={`${name}-checkbox-self-${i}`} container spacing={1} sx={{ marginBottom: '.25em' }}>
@@ -109,7 +109,7 @@ const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = (
         </PaddedFormGroup>
         <PaddedFormGroup>
             <Typography variant="h6">
-                How do you think others perceive your race and/or ethnicity? <i>Select all that apply:</i>
+                How do you think <u>others perceive</u> your race and/or ethnicity? <i>Select all that apply:</i>
             </Typography>
             {raceOptions.map((name, i) => <Grid
                 key={`${name}-checkbox-perc-${i}`} container spacing={1} sx={{ marginBottom: '.25em' }}>

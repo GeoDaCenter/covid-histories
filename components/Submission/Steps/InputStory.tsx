@@ -21,11 +21,26 @@ export const InputStory: React.FC<StepComponentProps> = ({
 }) => {
 	const submissionType = useSelector(selectType)
 	const SubmissionComponent = inputComponentMap[submissionType]
-	
+
 	return (
-		<Grid container spacing={2} minHeight="75vh" alignContent="center" justifyContent="center" >
+		<Grid container spacing={2} minHeight="75vh" alignContent="start" justifyContent="center" >
 			<Grid item xs={12}>
-				<Typography variant="h2">Make your story</Typography>
+				<Typography variant="h2">Share your story</Typography>
+				{submissionType === 'written' && <>
+					<Typography>
+						We know sharing and writing about personal experiences can be intimidating.
+						Take some deep breaths before you start writing and think about the experience you want to share.
+						Here are some tips to help you share your story:
+					</Typography>
+					<Typography>
+						<ul>
+							<li>Write from your senses and your experience; concrete images, actions, moments, conversations. Put your listeners in the moment. </li>
+							<li>Read your story to someone else, or read it aloud to yourself.</li>
+							<li>Focus on the important details of your experiences.</li>
+						</ul>
+
+					</Typography>
+				</>}
 			</Grid>
 			<Grid item xs={12}>
 				{SubmissionComponent !== undefined && (

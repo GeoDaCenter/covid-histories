@@ -6,7 +6,7 @@ import { db } from '../../../stores/indexdb/db'
 // @ts-ignore
 
 import dynamic from 'next/dynamic'
-import { Box, Button, Grid } from '@mui/material'
+import { Alert, Box, Button, Grid, Typography } from '@mui/material'
 import styled from 'styled-components'
 import colors from '../../../config/colors'
 import { StoryInputProps } from './types'
@@ -140,16 +140,38 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 		<RecorderContainer>
 			<Grid container spacing={3}>
 				<Grid item xs={12} md={6}>
-					<p>Welcome! Getting started instructions...</p>
+					<Typography>
+						We know getting in front of a camera or recording your voice can be intimidating. 
+						Take some deep breaths before you hit record and imagine you are talking to a family member or friend.  
+						Here are some tips to help you share your story:
+					</Typography>
+					<br />
+						{useVideo && (
+							<Typography>
+								Video tips:
+								<ul>
+									<li>Try to record in an area with good lighting &amp; minimal background noise</li>
+									<li>Raise your camera to eye-level. You can use a stack of books or other sturdy objects to lift up your device</li>
+									<li>If you are using your phone or handheld device, make sure to set your camera on a sturdy surface or use a tripod if you have one </li>
+									<li>Look directly into the camera. Imagine you are talking to a good friend</li>
+								</ul> 
+							</Typography>
+						)}
+						
+						<Typography>
+							Audio tips:
+							<ul>
+								<li>Listen to the room, and try to find a quiet area</li>
+								<li>Avoid distracting noises, like other people talking, clothes or jewelry rustling, or chip bags crackling</li>
+								<li>Place your device on a steady surface, and try not to move it too much</li>
+							</ul>
+							</Typography>
 					{hasRecorded && (
-						<p>
+						<Alert severity="success" sx={{my: 2}}>
 							Your story has been recorded! You can review your recording on
 							this page, and when you are happy with it please proceed to the
 							next step.
-							<br />
-							<br />
-							<b>Re-recording your story will delete your last draft.</b>
-						</p>
+						</Alert>
 					)}
 					{mediaInUse && (
 						<p>

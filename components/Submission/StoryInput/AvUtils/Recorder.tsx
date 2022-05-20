@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Timer from './Timer'
 import styled from 'styled-components'
 import { AudioPreview, VideoPreview } from './MediaPreviews'
-import { Button, Grid } from '@mui/material'
+import { Alert, Button, Grid } from '@mui/material'
 import colors from '../../../../config/colors'
 
 const AudioVideoContainer = styled.div`
@@ -99,6 +99,9 @@ const Recorder: React.FC<RecorderProps> = ({
 				</AudioVideoContainer>
 			)}
 			<Grid container spacing={1} alignItems="center" alignContent="center">
+				<Grid item xs={12}>
+					{hasRecorded ? <Alert severity='warning'>Warning: Recording a new story will delete your previous draft!</Alert> : null}
+				</Grid>
 				<Grid item xs={12} md={6}>
 					<RecordingButton
 						startRecording={startRecording}
@@ -114,6 +117,9 @@ const Recorder: React.FC<RecorderProps> = ({
 	) : (
 		<>
 			<Grid container spacing={1} alignItems="center" alignContent="center">
+				<Grid item xs={12}>
+					{hasRecorded ? <Alert severity='warning'>Warning: Recording a new story will delete your previous draft!</Alert> : null}
+				</Grid>
 				<Grid item xs={12} md={4}>
 					<RecordingButton
 						startRecording={startRecording}

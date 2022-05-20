@@ -33,9 +33,6 @@ const RichTextExample = ({
 
   return (
     <Slate editor={editor} value={value} onChange={handleChange}>
-      <Toolbar>
-        <p>Write your story below. <br/>Progress will automatically save on this device.</p>
-      </Toolbar>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}

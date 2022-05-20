@@ -208,7 +208,7 @@ export const SubmissionPage: React.FC = () => {
 				<Alert onClose={handleCloseToast} severity="warning" sx={{ width: '100%', maxWidth:'400px' }}>
 					You started a submission, but didn&apos;t finish it. This story is only saved to this device.
 					<br/><br/>
-					You can continue where you left off, or <Button onClick={handleReset} sx={{padding:0, textTransform:'none'}}>click here to start over.</Button>
+					You can finish submitting this story, or <Button onClick={handleReset} sx={{padding:0, textTransform:'none'}}>click here to start over.</Button>
 				</Alert>
 			</Snackbar>
 		</Box>
