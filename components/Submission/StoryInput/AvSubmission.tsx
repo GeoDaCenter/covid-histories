@@ -15,6 +15,7 @@ import { useReactMediaRecorder } from 'react-media-recorder'
 import { useGetMediaDevices } from '../../../hooks/useGetMediaDevices'
 import { AdvancedSettingsModal } from './AvUtils/AdvancedSettingsModal'
 import { AvSwitch } from './AvUtils/AvSwitch'
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 const Recorder = dynamic(() => import('./AvUtils/Recorder'), {
 	loading: () => <p>...</p>,
 	ssr: false
@@ -37,7 +38,8 @@ const initialVideoConstraints: MediaTrackConstraints = {
 		min: 640,
 		max: 1920,
 		ideal: 1920
-	}
+	},
+
 }
 
 const initialAudioConstraints: MediaTrackConstraints = {
@@ -80,6 +82,11 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 			deviceId
 		})
 	}
+	const ffmpeg = createFFmpeg({
+		corePath: "/ffmpeg/ffmpeg-core.js",
+		log: true,
+	});
+
 	const {
 		status,
 		startRecording,
@@ -90,13 +97,24 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	} = useReactMediaRecorder({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
-		askPermissionOnMount: true,
-		mediaRecorderOptions: { 
-			mimeType: 'video/webm;codecs=h264',
-			videoBitsPerSecond: 5000000,
-			audioBitsPerSecond: 128000
-		}
+		askPermissionOnMount: false,
+		// mediaRecorderOptions: { 
+			// mimeType:'video/webm; codecs="vp8, vorbis"',
+			// videoBitsPerSecond: 2500000,
+			// audioBitsPerSecond: 128000,
+			// bitsPerSecond: 2500000
+		// }
 	})
+
+	useEffect(() => {
+		const timeout = status === 'recording' 
+			? setTimeout(() => {
+				stopRecording()
+			}, 30 * 60 * 1000)
+			: setTimeout(() => {}, 5000)
+			
+		return () => clearTimeout(timeout)
+	},[status])
 
 	const availableDevices = useGetMediaDevices({
 		handleAudioSource,
@@ -111,13 +129,25 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 
 	useEffect(() => {
 		if (status === 'stopped' && mediaBlobUrl !== null) {
+			const doTranscode = async () => {
+				console.log('Loading ffmpeg-core.js');
+				await ffmpeg.load();
+				console.log('Start transcoding');
+				ffmpeg.FS('writeFile', 'test.avi', await fetchFile(mediaBlobUrl));
+				await ffmpeg.run('-i', 'test.avi', 'test.mp4');
+				console.log('Complete transcoding');
+				const data = ffmpeg.FS('readFile', 'test.mp4');
+				const blob = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }))
+				handleCacheStory(blob)
+				setCachedStory('')
+			};
 			const generateBlob = async () => {
 				const data = await fetch(mediaBlobUrl).then((r) => r.blob())
 				const blob = new Blob([data], { type: MIMETYPE })
 				handleCacheStory(blob)
 				setCachedStory('')
 			}
-			generateBlob()
+			doTranscode()
 		}
 	}, [status]) // eslint-disable-line
 

@@ -29,16 +29,18 @@ interface TimerProps {
 
 const Timer: React.FC<TimerProps> = ({ status, length }) => {
   const [time, setTime] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number>(0);
   const max = length * 60;
   const [intervalFunc, setIntervalFunc] = useState<typeof setInterval | null>(null);
 
   useEffect(() => {
     // @ts-ignore
     clearInterval(intervalFunc);
+    setStartTime(Date.now());
     setTime(0);
     if (status === 'recording') {
       // @ts-ignore
-      setIntervalFunc(setInterval(() => setTime((prev) => prev + 0.1), 100));
+      setIntervalFunc(setInterval(() => setTime((Date.now() - startTime)/1000), 1000));
     }
   }, [status]); // eslint-disable-line 
   const timestamp =
