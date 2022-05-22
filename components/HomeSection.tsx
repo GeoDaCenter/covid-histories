@@ -33,7 +33,7 @@ export const HomeSection = React.forwardRef((props: HomeSectionProps, ref: any) 
         ...sx
       }}
     >
-      <Box sx={{maxWidth: '1140px', margin:'0 auto', padding:'1em', display:'block'}}>{children}</Box>
+      <Box sx={{maxWidth: '1600px', margin:'0 auto', padding:'1em', display:'block'}}>{children}</Box>
     </Box>
   );
 })
