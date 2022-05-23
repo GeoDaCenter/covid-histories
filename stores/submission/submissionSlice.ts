@@ -124,7 +124,11 @@ export const submissionSlice = createSlice({
 		},
 		setEmailVerified: (state, action: PayloadAction<boolean>) => {
 			state.emailVerified = action.payload
-			state.canProgress = canProgressFns[state.step](state)
+			const tempState = {
+				...state,
+				emailVerified: action.payload
+			}
+			state.canProgress = canProgressFns[state.step](tempState)
 			state.canGoBack = canGoBackFns[state.step]()
 		},
 		setHasEnteredContent: (state) => {
