@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Image src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="253px" height="50px" />
+            <img src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="253px" height="50px" />
           </Grid>
           <Grid item xs={12} md={3} alignContent="center" justifyContent="center">
             <NavUl>
