@@ -59,7 +59,11 @@ export const Login: React.FC<StepComponentProps> = ({
                     <br/>
                     {user.email_verified 
                         ? <Alert severity="success" sx={{mt: 2}}>Your email has been verified, and you may now submit your story.</Alert>
-                        : <Alert severity="warning" sx={{mt: 2}}>You must verify your email to submit your story. Please check your email and spam folder for a confirmation.</Alert>
+                        : <Alert severity="warning" sx={{mt: 2}}>
+                            You must verify your email to submit your story. Please check your email and spam folder for a confirmation.
+                            <br/><br/>
+                            If you already verified your email and are still seeing this message, please try logging out and logging back in.
+                        </Alert>
                     } 
                 </Typography>
             </Grid>
