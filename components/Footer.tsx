@@ -31,10 +31,11 @@ export const Footer: React.FC = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        py: 2
       }}
     >
       <Box>
-        <Grid container spacing={5} maxWidth="1600px">
+        <Grid container spacing={5} className="standard-page-width">
           <Grid item xs={12} md={6}>
             <Typography fontWeight={"bold"} variant="h4">
               Atlas <span className="cursive">Stories</span>

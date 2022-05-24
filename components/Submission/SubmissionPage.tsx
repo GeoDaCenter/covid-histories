@@ -188,7 +188,7 @@ export const SubmissionPage: React.FC = () => {
 	// @ts-ignore
 	const CurrentStepComponent = stepComponents[activeStep]
 	return (
-		<Box sx={{ minHeight: '100vh', maxWidth: '1600px', margin: '1.5em auto' }}>
+		<Box sx={{ minHeight: '100vh', margin: '1.5em auto' }} className="standard-page-width">
 			<CurrentStepComponent
 				handleNext={handleNext}
 				storyId={storyId}

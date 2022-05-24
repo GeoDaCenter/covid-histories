@@ -16,7 +16,6 @@ const NavBarOuterContainer = styled.div`
 `;
 const NavbarContainer = styled.nav`
   width: 100%;
-  max-width: 1600px;
   display: flex;
   margin: 0 auto;
   color: ${colors.darkgray};
@@ -213,7 +212,7 @@ export const TopBar: React.FC = () => {
   return (
     <NavBarOuterContainer>
       {/* @ts-ignore */}
-      <NavbarContainer navOpen={navOpen}>
+      <NavbarContainer navOpen={navOpen} className="standard-page-width">
         <NavLogo>
           <Link href="/">
             <a>

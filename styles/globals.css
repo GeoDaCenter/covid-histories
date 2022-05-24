@@ -41,3 +41,14 @@ div.skiptranslate {
 div.goog-te-gadget {
   display: initial;
 }
+
+/* PAGE DISPLAY GLOBAL */
+.standard-page-width {
+  max-width:80vw;
+}
+
+@media (max-width: 768px) {
+  .standard-page-width {
+    max-width:100vw;
+  }
+}

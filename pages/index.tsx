@@ -126,7 +126,7 @@ const Home: NextPage = () => {
 				fadeout={2}
 				currInView={currInView}
 			>
-				<Typography variant="h2">Your experiences, your medium</Typography>
+				<Typography variant="h3" >Your experiences, your medium</Typography>
 				<Typography>
 					We support four different ways to tell your story through our web
 					portal or over the phone. You’re invited to share up to three

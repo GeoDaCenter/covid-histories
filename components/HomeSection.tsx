@@ -29,11 +29,13 @@ export const HomeSection = React.forwardRef((props: HomeSectionProps, ref: any) 
         transition:'250ms opacity',
         transitionDelay: '250ms visibility',
         opacity: (fadeout && currInView) && fadeout < currInView ? 0 : 1,
+        maxWidth:'100vw', 
+        overflow:'hidden',
         // visibility: fadeout < currInView ? 'hidden' : 'visible',
         ...sx
       }}
     >
-      <Box sx={{maxWidth: '1600px', margin:'0 auto', padding:'1em', display:'block'}}>{children}</Box>
+      <Box sx={{margin:'0 auto', padding:'1em', display:'block'}} className="standard-page-width">{children}</Box>
     </Box>
   );
 })
