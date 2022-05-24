@@ -14,6 +14,7 @@ const NavUl = styled.ul`
   padding-inline-start:0;
   li {
     margin-left:0;
+    margin-top:.5em;
     a {
       text-decoration:underline;
     }
@@ -65,6 +66,16 @@ export const Footer: React.FC = () => {
                   <a>About</a>
                 </Link>
               </li>
+              <li>
+                <Link href="/license">
+                  <a>License</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/submission-overview">
+                  <a>Submission Help</a>
+                </Link>
+              </li>
             </NavUl>
           </Grid>
           <Grid item xs={12} md={3}>
@@ -95,6 +106,8 @@ export const Footer: React.FC = () => {
             Atlas Stories is run by the US Covid Atlas, a project by the Healthy Regions and Policy Lab and the Center for Spatial Data Science at the University of Chicago. The US Covid Atlas is funded in part by the Robert Wood Johnson Foundation.
             <br/><br/>
             <a href="https://www.netlify.com/" target="_blank" rel="noopener noreferrer">Powered by Netlify</a>
+            <br/><br/>
+            Copyright © 2022 US Covid Atlas, Atlas Stories. All rights reserved.
           </Grid>
         </Grid>
       </Box>
