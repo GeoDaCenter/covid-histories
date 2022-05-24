@@ -86,8 +86,8 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
                 <li>
-                  <Link href="/help">
-                    <a>Help</a>
+                  <Link href="/resources">
+                    <a>Resources</a>
                   </Link>
                 </li>
                 <li>

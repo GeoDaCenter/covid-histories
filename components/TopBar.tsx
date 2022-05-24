@@ -263,8 +263,8 @@ export const TopBar: React.FC = () => {
                         </Link>
                       </li>
                       <li>
-                        <Link href="/help">
-                          <a>Help</a>
+                        <Link href="/resources">
+                          <a>Resources</a>
                         </Link>
                       </li>
                       <li>
@@ -283,8 +283,8 @@ export const TopBar: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/help">
-                    <a>Help</a>
+                  <Link href="/resources">
+                    <a>Resources</a>
                   </Link>
                 </li>
                 <li>
