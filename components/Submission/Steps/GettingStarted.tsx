@@ -1,4 +1,5 @@
 import { Grid, Typography } from "@mui/material";
+import Link from "next/link";
 import React from "react";
 import { StepComponentProps } from "./types";
 
@@ -18,6 +19,10 @@ export const GettingStarted: React.FC<StepComponentProps> = () => {
               have adapted. Whatever story you choose to share, it will help
               researchers and everyone better understand what COVID - 19 looked like
               for you and your community.
+            </Typography>
+            <br/>
+            <Typography>
+              If at any time in submitting your story you feel distressed, please visit our resources page for <Link href="resources"><a style={{textDecoration:"underline"}}>emotional and mental health resources</a></Link>.
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
