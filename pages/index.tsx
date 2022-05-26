@@ -89,7 +89,7 @@ const Home: NextPage = () => {
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
 							capacity for resilience and unexpected changes everyday life. 
-							This project collects stories behind the statistical trends. 
+							This project collects stories behind the statistics and data. 
 							We are building a more holistic and human audio-visual experience of the pandemic. 
 							The voices and perspectives included aspire to represent the diversity of
 							experiences in the United States.
@@ -186,11 +186,11 @@ const Home: NextPage = () => {
 					<Grid item xs={12} sm={6}>
 						<Typography variant="h3">More than just data</Typography>
 						<Typography>
-							Atlas Stories expands the numeric data on the US Covid Atlas
+							Atlas Stories expands the data on the US Covid Atlas
 							to contextualize how and what you experienced during the pandemic.
 							Stories are layered on top of our map of COVID-19 data at the county
-							level. We’re working to get an equitable group of stories from
-							across the US, from cities, towns, suburbs, and everywhere in
+							level. We’re working to collect an equitable group of stories from
+							across the U.S., from cities, towns, suburbs, and everywhere in
 							between.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
@@ -226,7 +226,7 @@ const Home: NextPage = () => {
 					<Grid item xs={12} sm={6}>
 						<Typography variant="h4">Have more questions?</Typography>
 						<Typography>
-							We’re here to make telling your story easy and worry-free. Contact
+							We’re here to make telling your story easy. Contact
 							us with any questions about how to share your story, the terms and
 							license agreement, and how your story may be published.
 						</Typography>
