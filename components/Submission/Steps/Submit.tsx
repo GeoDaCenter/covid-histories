@@ -158,21 +158,6 @@ export const Submit: React.FC<StepComponentProps> = ({
 			? '&fileType=' + entry?.content?.type
 			: ''
 
-		const uploadURL = await getSubmissionUrl(storyType, storyId, storyType, additionalParams)
-
-		if (uploadURL && entry?.content) {
-			try {
-				const blob = entry.type === 'written'
-					? str2blob(entry.content)
-					: entry.content
-
-				if (typeof blob === 'object') {
-					handleSendFile(blob, uploadURL)
-				}
-			} catch {
-				handleFailedUpload()
-			}
-		}
 		const metaUploadURL = await getSubmissionUrl(storyType, storyId + "_meta", 'meta')
 		if (entry?.additionalContent) {
 			const additionalContentURL = await getSubmissionUrl(storyType, storyId, 'written')
@@ -195,6 +180,21 @@ export const Submit: React.FC<StepComponentProps> = ({
 			}
 			const blob = str2blob(JSON.stringify(meta))
 			handleSendFile(blob, metaUploadURL, true)
+		}
+		const uploadURL = await getSubmissionUrl(storyType, storyId, storyType, additionalParams)
+
+		if (uploadURL && entry?.content) {
+			try {
+				const blob = entry.type === 'written'
+					? str2blob(entry.content)
+					: entry.content
+
+				if (typeof blob === 'object') {
+					handleSendFile(blob, uploadURL)
+				}
+			} catch {
+				handleFailedUpload()
+			}
 		}
 	}
 
