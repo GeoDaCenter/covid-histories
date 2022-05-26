@@ -223,7 +223,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 							<Typography>We can publish your story</Typography>
 						</li>
 						<li>
-							<Typography>You agree to the <Link href="/privacy"><a target="_blank" style={{ textDecoration: 'underline' }}>full license terms</a></Link></Typography>
+							<Typography>You agree to the <Link href="/license"><a target="_blank" style={{ textDecoration: 'underline' }}>full license terms</a></Link></Typography>
 						</li>
 					</ul>
 					<Typography>
