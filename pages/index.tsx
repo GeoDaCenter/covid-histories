@@ -87,12 +87,12 @@ const Home: NextPage = () => {
 					<Grid item xs={12} md={6}>
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br/>of the pandemic</Typography>
 						<Typography paddingTop="1em">
-							The COVID-19 pandemic in the US highlighted community
+							The COVID-19 pandemic highlighted community
 							capacity for resilience and unexpected changes everyday life. 
 							This project collects stories behind the statistical trends. 
 							We are building a more holistic and human audio-visual experience of the pandemic. 
 							The voices and perspectives included aspire to represent the diversity of
-							experience and opinion in the United States.
+							experiences in the United States.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
 							Share your story
@@ -130,8 +130,8 @@ const Home: NextPage = () => {
 				<Typography>
 					We support four different ways to tell your story through our web
 					portal or over the phone. You’re invited to share up to three
-					different stories about your experiences of COVID-19 in the US. Choose
-					the type of story you’d like to submit, or scroll down for more
+					different stories about your experiences of COVID-19 in the United States. 
+					Choose the type of story you would like to submit, or scroll down for more
 					information.
 				</Typography>
 				<Grid container>
@@ -186,9 +186,9 @@ const Home: NextPage = () => {
 					<Grid item xs={12} sm={6}>
 						<Typography variant="h3">More than just data</Typography>
 						<Typography>
-							Atlas Stores expands the quantitative data on the US Covid Atlas
+							Atlas Stories expands the numeric data on the US Covid Atlas
 							to contextualize how and what you experienced during the pandemic.
-							Stories are layered on top of our map of COVID data at the county
+							Stories are layered on top of our map of COVID-19 data at the county
 							level. We’re working to get an equitable group of stories from
 							across the US, from cities, towns, suburbs, and everywhere in
 							between.
