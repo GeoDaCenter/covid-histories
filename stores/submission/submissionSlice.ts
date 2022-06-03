@@ -4,19 +4,24 @@ import { CustomerProfilesEntityAssignmentsPage } from 'twilio/lib/rest/trusthub/
 import { canProgressFns, canGoBackFns } from '../../components/Submission/SubmissionPage';
 
 export type SubmissionTypes = 'audio' | 'video' | 'written' | 'photo' | 'phone'
-export interface SubmissionState {
-	step: number
+
+export interface Submission {
 	type: SubmissionTypes
 	theme: string
 	questions: string[]
 	county: { label: string; value: number }
 	title: string
 	consent: boolean
-	optInResearch: boolean
 	id: string
+	tags: string[]
+	zip?: string
+}
+
+export interface SubmissionState extends Submission {
+	step: number
+	optInResearch: boolean
 	isUploading: boolean
 	uploadProgress: number
-	tags: string[]
 	emailVerified: boolean
 	hasEnteredContent: boolean
 	canProgress: boolean
