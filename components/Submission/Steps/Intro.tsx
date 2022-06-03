@@ -42,6 +42,10 @@ export const Intro: React.FC<StepComponentProps> = ({ handleNext }) => {
 					story behind the data and allow us to humanize the statistics 
 					within the pandemic experience.
 				</Typography>
+				<br/>
+				<Typography fontWeight="bold">
+					Your submission progress will be displayed on the bar at the bottom of your screen. Click or tap on "Next" to begin.
+				</Typography>
 			</Grid>
 			<Grid item xs={12} sm={6}>
 				<Box
