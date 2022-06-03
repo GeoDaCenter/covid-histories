@@ -71,17 +71,17 @@ export const Login: React.FC<StepComponentProps> = ({
     ) : (
         <Grid container minHeight="75vh"  alignItems="center">
             <Grid item xs={12}>
-                <Typography variant="h2" component="h1">Signup or Login</Typography>
+                <Typography variant="h2" component="h1">Sign Up or Login</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
                 <Typography>
                     You can submit stories to Atlas Stories by signing up or logging in.
                     We use user logins to protect our users from harmful materials and ensure
                     that you can manage or remove your stories in the future. You may create an account
-                    using your email adress or your Google account.
+                    using your email address or your Google account.
                 </Typography>
                 <Link href={`/api/auth/login?redirect=${pathname}`} passHref>
-                    <CtaLink>Signup / Login</CtaLink>
+                    <CtaLink>Sign Up or Login</CtaLink>
                 </Link>
             </Grid>
         </Grid>
