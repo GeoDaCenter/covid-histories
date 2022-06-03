@@ -60,6 +60,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const useVideo = useSelector(selectType) === 'video'
 	const toggleUseVideo = () => dispatch(toggleAudioVideo())
 	const [recordingTimeout, setRecordingTimeout] = useState(null)
+	const [mediaError, setMediaError] = useState<string>('')
 	const [showAdvancedModal, setShowAdvancedModal] = useState<boolean>(false)
 	const toggleAdvancedModal = () => setShowAdvancedModal((prev) => !prev)
 	const [cachedStory, setCachedStory] = useState<string>('')
@@ -91,7 +92,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	} = useReactMediaRecorder({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
-		askPermissionOnMount: true
+		askPermissionOnMount: false
 		// mediaRecorderOptions: {
 		// 	mimeType: 'video/webm; codecs=vp9',
 		// 	videoBitsPerSecond: 5000000,
@@ -136,6 +137,52 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 		}
 	}, [dbActive, storyId])
 
+	useEffect(() => {
+		async function getMedia(constraints: MediaStreamConstraints) {
+			let stream = null;
+			try {
+				stream = await navigator.mediaDevices.getUserMedia(constraints);
+				/* use the stream */
+			} catch (err) {
+				// @ts-ignore
+				if (err?.name){
+					// @ts-ignore
+					switch(err.name){
+						case 'NotAllowedError':
+							setMediaError('You must allow access to your microphone and/or camera to record your story.')
+							break;
+						case 'NotFoundError':
+							setMediaError('Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.')
+							break;
+						case 'NotReadableError':
+							setMediaError("We couldn't access your device for recording, please make sure no other application is using your camera.")
+							break;
+						case 'OverconstrainedError':
+							setMediaError('Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.')
+							break;
+						default:
+							setMediaError("We weren't able to access your microphone or camera. Please make sure your browser allows microphone or camera access, and check the 'advanced settings' button to change your settings.")
+					}
+				}
+			}
+		}
+
+		if (status === 'idle') {
+			if (useVideo) {
+				getMedia({
+					audio: audioConstraints,
+					video: videoConstraints
+				} as MediaStreamConstraints)
+			} else {
+				getMedia({
+					video: videoConstraints
+				} as MediaStreamConstraints)
+			}
+		} else if (status === "recording"){
+			setMediaError('')
+		}
+	}, [status])
+	console.log(mediaError)
 	return (
 		<RecorderContainer>
 			<Grid container spacing={3}>
@@ -224,6 +271,11 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 							</Grid>
 						</Grid>
 					</Box>
+					{!!mediaError?.length && (
+						<Alert severity="error" sx={{ my: 2 }}>
+							{mediaError}
+						</Alert>
+					)}
 					<Recorder
 						{...{
 							length,
