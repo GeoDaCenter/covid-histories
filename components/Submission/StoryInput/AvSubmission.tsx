@@ -15,6 +15,7 @@ import { useReactMediaRecorder } from 'react-media-recorder'
 import { useGetMediaDevices } from '../../../hooks/useGetMediaDevices'
 import { AdvancedSettingsModal } from './AvUtils/AdvancedSettingsModal'
 import { AvSwitch } from './AvUtils/AvSwitch'
+import fixWebmDuration from 'webm-duration-fix'
 const Recorder = dynamic(() => import('./AvUtils/Recorder'), {
 	loading: () => <p>...</p>,
 	ssr: false
@@ -82,6 +83,16 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 			deviceId
 		})
 	}
+	const onStop = async (_blobUrl: string, blob: Blob) => {
+		try {
+			const fixedBlob = await fixWebmDuration(blob); 
+			handleCacheStory(fixedBlob)
+			setCachedStory('')
+		  } catch (error) {
+			console.log("fixWebmDuration error: ", error);
+		  }
+	}
+
 	const {
 		status,
 		startRecording,
@@ -92,7 +103,11 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	} = useReactMediaRecorder({
 		video: useVideo ? videoConstraints : false,
 		audio: audioConstraints,
-		askPermissionOnMount: false
+		askPermissionOnMount: false,
+		blobPropertyBag: {
+			type: useVideo ? 'video/webm' : 'audio/webm'
+		},
+		onStop
 		// mediaRecorderOptions: {
 		// 	mimeType: 'video/webm; codecs=vp9',
 		// 	videoBitsPerSecond: 5000000,
@@ -112,18 +127,18 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const mediaInUse = status === 'media_in_use'
 	const MIMETYPE = useVideo ? 'video/mp4' : 'audio/wav'
 
-	useEffect(() => {
-		if (status === 'stopped' && mediaBlobUrl !== null) {
-			console.log('mediaBlobUrl', mediaBlobUrl)
-			const generateBlob = async () => {
-				const data = await fetch(mediaBlobUrl).then((r) => r.blob())
-				const blob = new Blob([data], { type: MIMETYPE })
-				handleCacheStory(blob)
-				setCachedStory('')
-			}
-			generateBlob()
-		}
-	}, [status]) // eslint-disable-line
+	// useEffect(() => {
+	// 	if (status === 'stopped' && mediaBlobUrl !== null) {
+	// 		console.log('mediaBlobUrl', mediaBlobUrl)
+	// 		const generateBlob = async () => {
+	// 			const data = await fetch(mediaBlobUrl).then((r) => r.blob())
+	// 			const blob = new Blob([data], { type: MIMETYPE })
+	// 			handleCacheStory(blob)
+	// 			setCachedStory('')
+	// 		}
+	// 		generateBlob()
+	// 	}
+	// }, [status]) // eslint-disable-line
 
 	useEffect(() => {
 		if (db && storyId?.length) {
