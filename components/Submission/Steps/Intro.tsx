@@ -44,7 +44,7 @@ export const Intro: React.FC<StepComponentProps> = ({ handleNext }) => {
 				</Typography>
 				<br/>
 				<Typography fontWeight="bold">
-					Your submission progress will be displayed on the bar at the bottom of your screen. Click or tap on "Next" to begin.
+					Your submission progress will be displayed on the bar at the bottom of your screen. Click or tap on &quot;Next&quot; to begin.
 				</Typography>
 			</Grid>
 			<Grid item xs={12} sm={6}>
