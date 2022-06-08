@@ -3,6 +3,8 @@ import { Box, FormControl, FormGroup, Input, InputLabel, Select, SelectChangeEve
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import useSWR, { SWRResponse } from 'swr'
+
 import {
     selectUserId, selectSelfIdentifiedRace,
     selectPerceivedIdentifiedRace,
@@ -29,13 +31,19 @@ const raceOptions = [
 const PaddedFormGroup = styled(FormGroup)`
     padding: 1rem 0;
 `
-const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = ({
+
+const surveyFetcher = (url: string) => fetch(url).then((res) => res.json()).then(jsonRes => jsonRes?.hasCompleted);
+
+const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?: boolean }> = ({
     handleNext,
-    allowSubmit=true
+    allowSubmit = true
 }) => {
     const dispatch = useDispatch();
 
     const { user } = useUser();
+    const {
+        data: hasCompletedSurvey
+    } = useSWR('/api/files/completed_survey', surveyFetcher)
     const selfIdentifiedRace = useSelector(selectSelfIdentifiedRace)
     const selfIdentifiedRaces = selfIdentifiedRace.map(race => race.name)
     const perceivedIdentifiedRace = useSelector(selectPerceivedIdentifiedRace)
@@ -57,6 +65,12 @@ const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = (
         }
     }, [user]) // eslint-disable-line
 
+    useEffect(() => {
+        if (hasCompletedSurvey && allowSubmit) {
+            handleNext()
+        }
+    }, [hasCompletedSurvey, allowSubmit])
+
     const handleSubmit = async () => {
         const response = await fetch("/api/survey", {
             method: "POST",
@@ -76,6 +90,16 @@ const SurveyForm: React.FC<{ handleNext: () => void, allowSubmit?:boolean }> = (
             handleNext()
         }
     }
+    if (hasCompletedSurvey && allowSubmit) {
+        return <Button onClick={handleNext} variant="contained" color="primary">
+            Continue to the next step
+        </Button>
+    }
+
+    if (hasCompletedSurvey) {
+        return null
+    }
+
     return (<Box
         component="form"
         autoComplete="off"
@@ -200,7 +224,7 @@ interface SurveyProps extends StepComponentProps {
 
 export const Survey: React.FC<SurveyProps> = ({
     handleNext,
-    allowSubmit=true
+    allowSubmit = true
 }) => {
     return <SurveyForm handleNext={handleNext} allowSubmit={allowSubmit} />
 }
