@@ -15,7 +15,7 @@ interface WrittenSubmissionEditorProps {
     text: Descendant[]
     setText: (text: Descendant[]) => void
     handleChange: (newText: Descendant[]) => void
-    getCachedEntry: (entry: SubmissionDraft | undefined) => string | undefined
+    getCachedEntry: (entry: SubmissionDraft | undefined) => string | Blob | undefined
     dbActive: boolean
 }
 
@@ -32,7 +32,7 @@ export const WrittenSubmissionEditor: React.FC<WrittenSubmissionEditorProps> = (
         if (db && storyId?.length) {
             db.submissions.get(0).then((entry) => {
                 const cachedContent = getCachedEntry(entry)
-                if (cachedContent) {
+                if (cachedContent && typeof cachedContent === 'string') {
                     unified()
                         .use(markdown)
                         .use(slate)
