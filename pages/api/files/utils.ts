@@ -21,37 +21,16 @@ export const getFileList = async (
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
 
-const submissionTypeMap: {
-	[key: string]: { fileExtension: string; ContentType: string }
-} = {
-	audio: {
-		fileExtension: '.wav',
-		ContentType: 'audio/wav'
-	},
-	video: {
-		fileExtension: '.mp4',
-		ContentType: 'video/mp4'
-	},
-	written: {
-		fileExtension: '.md',
-		ContentType: 'text/markdown; charset=UTF-8'
-	},
-	photo: {
-		fileExtension: '.jpg',
-		ContentType: 'image/' // jpg, jpeg, png, tif, tiff, gif, bmp
-	},
-	meta: {
-		fileExtension: '.json',
-		ContentType: 'text/markdown; charset=UTF-8'
-	}
-}
-
 const fileExtensionMap: { [fileType: string]: string } = {
 	'image/jpeg': '.jpg',
 	'image/png': '.png',
 	'image/tiff': '.tiff',
 	'image/gif': '.gif',
-	'image/bmp': '.bmp'
+	'image/bmp': '.bmp',
+	'audio/webm': '.webm',
+	'video/webm': '.webm',
+	'text/markdown': '.md',
+	'application/json': '_meta.json',
 }
 
 const config = {
@@ -64,19 +43,14 @@ const URL_EXPIRATION_SECONDS = 60 * 5
 
 export async function getPresignedUrl(
 	s3: any,
-	type: SubmissionType,
 	key: string,
-	fileType: string,
+	ContentType: string,
 	prePath: string,
 	operation: string
 ) {
 	if (operation === 'putObject') {
-		const ext: string =
-			fileExtensionMap[fileType] || submissionTypeMap[type].fileExtension
+		const ext: string = fileExtensionMap[ContentType]
 		const fileName: string = `${key || nanoid()}${ext}`
-		const ContentType = fileType
-			? fileType
-			: submissionTypeMap[type].ContentType
 		// Get signed URL from S3
 		const s3Params = {
 			Bucket: config.S3_BUCKET,
@@ -112,7 +86,7 @@ export async function getPresignedUrl(
 
 export async function uploadMeta(
 	s3: any,
-	type: SubmissionType,
+	storyType: SubmissionType,
 	key: string,
 	hashedEmail: string
 ) {
@@ -124,7 +98,7 @@ export async function uploadMeta(
 			ACL: 'private',
 			Key: `meta/${hashedEmail}/${key}.json`,
 			Body: JSON.stringify({
-				type,
+				storyType,
 				uploadTimestamp
 			}),
 			ContentType: 'application/json'
@@ -143,6 +117,14 @@ export async function deleteObject(s3: any, Bucket: string, Key: string) {
 		.promise()
 }
 
+const baseCounts = {
+	written: 0,
+	av: 0,
+	photo: 0
+}
+
+export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
+
 export async function getSubmissionCounts(
 	s3: any,
 	Bucket: string,
@@ -153,32 +135,43 @@ export async function getSubmissionCounts(
 		Bucket,
 		prefix
 	)
-	const fileNames = currentFiles
-		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
-				Key: Key.split('/').slice(-1)[0],
-				LastModified
-		  }))
-		: []
-	const filteredSubmissions = fileNames?.filter(
-		(f) => !f.Key?.includes('_meta.json') && !f.Key.includes('survey.json')
-	)
-	const metaResponse = await Promise.all(
-		filteredSubmissions?.map((f) =>
-			s3.getObject({ Bucket, Key: `${prefix}/${f.Key}` }).promise()
-		)
-	)
-	const allMeta = metaResponse.map((r) => JSON.parse(r.Body.toString()))
-	const metaCounts = allMeta.reduce(
+	
+	if (!currentFiles || !currentFiles.Contents) {
+		return baseCounts
+	}
+
+	const fileNameList = currentFiles.Contents
+		.map(entry => entry.Key.split('/').pop()||'')
+	const uniqueIds = fileNameList
+		.map(entry => entry.split('.')[0].split('_meta')[0])
+		.filter(onlyUnique)
+	const counts = uniqueIds.map(id => {
+		let type;
+		const fileList = fileNameList.filter(f => f.includes(id))
+
+		if (fileList.length === 3){ // photo -- meta, caption, and image
+			type = 'photo'
+		} 
+		if (fileList.length === 2 && (fileList.includes(`${id}.webm`) || fileList.includes(`${id}.mp4`) || fileList.includes(`${id}.wav`))){ 
+			// av + legacy formats and meta file
+			type = 'av'
+		}
+		if (fileList.length === 2 && (fileList.includes(`${id}.md`))){ 
+			type = 'written'
+		}
+		return {
+			type
+		}
+	}).filter(entry => !!entry.type)
+	
+	const combinedCounts = counts.reduce(
 		(acc, cur) => {
 			switch (cur.type) {
 				case 'written':
 					acc.written++
 					break
-				case 'audio':
-					acc['audio']++
-					break
-				case 'video':
-					acc['video']++
+				case 'av':
+					acc['av']++
 					break
 				case 'photo':
 					acc.photo++
@@ -188,12 +181,8 @@ export async function getSubmissionCounts(
 			}
 			return acc
 		},
-		{
-			written: 0,
-			video: 0,
-			audio: 0,
-			photo: 0
-		}
+		baseCounts
 	)
-	return metaCounts
+	
+	return combinedCounts
 }

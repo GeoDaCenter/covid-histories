@@ -21,7 +21,7 @@ export const Login: React.FC<StepComponentProps> = ({
     const dispatch = useDispatch();
     const { data: storyCounts } = useSWR('/api/files/submission_counts', jsonFetcher);
     const storyType = useSelector(selectType);
-    const hasExceededSubmissions = storyCounts && storyCounts[storyType] >= 3
+    const hasExceededSubmissions = storyCounts && ((['video','audio'].includes(storyType) && storyCounts[storyType] >= 6) || (!['video','audio'].includes(storyType) && storyCounts[storyType] >= 3))
 
     useEffect(() => {
         if (user?.email?.length && user?.email_verified && hasExceededSubmissions === false){
@@ -38,13 +38,13 @@ export const Login: React.FC<StepComponentProps> = ({
                     Warning: You have exceeded the maximum number of submissions for this type of story.
                 </Typography>
                 <Typography variant="h4">
-                    You may only submit 3 stories of each type at this time.
+                    {["video","audio"].includes(storyType) ? "You may only submit 6 audio and video stories at this time." : `You may only submit 3 ${storyType} stories at this time.`}
                 </Typography>
                 <Typography paddingTop={"1em"}>
-                    You have previously submitted {storyCounts?.video} audio/video stories, {storyCounts?.written} written stories, and {storyCounts?.photo} photo stories.
+                    You have previously submitted {storyCounts?.av} audio/video stories, {storyCounts?.written} written stories, and {storyCounts?.photo} photo stories.
                 </Typography>
                 <Typography paddingTop={"1em"}>
-                    If you&apos;re like, please return to the &quot;Choose your story type&quot; step and select a different type of content. 
+                    Please return to the previous step and select a different type of story to share. 
                     You may delete an already submitted story of this type from the &quot;My Stories&quot; page.
                 </Typography>
             </Grid>

@@ -128,7 +128,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const hasRecorded =
 		status !== 'recording' && (mediaBlobUrl !== null || cachedStory !== '')
 	const mediaInUse = status === 'media_in_use'
-	const MIMETYPE = useVideo ? 'video/mp4' : 'audio/wav'
+	const MIMETYPE = useVideo ? 'video/webm' : 'audio/webm'
 
 	// useEffect(() => {
 	// 	if (status === 'stopped' && mediaBlobUrl !== null) {

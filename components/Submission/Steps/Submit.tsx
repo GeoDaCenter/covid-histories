@@ -42,16 +42,30 @@ const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 	ssr: false
 })
 
+interface UploadSpec {
+	storyType: string
+	fileType: string
+	storyId: string
+}
+
+// helpers
 const str2blob = (txt: string): Blob =>
 	new Blob([txt], { type: 'text/markdown' })
 
-const getSubmissionUrl = async (storyType: string, storyId: string, type: string, additionalParams?: string): Promise<string> => {
+const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
+	const {
+		storyType,
+		fileType,
+		storyId
+	} = uploadSpec;
+
 	const response = await fetch(
-		`/api/files/request_url?storyType=${storyType}&type=${type}&key=${storyId}${additionalParams || ''}`
+		`/api/files/request_upload?storyType=${encodeURIComponent(storyType)}&storyId=${encodeURIComponent(storyId)}&fileType=${encodeURIComponent(fileType)}`
 	).then((res) => res.json())
 	return response?.uploadURL
 }
 
+// submission component
 export const Submit: React.FC<StepComponentProps> = ({
 	storyId,
 	handleNext
@@ -68,7 +82,9 @@ export const Submit: React.FC<StepComponentProps> = ({
 	const [content, setContent] = useState<any | null>(null)
 	const [additionalContent, setAdditionalContent] = useState<any | null>(null)
 	const [isUploading, setIsUploading] = useState<boolean>(false)
+	const canSubmit = consent && county?.label?.length
 
+	// load cached content
 	useEffect(() => {
 		const getContent = async () => {
 			const entry = await db.submissions.get(0)
@@ -105,6 +121,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 		getContent()
 	}, [storyType])
 
+	// handlers for UI events
 	const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
 		setTab(newValue)
 	}
@@ -121,6 +138,11 @@ export const Submit: React.FC<StepComponentProps> = ({
 	}
 	const handleConsent = () => dispatch(toggleConsent())
 	const handleOptInResearch = () => dispatch(toggleOptInResearch())
+	const handleTag = (tags: string[]) => {
+		dispatch(setTags(tags))
+	}
+
+	// handlers for uploads
 	const handleSuccessfulUpload = () => {
 		setIsUploading(false)
 		handleNext()
@@ -145,60 +167,67 @@ export const Submit: React.FC<StepComponentProps> = ({
 		})
 		request.send(blob)
 	}
-	const handleTag = (tags: string[]) => {
-		dispatch(setTags(tags))
-	}
 
 	const handleSubmit = async () => {
-		const entry = await db.submissions.get(0)
+		try {
+			const entry = await db.submissions.get(0)
 
-		// @ts-ignore
-		const additionalParams = storyType === 'photo' && entry?.content?.type
-			// @ts-ignore
-			? '&fileType=' + entry?.content?.type
-			: ''
+			if (entry?.content) {
+				if (entry?.additionalContent) {
+					const blob = str2blob(entry.additionalContent)
+					const additionalContentUploadSpec = {
+						storyType: storyType,
+						fileType: blob.type,
+						storyId: storyId
+					}
+					const additionalContentURL = await getSubmissionUrl(additionalContentUploadSpec)
+					if (additionalContentURL) {
+						handleSendFile(blob, additionalContentURL, true)
+					}
+				}
 
-		const metaUploadURL = await getSubmissionUrl(storyType, storyId + "_meta", 'meta')
-		if (entry?.additionalContent) {
-			const additionalContentURL = await getSubmissionUrl(storyType, storyId, 'written')
-			if (additionalContentURL) {
-				const blob = str2blob(entry.additionalContent)
-				handleSendFile(blob, additionalContentURL, true)
-			}
-		}
-		if (metaUploadURL) {
-			const meta = {
-				title,
-				county,
-				consent,
-				storyId,
-				storyType,
-				theme,
-				tags,
-				date: new Date().toISOString(),
-				// additionalTags
-			}
-			const blob = str2blob(JSON.stringify(meta))
-			handleSendFile(blob, metaUploadURL, true)
-		}
-		const uploadURL = await getSubmissionUrl(storyType, storyId, storyType, additionalParams)
+				const meta = {
+					title,
+					county,
+					consent,
+					storyId,
+					storyType,
+					theme,
+					tags,
+					date: new Date().toISOString(),
+					// additionalTags
+				}
+				const metaBlob = str2blob(JSON.stringify(meta))
+				const metaUploadSpec = {
+					storyType: storyType,
+					fileType: 'application/json',
+					storyId: storyId
+				}
+				const metaUploadURL = await getSubmissionUrl(metaUploadSpec)
+				if (metaUploadURL) {
+					handleSendFile(metaBlob, metaUploadURL, true)
+				}
 
-		if (uploadURL && entry?.content) {
-			try {
-				const blob = entry.type === 'written'
+
+				const contentBlob = typeof (entry.content) === 'string'
 					? str2blob(entry.content)
 					: entry.content
 
-				if (typeof blob === 'object') {
-					handleSendFile(blob, uploadURL)
+				const contentUploadSpec = {
+					storyType: storyType,
+					fileType: contentBlob.type,
+					storyId: storyId
 				}
-			} catch {
-				handleFailedUpload()
+				const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
+				if (contentUploadUrl) {
+					handleSendFile(contentBlob, contentUploadUrl)
+				}
 			}
+		} catch {
+			handleFailedUpload()
 		}
 	}
 
-	const canSubmit = consent && county?.label?.length
 
 	return (
 		<>

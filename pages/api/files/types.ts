@@ -4,11 +4,9 @@ export interface FileListReturn {
 		LastModified: string
 	}>
 }
-
+export type SubmissionType = 'audio' | 'video' | 'written' | 'photo'
 export interface QueryParams {
-	type: SubmissionType
 	fileType: string
-	key: string
+	storyId: string,
+	storyType: SubmissionType
 }
-
-export  type SubmissionType = 'audio' | 'video' | 'written' | 'photo' | 'meta' | ''

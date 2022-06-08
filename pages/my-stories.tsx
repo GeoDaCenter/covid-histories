@@ -58,8 +58,6 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 		/>
 	)
 }
-// @ts-ignore
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 const StoryManager: React.FC<{ story: StoryProps }> = ({ story }) => {
 	const { title, date, storyType, theme, tags, county } = story
@@ -180,9 +178,12 @@ const StoryManager: React.FC<{ story: StoryProps }> = ({ story }) => {
 	</Grid>
 }
 
+// @ts-ignore
+const storiesFetcher = (...args) => fetch(...args).then((res) => res.json())
+
 const MyStories: NextPage = () => {
 	const { user } = useUser()
-	const { data, error } = useSWR('/api/files/request_files', fetcher)
+	const { data, error } = useSWR('/api/files/request_files', storiesFetcher)
 
 	return (
 		<div className={styles.container}>

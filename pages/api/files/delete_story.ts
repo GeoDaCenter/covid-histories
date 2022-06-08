@@ -32,8 +32,9 @@ export default withApiAuthRequired(async function handler(
         if (currentFiles?.Contents.length){
             const files = [
                 ...currentFiles.Contents,
-                {Key: `meta/${encrypted}/${storyId}.json`},
-                {Key: `meta/${encrypted}/${storyId}_meta.json`}
+                // previously, we deleted meta files, but we'll keep these to log uploads
+                // {Key: `meta/${encrypted}/${storyId}.json`},
+                // {Key: `meta/${encrypted}/${storyId}_meta.json`}
             ]
             const deletionResults = await Promise.all(files.map(({Key}) => deleteObject(s3, S3_BUCKET, Key)))
             const newFileList: FileListReturn | undefined = await getFileList(s3, S3_BUCKET, prefix)

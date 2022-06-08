@@ -5,6 +5,7 @@ import { getFileList } from './utils'
 import hash from 'object-hash'
 import { FileListReturn } from './types'
 import {getPresignedUrl} from './utils'
+import { current } from '@reduxjs/toolkit'
 // AWS
 const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.AWS_REGION })
@@ -28,10 +29,9 @@ export default withApiAuthRequired(async function handler(
 		const prefix = `uploads/${encrypted}`
 		const currentFiles: FileListReturn | undefined = await getFileList(s3, S3_BUCKET, prefix)
 		const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified}))
-		
 		const presignedGets = await Promise.all(
 			fileNames?.map(({Key, LastModified}) => 
-				getPresignedUrl(s3, '', Key||'', '', `uploads/${encrypted}/`, 'getObject')
+				getPresignedUrl(s3, Key||'', '', `uploads/${encrypted}/`, 'getObject')
 			)||[])	
 				
 		const metaData = await Promise.all(
@@ -47,7 +47,6 @@ export default withApiAuthRequired(async function handler(
 						.map(f => ({...f, fileType: f.fileName?.split('.').slice(-1)[0]}))
 				}
 			))
-		
 
 		res.status(200).json(
 			JSON.stringify(mergedData)
