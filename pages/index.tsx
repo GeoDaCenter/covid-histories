@@ -91,12 +91,80 @@ const getStepBackground = (inView: { [key: string]: boolean }) => {
 	return stepParams
 }
 
+// helper subcomponents
+interface ScrollLinkButtonProps {
+	onClick: () => void
+	text: string
+}
+const ScrollLinkButton: React.FC<ScrollLinkButtonProps> = ({
+	onClick,
+	text
+}) => {
+	return (
+		<Button
+			onClick={onClick}
+			className="cta-button"
+			sx={{
+				py: 0.5,
+				px: 0,
+				fontWeight: 'light',
+				textTransform: 'none',
+				display: 'block'
+			}}
+		>
+			<span
+				className="material-icons"
+				style={{
+					transform: 'translateY(25%)',
+					marginRight: 5
+				}}
+			>keyboard_double_arrow_down
+			</span>
+			{text}
+		</Button>
+	)
+}
+
+interface FadeInPhotoProps {
+	width: number
+	fadeInTrigger: boolean
+	top: number
+	left: number
+	animationDelay: number
+	src: string
+}
+
+const FadeInPhoto: React.FC<FadeInPhotoProps> = ({
+	width,
+	fadeInTrigger,
+	top,
+	left,
+	animationDelay,
+	src
+}) => {
+	return (
+		<img
+			width={`${width}%`}
+			height="auto"
+			className={fadeInTrigger ? styles.fadeIn : ''}
+			style={{
+				position: 'absolute',
+				boxShadow: '0px 0px 5px rgba(0,0,0,0.5)',
+				left: `${left}%`,
+				top: `${top}%`,
+				animationDelay: `${animationDelay}ms`
+			}}
+			src={src} />
+	)
+}
+
 const Home: NextPage = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null);
 	const [homeRef, homeInView] = useInView({ threshold: .5 });
 	const [exampleMapRef, exampleMapInView] = useInView({ threshold: .5 });
 	const mapScrollRef = useRef<HTMLElement | null>(null)
 	const [experiencesRef, experiencesInView] = useInView({ threshold: .5 });
+	const storyTypesScrollRef = useRef<HTMLElement | null>(null)
 	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: .5 });
 	const moreThanDataScrollRef = useRef<HTMLElement | null>(null)
 	const [questionsRef, questionsInView] = useInView({ threshold: .5 });
@@ -113,8 +181,9 @@ const Home: NextPage = () => {
 		questionsInView
 	})
 
-	const scrollToPrivacy = () => moreThanDataScrollRef?.current && moreThanDataScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-	const scrollToExampleMap = () => mapScrollRef?.current && mapScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	const scrollToExampleMap = () => mapScrollRef?.current && mapScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+	const scrollToStoryTypes = () => storyTypesScrollRef?.current && storyTypesScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+	const scrollToPrivacy = () => moreThanDataScrollRef?.current && moreThanDataScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
 	return (
 		<div className={styles.container} style={{ background }} ref={containerRef}>
@@ -141,7 +210,7 @@ const Home: NextPage = () => {
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
 							capacity for resilience and inequitable impacts on diverse people and places.
-							This project collects stories behind the statistics and data. 
+							This project collects stories behind the statistics and data.
 							We seek voices and perspectives that represent the diversity of experiences in the United States,
 							in order to build a more holistic archive of the pandemic.
 						</Typography>
@@ -151,10 +220,10 @@ const Home: NextPage = () => {
 						<Typography>
 							Learn more by scrolling down, or jump to a topic below.
 						</Typography>
-						<Box sx={{pt: 1}}>
-							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; How will my story be visualized?</Button>
-							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; What kind of story can I share?</Button>
-							<Button onClick={scrollToPrivacy} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; Is my data private?</Button>
+						<Box sx={{ pt: 1 }}>
+							<ScrollLinkButton onClick={scrollToExampleMap} text="How will my story be visualized?" />
+							<ScrollLinkButton onClick={scrollToStoryTypes} text="What kind of story can I share?" />
+							<ScrollLinkButton onClick={scrollToPrivacy} text="Is my data private?" />
 						</Box>
 					</Grid>
 					<Grid item xs={12} md={6}>
@@ -166,9 +235,30 @@ const Home: NextPage = () => {
 								aspectRatio: '.9'
 							}}
 						>
-							<img width="60%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: '10%', animationDelay: '250ms' }} src="/images/grocery.jpg" />
-							<img width="50%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '50%', top: '25%', animationDelay: '500ms' }} src="/images/work.jpg" />
-							<img width="45%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '10%', top: '50%', animationDelay: '750ms' }} src="/images/hero-1.jpg" />
+							<FadeInPhoto
+								width={60}
+								fadeInTrigger={currSectionName === 'homeInView'}
+								left={0}
+								top={10}
+								animationDelay={250}
+								src="/images/grocery.jpg"
+							/>
+							<FadeInPhoto
+								width={50}
+								fadeInTrigger={currSectionName === 'homeInView'}
+								left={50}
+								top={25}
+								animationDelay={500}
+								src="/images/work.jpg"
+							/>
+							<FadeInPhoto
+								width={45}
+								fadeInTrigger={currSectionName === 'homeInView'}
+								left={10}
+								top={50}
+								animationDelay={750}
+								src="/images/hero-1.jpg"
+							/>
 						</Box>
 					</Grid>
 				</Grid>
@@ -213,7 +303,8 @@ const Home: NextPage = () => {
 					Choose the type of story you would like to submit, or scroll down for more
 					information.
 				</Typography>
-				<Grid container>
+				{/* @ts-ignore */}
+				<Grid container ref={storyTypesScrollRef}>
 					<Grid item xs={12} sm={6} md={3}>
 						<span className={currSectionName === 'experiencesInView' ? styles.fadeIn : ''}>
 							<StoryTypeContainer>
