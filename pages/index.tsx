@@ -140,18 +140,21 @@ const Home: NextPage = () => {
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br />of the pandemic</Typography>
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
-							capacity for resilience and unexpected changes everyday life.
-							This project collects stories behind the statistics and data.
-							We are building a more holistic and human audio-visual experience of the pandemic.
-							The voices and perspectives included aspire to represent the diversity of
-							experiences in the United States.
+							capacity for resilience and inequitable impacts on diverse people and places.
+							This project collects stories behind the statistics and data. 
+							We seek voices and perspectives that represent the diversity of experiences in the United States,
+							in order to build a more holistic archive of the pandemic.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
-							Share your story
+							What was your experience of the pandemic?
 						</CtaLink>
-						<Box>
-							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic"}}><b>&#709;</b>&nbsp; See how your story will be visualized in our archive</Button>
-							<Button onClick={scrollToPrivacy} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic"}}><b>&#709;</b>&nbsp; Learn more about our data ownership and privacy policy</Button>
+						<Typography>
+							Learn more by scrolling down, or jump to a topic below.
+						</Typography>
+						<Box sx={{pt: 1}}>
+							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; How will my story be visualized?</Button>
+							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; What kind of story can I share?</Button>
+							<Button onClick={scrollToPrivacy} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic", display:'block'}}><b>&#709;</b>&nbsp; Is my data private?</Button>
 						</Box>
 					</Grid>
 					<Grid item xs={12} md={6}>

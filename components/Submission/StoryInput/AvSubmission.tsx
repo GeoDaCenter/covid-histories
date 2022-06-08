@@ -227,7 +227,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 									set your camera on a sturdy surface or use a tripod.
 								</li>
 								<li>
-									Look directly into the camera. Imagine you are talking to a
+									Look directly into the camera. Imagine you are conversing to a
 									good friend or family member.
 								</li>
 							</ul>
@@ -239,7 +239,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 						<ul>
 							<li>Listen to the room, and try to find a quiet area.</li>
 							<li>
-								Avoid distracting noises, like other people talking, clothes or
+								Avoid distracting noises, like people talking, clothes or
 								jewelry rustling, or chip bags crackling.
 							</li>
 							<li>

@@ -14,14 +14,14 @@ export const prompts =[
       "How did your family life change during the pandemic?",
       "Did you or anyone close to you contract COVID- 19?",
       "How did you navigate that experience?",
-      "Talk about any hardships or challenges your family faced during the pandemic.",
+      "Describe about any hardships or challenges your family faced during the pandemic.",
     ] 
   },
   {
     name:"Your Self",
     categories: [
-      "Talk about a moment that you will remember most during this time.",
-      "Talk about the biggest challenge that you experienced during the pandemic.",
+      "Describe about a moment that you will remember most during this time.",
+      "Describe about the biggest challenge that you experienced during the pandemic.",
       "What should people in the future take away or remember most, from your pandemic experience?",
     ] 
   }
