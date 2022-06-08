@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import styled from 'styled-components'
 import { HomeSection } from '../components/HomeSection'
@@ -34,7 +34,7 @@ const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	}
 `
 
-const ProgressIndicatorBar = styled.span<{Progress: number}>`
+const ProgressIndicatorBar = styled.span<{ Progress: number }>`
 	position:fixed;
 	bottom:0;
 	left:0;
@@ -44,29 +44,77 @@ const ProgressIndicatorBar = styled.span<{Progress: number}>`
 	background:#F37E44;
 `
 
-const ProgressIndicator: React.FC<{containerRef: any}> = ({containerRef}) => {
+const ProgressIndicator: React.FC<{ containerRef: any }> = ({ containerRef }) => {
 	const [currScroll, setCurrScroll] = useState<number>(0);
 	const [maxHeight, setMaxHeight] = useState<number>(0);
 	useLayoutEffect(() => {
 		if (typeof window !== "undefined" && containerRef?.current) {
 			window.addEventListener('scroll', () => setCurrScroll(window.scrollY))
-			window.addEventListener('resize', () => setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight/2))
-			setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight/2)
+			window.addEventListener('resize', () => setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight / 2))
+			setMaxHeight(containerRef?.current.getBoundingClientRect().height - window.innerHeight / 2)
 		}
 	})
 
-	return <ProgressIndicatorBar Progress={currScroll/maxHeight}/>
+	return <ProgressIndicatorBar Progress={currScroll / maxHeight} />
+}
+
+const sectionColors = {
+	'homeInView': 'none',
+	'exampleMapInView': colors.teal,
+	'experiencesInView': '#FFF3B4',
+	'moreThanDataInView': colors.gray,
+	'questionsInView': colors.skyblue
+} as { [SectionName: string]: string }
+
+interface StepParams {
+	background: string
+	currSectionName: string
+	currSectionIndex: number
+}
+
+const getStepBackground = (inView: { [key: string]: boolean }) => {
+	const sections = Object.keys(inView)
+	const section = sections.find(section => inView[section])
+	const stepParams: StepParams = section
+		? {
+			background: sectionColors[section],
+			currSectionName: section,
+			currSectionIndex: sections.indexOf(section)
+
+		}
+		: {
+			background: 'none',
+			currSectionName: 'homeInView',
+			currSectionIndex: 0
+		}
+
+	return stepParams
 }
 
 const Home: NextPage = () => {
-	const containerRef = useRef(null);
-	const [homeRef, homeInView] = useInView({ threshold: 0.25 });
-	const [experiencesRef, experiencesInView] = useInView({ threshold: 0.375 });
-	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: 0.375 });
-	const [questionsRef, questionsInView] = useInView({ threshold: 0.375 });
-	
-	const background = questionsInView ? colors.skyblue : moreThanDataInView ? colors.gray : experiencesInView ? '#FFF3B4' : 'none'
-	const currInView = questionsInView ? 4 : moreThanDataInView ? 3 : experiencesInView ? 2 : 1
+	const containerRef = useRef<HTMLDivElement | null>(null);
+	const [homeRef, homeInView] = useInView({ threshold: .5 });
+	const [exampleMapRef, exampleMapInView] = useInView({ threshold: .5 });
+	const mapScrollRef = useRef<HTMLElement | null>(null)
+	const [experiencesRef, experiencesInView] = useInView({ threshold: .5 });
+	const [moreThanDataRef, moreThanDataInView] = useInView({ threshold: .5 });
+	const moreThanDataScrollRef = useRef<HTMLElement | null>(null)
+	const [questionsRef, questionsInView] = useInView({ threshold: .5 });
+
+	const {
+		background,
+		currSectionName,
+		currSectionIndex
+	}: StepParams = getStepBackground({
+		homeInView,
+		exampleMapInView,
+		experiencesInView,
+		moreThanDataInView,
+		questionsInView
+	})
+
+	const scrollToPrivacy = () => moreThanDataScrollRef?.current && moreThanDataScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+	const scrollToExampleMap = () => mapScrollRef?.current && mapScrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
 	return (
 		<div className={styles.container} style={{ background }} ref={containerRef}>
@@ -77,29 +125,34 @@ const Home: NextPage = () => {
 				/>
 				<link
 					rel="stylesheet"
-					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
+					href="https://fonts.googleapis.com/css?family=Sriracha&display=swap"
 				/>
 			</Head>
-			
+
 			<ProgressIndicator containerRef={containerRef} />
-			<HomeSection sx={{ minHeight: '100vh' }} ref={homeRef} fadeout={1} currInView={currInView}>
+			<HomeSection
+				ref={homeRef}
+				fadeout={1}
+				triggerFade={currSectionName === 'homeInView'}
+			>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
 					<Grid item xs={12} md={6}>
-						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br/>of the pandemic</Typography>
+						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br />of the pandemic</Typography>
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
-							capacity for resilience and unexpected changes everyday life. 
-							This project collects stories behind the statistics and data. 
-							We are building a more holistic and human audio-visual experience of the pandemic. 
+							capacity for resilience and unexpected changes everyday life.
+							This project collects stories behind the statistics and data.
+							We are building a more holistic and human audio-visual experience of the pandemic.
 							The voices and perspectives included aspire to represent the diversity of
 							experiences in the United States.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
 							Share your story
 						</CtaLink>
-						<Typography fontStyle="italic" fontSize=".75em">
-							Scroll down to learn more.
-						</Typography>
+						<Box>
+							<Button onClick={scrollToExampleMap} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic"}}><b>&#709;</b>&nbsp; See how your story will be visualized in our archive</Button>
+							<Button onClick={scrollToPrivacy} className="cta-button" sx={{py:0.5, px:0, fontWeight:'light', textTransform:'none', fontStyle:"italic"}}><b>&#709;</b>&nbsp; Learn more about our data ownership and privacy policy</Button>
+						</Box>
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<Box
@@ -110,33 +163,56 @@ const Home: NextPage = () => {
 								aspectRatio: '.9'
 							}}
 						>
-							<img width="50%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: '10%', animationDelay: '250ms' }} src="/images/hero-2.jpg" />
-							<img width="65%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '25%', top: '35%', animationDelay: '500ms' }} src="/images/hero-1.jpg" />
-							<img width="40%" height="auto" className={currInView === 1 ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '5%', top: '60%', animationDelay: '750ms' }} src="/images/hero-3.jpg" />
+							<img width="60%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: 0, top: '10%', animationDelay: '250ms' }} src="/images/grocery.jpg" />
+							<img width="50%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '50%', top: '25%', animationDelay: '500ms' }} src="/images/work.jpg" />
+							<img width="45%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} style={{ position: 'absolute', boxShadow: '0px 0px 5px rgba(0,0,0,0.5)', left: '10%', top: '50%', animationDelay: '750ms' }} src="/images/hero-1.jpg" />
 						</Box>
+					</Grid>
+				</Grid>
+			</HomeSection>
+			<HomeSection
+				ref={exampleMapRef}
+				fadeout={1}
+				triggerFade={currSectionName === 'exampleMapInView'}
+			>
+				{/* @ts-ignore */}
+				<Grid container spacing={2} alignContent="center" alignItems="center" ref={mapScrollRef}>
+					<Grid item xs={12} md={6} display="flex" >
+						<img width="90%" height="auto" className={currSectionName === 'homeInView' ? styles.fadeIn : ''} src="/images/sample-usage.jpg" />
+					</Grid>
+
+					<Grid item xs={12} md={6}>
+						<Typography variant="h3" component="h2">An open archive</Typography>
+						<Typography paddingTop="1em">
+							Your story can be a part of the US Covid Atlas archive, adding critical context to the data.
+							Stories will be tagged geographically to your county, so shared experiences of your community
+							can be explored together.
+						</Typography>
+						<CtaLink href="/submit" className="cta-button">
+							Share your story
+						</CtaLink>
 					</Grid>
 				</Grid>
 			</HomeSection>
 			<HomeSection
 				ref={experiencesRef}
 				sx={{
-					color: colors.darkgray,
-					minHeight: '100vh'
+					color: colors.darkgray
 				}}
 				fadeout={2}
-				currInView={currInView}
+				triggerFade={currSectionName === 'experiencesInView'}
 			>
 				<Typography variant="h3" >Your experiences, your medium</Typography>
 				<Typography>
 					We support four different ways to tell your story through our web
 					portal or over the phone. You’re invited to share up to three
-					different stories about your experiences of COVID-19 in the United States. 
+					different stories about your experiences of COVID-19 in the United States.
 					Choose the type of story you would like to submit, or scroll down for more
 					information.
 				</Typography>
 				<Grid container>
 					<Grid item xs={12} sm={6} md={3}>
-						<span className={currInView === 2 ? styles.fadeIn : ''}>
+						<span className={currSectionName === 'experiencesInView' ? styles.fadeIn : ''}>
 							<StoryTypeContainer>
 								<Icons.video />
 								<br />
@@ -147,7 +223,7 @@ const Home: NextPage = () => {
 						</span>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
-						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "250ms" }}>
+						<span className={currSectionName === 'experiencesInView' ? styles.fadeIn : ''} style={{ animationDelay: "250ms" }}>
 							<StoryTypeContainer>
 								<Icons.written />
 								<br />
@@ -158,7 +234,7 @@ const Home: NextPage = () => {
 						</span>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
-						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "500ms" }}>
+						<span className={currSectionName === 'experiencesInView' ? styles.fadeIn : ''} style={{ animationDelay: "500ms" }}>
 							<StoryTypeContainer>
 								<Icons.photo />
 								<br />
@@ -169,7 +245,7 @@ const Home: NextPage = () => {
 						</span>
 					</Grid>
 					<Grid item xs={12} sm={6} md={3}>
-						<span className={currInView === 2 ? styles.fadeIn : ''} style={{ animationDelay: "750ms" }}>
+						<span className={currSectionName === 'experiencesInView' ? styles.fadeIn : ''} style={{ animationDelay: "750ms" }}>
 							<StoryTypeContainer hideBorder={true}>
 								<Icons.phone />
 								<br />
@@ -181,8 +257,15 @@ const Home: NextPage = () => {
 					</Grid>
 				</Grid>
 			</HomeSection>
-			<HomeSection sx={{ minHeight: '100vh' }} ref={moreThanDataRef} fadeout={3} currInView={currInView}>
-				<Grid container spacing={3}>
+			<HomeSection
+				sx={{ minHeight: '100vh' }}
+				ref={moreThanDataRef}
+				fadeout={3}
+				triggerFade={currSectionName === 'moreThanDataInView'}
+			>
+
+				{/* @ts-ignore */}
+				<Grid container spacing={3} ref={moreThanDataScrollRef}>
 					<Grid item xs={12} sm={6}>
 						<Typography variant="h3">More than just data</Typography>
 						<Typography>
@@ -197,7 +280,7 @@ const Home: NextPage = () => {
 							Share your story
 						</CtaLink>
 					</Grid>
-					<Grid item xs={12} sm={6} className={currInView === 3 ? styles.fadeIn : ''} style={{ animationDelay: '250ms' }}>
+					<Grid item xs={12} sm={6} className={currSectionName === 'moreThanDataInView' ? styles.fadeIn : ''} style={{ animationDelay: '250ms' }}>
 						<Typography variant="h3">Keep your story</Typography>
 						<Typography>
 							By sharing your story with us, you keep all the rights to use your
@@ -214,13 +297,11 @@ const Home: NextPage = () => {
 			</HomeSection>
 			<HomeSection
 				sx={{
-					minHeight: '50vh',
-					paddingBottom: '0',
 					color: colors.darkgray
 				}}
 				ref={questionsRef}
 				fadeout={4}
-				currInView={currInView}
+				triggerFade={currSectionName === 'questionsInView'}
 			>
 				<Grid container spacing={3}>
 					<Grid item xs={12} sm={6}>
@@ -233,7 +314,7 @@ const Home: NextPage = () => {
 					</Grid>
 					<Grid item xs={12} sm={6} display="flex" alignContent="center" alignItems="center" justifyContent="center" textAlign="center">
 						<Image width="40px" height="40px" src={'/email-icon.svg'} />
-						<Typography variant="h6" sx={{ml: 2}}>theuscovidatlas@gmail.com</Typography>
+						<Typography variant="h6" sx={{ ml: 2 }}>theuscovidatlas@gmail.com</Typography>
 					</Grid>
 				</Grid>
 			</HomeSection>

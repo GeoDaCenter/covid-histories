@@ -6,7 +6,7 @@ import { db } from '../../../stores/indexdb/db'
 // @ts-ignore
 
 import dynamic from 'next/dynamic'
-import { Alert, Box, Button, Grid, Typography } from '@mui/material'
+import { Alert, Box, Button, Grid, Snackbar, Typography } from '@mui/material'
 import styled from 'styled-components'
 import colors from '../../../config/colors'
 import { StoryInputProps } from './types'
@@ -62,6 +62,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const toggleUseVideo = () => dispatch(toggleAudioVideo())
 	const [recordingTimeout, setRecordingTimeout] = useState(null)
 	const [mediaError, setMediaError] = useState<string>('')
+	const [showSuccessToast, setShowSuccessToast] = useState<boolean>(false)
 	const [showAdvancedModal, setShowAdvancedModal] = useState<boolean>(false)
 	const toggleAdvancedModal = () => setShowAdvancedModal((prev) => !prev)
 	const [cachedStory, setCachedStory] = useState<string>('')
@@ -83,8 +84,10 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 			deviceId
 		})
 	}
+	const handleToggleToast = () => setShowSuccessToast(prev => !prev)
 	const onStop = async (_blobUrl: string, blob: Blob) => {
 		try {
+			handleToggleToast()
 			const fixedBlob = await fixWebmDuration(blob); 
 			handleCacheStory(fixedBlob)
 			setCachedStory('')
@@ -197,7 +200,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 			setMediaError('')
 		}
 	}, [status])
-	console.log(mediaError)
+	
 	return (
 		<RecorderContainer>
 			<Grid container spacing={3}>
@@ -245,13 +248,15 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 							</li>
 						</ul>
 					</Typography>
-					{hasRecorded && (
-						<Alert severity="success" sx={{ my: 2 }}>
+					
+					<Snackbar open={hasRecorded && showSuccessToast} autoHideDuration={10000} onClose={handleToggleToast}>
+						<Alert onClose={handleToggleToast} severity="success" variant="filled" sx={{ width: '100%', maxWidth:'400px' }}>
+
 							Your story has been recorded! You can review your recording on
 							this page, and when you are happy with it please proceed to the
 							next step.
 						</Alert>
-					)}
+					</Snackbar>
 					{mediaInUse && (
 						<p>
 							We weren{"'"}t able to access your camera and microphone. This
@@ -287,7 +292,7 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 						</Grid>
 					</Box>
 					{!!mediaError?.length && (
-						<Alert severity="error" sx={{ my: 2 }}>
+						<Alert variant="filled" severity="error" sx={{ my: 2 }}>
 							{mediaError}
 						</Alert>
 					)}

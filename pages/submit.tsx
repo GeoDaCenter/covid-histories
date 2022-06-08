@@ -15,7 +15,7 @@ export default function Submit() {
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
+          href="https://fonts.googleapis.com/css?family=Sriracha&display=swap"
         />
       </Head>
       <Provider store={store}>

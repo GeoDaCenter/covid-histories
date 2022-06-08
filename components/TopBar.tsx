@@ -13,6 +13,11 @@ import Image from "next/image";
 const NavBarOuterContainer = styled.div`
   width: 100%;
   background: ${colors.skyblue};
+  @media(max-width: 1024px){
+    position:sticky;
+    top:0;
+    z-index:1;
+  }
 `;
 const NavbarContainer = styled.nav`
   width: 100%;
@@ -66,6 +71,7 @@ const NavLogo = styled.div`
 const NavItems = styled.div`
   font-size: 1.25em;
   flex-grow: 0;
+  z-index:1;
   ul {
     list-style: none;
     margin: 0;
@@ -119,6 +125,8 @@ const NavItems = styled.div`
     position: fixed;
     width: 100%;
     height: 100%;
+    left: 0;
+    top: 0;
     background: rgba(0, 0, 0, 0.85);
     align-items: center;
     justify-content: center;

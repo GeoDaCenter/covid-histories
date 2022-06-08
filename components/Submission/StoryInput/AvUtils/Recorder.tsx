@@ -101,7 +101,7 @@ const Recorder: React.FC<RecorderProps> = ({
 			<Grid container spacing={1} alignItems="center" alignContent="center">
 				<Grid item xs={12}>
 					{hasRecorded ? (
-						<Alert severity="warning">
+						<Alert severity="warning" variant="outlined">
 							Warning: Recording a new story will delete your previous draft!
 						</Alert>
 					) : null}
@@ -123,7 +123,7 @@ const Recorder: React.FC<RecorderProps> = ({
 			<Grid container spacing={1} alignItems="center" alignContent="center">
 				<Grid item xs={12}>
 					{hasRecorded ? (
-						<Alert severity="warning">
+						<Alert severity="warning"  variant="outlined">
 							Warning: Recording a new story will delete your previous draft!
 						</Alert>
 					) : null}

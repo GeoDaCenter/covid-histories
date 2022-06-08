@@ -193,7 +193,7 @@ const MyStories: NextPage = () => {
 				/>
 				<link
 					rel="stylesheet"
-					href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
+					href="https://fonts.googleapis.com/css?family=Sriracha&display=swap"
 				/>
 			</Head>
 			<HomeSection sx={{ minHeight: '100vh', width: '100%' }}>
