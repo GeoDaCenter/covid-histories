@@ -57,6 +57,9 @@ export const YourCovidExperience: React.FC = () => {
 					prompts to think about. Feel free to any of these to get started
 					telling your story.
 				</Typography>
+				<Typography color="primary">
+					* required
+				</Typography>
 			</Grid>
 			<Grid item xs={12} md={12}>
 				{Themes.map((theme, i) => (

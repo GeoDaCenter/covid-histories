@@ -25,10 +25,10 @@ import { SubmissionState, SubmissionStateOuter, SubmissionTypes } from '../../st
 import { useRouter } from 'next/router'
 
 const stepsText = [
-	'',
+	'Intro',
 	'Get Started',
-	'Story Type',
-	'Your COVID Experience',
+	'Choose Story Type',
+	'Choose Story Topic',
 	'Login',
 	'Make your Story',
 	'Submit',
