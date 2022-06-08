@@ -36,13 +36,13 @@ export const SubmissionStepper: React.FC<SubmissionStepperProps> = ({
         steps={steps.length + 1}
 
         nextButton={
-          <Button size="small" onClick={handleNext} disabled={!canProgress || activeStep === steps.length}>
+          <Button size="small" variant="contained" onClick={handleNext} disabled={!canProgress || activeStep === steps.length}>
             Next
             <span className="material-icons">arrow_forward_ios</span>
           </Button>
         }
         backButton={
-          <Button size="small" onClick={handleBack} disabled={!canGoBack || activeStep === 0}>
+          <Button size="small" variant="contained" onClick={handleBack} disabled={!canGoBack || activeStep === 0}>
             <span className="material-icons">arrow_back_ios</span>
             Back
           </Button>
