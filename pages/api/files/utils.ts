@@ -1,8 +1,45 @@
 import { FileListReturn } from './types'
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
-import { DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput } from '@aws-sdk/client-s3'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+
+// constants
+const config = {
+	REGION: process.env.APP_AWS_REGION,
+	STAGE: 'dev',
+	S3_BUCKET: process.env.APP_AWS_BUCKET
+}
+const URL_EXPIRATION_SECONDS = 60 * 5
+const TAG_FILTER_PREDICATES = {
+	'unreviewed': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'reviewed' && t.Value === 'false',
+	'rejected': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'false',
+	'approved': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'true',
+	'all': () => true
+}
+const fileExtensionMap: { [fileType: string]: string } = {
+	'image/jpeg': '.jpg',
+	'image/png': '.png',
+	'image/tiff': '.tiff',
+	'image/gif': '.gif',
+	'image/bmp': '.bmp',
+	'audio/webm': '.webm',
+	'video/webm': '.webm',
+	'text/markdown': '.md',
+	'application/json': '_meta.json',
+}
+// helpers 
+
+export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
+
+// types
+export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all'
+export interface UploadInfo {
+	Key: string | undefined
+	fileId: string | undefined
+	LastModified: Date  | undefined
+}
+
 
 export const getFileList = async (
 	s3: S3Client,
@@ -21,25 +58,93 @@ export const getFileList = async (
 	}
 }
 
-const fileExtensionMap: { [fileType: string]: string } = {
-	'image/jpeg': '.jpg',
-	'image/png': '.png',
-	'image/tiff': '.tiff',
-	'image/gif': '.gif',
-	'image/bmp': '.bmp',
-	'audio/webm': '.webm',
-	'video/webm': '.webm',
-	'text/markdown': '.md',
-	'application/json': '_meta.json',
+export const getObjectTags = async (
+	s3: S3Client,
+	Bucket: string,
+	Key: string
+): Promise<GetObjectTaggingCommandOutput | undefined> => {
+	const command = new GetObjectTaggingCommand({
+		Bucket,
+		Key
+	})
+	const response = await s3.send(command)
+	return response
 }
 
-const config = {
-	REGION: process.env.APP_AWS_REGION,
-	STAGE: 'dev',
-	S3_BUCKET: process.env.APP_AWS_BUCKET
+export const setObjectTagging = async (
+	s3: S3Client,
+	Bucket: string,
+	Key: string,
+	Tags: Tag[]
+): Promise<PutObjectTaggingCommandOutput | undefined> => {
+	const command = new PutObjectTaggingCommand({
+		Bucket,
+		Key,
+		Tagging: {
+			TagSet: Tags
+		}
+	})
+	const response = await s3.send(command)
+	return response		
 }
 
-const URL_EXPIRATION_SECONDS = 60 * 5
+
+export const getTaggedFileList = async (
+	s3: S3Client,
+	Bucket: string,
+	tagFilter: TagFilter
+): Promise<UploadInfo[] | undefined> => {
+	const prefix = `uploads/`
+	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, Bucket, prefix)
+	const fileNames = currentFiles
+		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
+				Key,
+				fileId: Key?.split('uploads/')[1]?.split('.')[0],
+				LastModified
+		  }))
+		: []
+		
+	const entriesToReview = fileNames
+		?.filter((f) => {
+			// to be ignored
+			if (
+				!f.Key ||
+				!f.LastModified ||
+				!f.fileId ||
+				f.Key.includes('_meta.json') ||
+				f.Key === 'uploads/'
+			) {
+				return false
+			}
+			const fileId = f.fileId || 'PLACEHOLDER_INVALID_KEY'
+			// image submission with description
+			if (
+				f.Key.includes('.md') &&
+				fileNames.filter((f) => f.Key && f.Key.includes(fileId)).length > 2
+			) {
+				return false
+			}
+			//  otherwise, a valid submission
+			return true
+		}) //@ts-ignore
+		.sort((a, b) => b.LastModified - a.LastModified)
+	const entryTagging =
+		entriesToReview &&
+		(await Promise.all(
+			entriesToReview?.map(
+				({ Key }) =>
+					Key && getObjectTags(s3, Bucket, Key).then((r) => r?.TagSet)
+			)
+		))
+	const filterPredicate = TAG_FILTER_PREDICATES[tagFilter]
+	const filteredEntries = entriesToReview?.filter((_,i) => {
+		const tags = entryTagging?.[i]
+		return !tags || tags.some(filterPredicate)
+	})
+	
+	return filteredEntries
+}
+
 
 export async function getPresignedUrl(
 	s3: S3Client,
@@ -112,8 +217,6 @@ export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
 	const response = await s3.send(command);
 	return response
 }
-
-export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
 
 export async function getSubmissionCounts(
 	s3: any,
