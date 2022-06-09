@@ -28,7 +28,7 @@ export const GettingStarted: React.FC<StepComponentProps> = () => {
           <Grid item xs={12} md={6}>
             <Typography variant="h4">About Atlas Histories</Typography>
             <Typography>
-              The oral history project curates stories illustrative of statistical trends to contribute more holistic and visceral audio-visual evidence to the Atlas. The voices and perspectives included aspire to accurately represent the diversity of experience and opinion in the United States. Some of these perspectives may be scientifically inaccurate and/or harmful, and include disclaimers and qualifying text.
+              The oral history project curates stories illustrative of statistical trends to contribute more holistic and visceral audio-visual evidence to the Atlas. The perspectives included aspire to accurately represent the diversity of experience and opinion in the United States. Some of these perspectives may be scientifically inaccurate and/or harmful, and include disclaimers and qualifying text.
             </Typography>
           </Grid>
           <Grid item xs={12}>

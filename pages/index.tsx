@@ -211,7 +211,7 @@ const Home: NextPage = () => {
 							The COVID-19 pandemic highlighted community
 							capacity for resilience and inequitable impacts on diverse people and places.
 							This project collects stories behind the statistics and data.
-							We seek voices and perspectives that represent the diversity of experiences in the United States,
+							We seek perspectives that represent the diversity of experiences in the United States,
 							in order to build a more holistic archive of the pandemic.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
