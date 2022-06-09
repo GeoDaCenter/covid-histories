@@ -1,7 +1,7 @@
 //  Next + auth
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
-import { getFileList, getObjectTags, getTaggedFileList } from '../files/utils'
+import { getFileList, getObjectTags, getTaggedFileList, TagFilter } from '../files/utils'
 // AWS
 import { ListObjectsCommandOutput, S3Client } from '@aws-sdk/client-s3'
 
@@ -21,7 +21,7 @@ export default withApiAuthRequired(async function handler(
 ) {
 	// @ts-ignore
 	const { user } = getSession(req, res)
-    const filter = req.query.filter || 'all'
+    const filter: TagFilter = req.query.filter as TagFilter || 'all'
 	const isAdmin =
 		user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 	if (isAdmin) {
