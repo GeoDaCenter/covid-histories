@@ -248,6 +248,10 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 							</li>
 						</ul>
 					</Typography>
+					<br/>
+					<Typography>
+						Privacy Notice: When you click record, the audio and video (if selected) will be recorded to your device. Your recording will be sent to the Atlas Stories servers when you submit during the next step.
+					</Typography>
 					
 					<Snackbar open={hasRecorded && showSuccessToast} autoHideDuration={10000} onClose={handleToggleToast}>
 						<Alert onClose={handleToggleToast} severity="success" variant="filled" sx={{ width: '100%', maxWidth:'400px' }}>
