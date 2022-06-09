@@ -117,12 +117,6 @@ export async function deleteObject(s3: any, Bucket: string, Key: string) {
 		.promise()
 }
 
-const baseCounts = {
-	written: 0,
-	av: 0,
-	photo: 0
-}
-
 export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
 
 export async function getSubmissionCounts(
@@ -135,6 +129,12 @@ export async function getSubmissionCounts(
 		Bucket,
 		prefix
 	)
+
+	const baseCounts = {
+		written: 0,
+		av: 0,
+		photo: 0
+	}
 	
 	if (!currentFiles || !currentFiles.Contents) {
 		return baseCounts
