@@ -8,7 +8,7 @@ _Purpose_
 Returns a list of relevant uploads
 
 _Query Parameters_
-- Filter: 'unreviewed' | 'approved' | 'rejected' | 'all' 
+- filter: 'unreviewed' | 'approved' | 'rejected' | 'all' 
  > Filters entries based on current tags
 
 _Returns_
