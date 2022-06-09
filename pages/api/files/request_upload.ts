@@ -5,15 +5,16 @@ import { getPresignedUrl, getSubmissionCounts, uploadMeta } from './utils'
 import { QueryParams, SubmissionType } from './types'
 import hash from 'object-hash'
 // AWS
-const AWS = require('aws-sdk')
-AWS.config.update({ region: process.env.AWS_REGION })
+import { S3Client } from "@aws-sdk/client-s3";
 
-const s3 = new AWS.S3({
-	accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
-	secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
-	region: process.env.APP_AWS_REGION
-})
-const S3_BUCKET = process.env.APP_AWS_BUCKET || ''
+const S3_BUCKET = process.env.APP_AWS_BUCKET || ""
+const REGION = process.env.APP_AWS_REGION || ""
+const s3 = new S3Client({
+	region: REGION,
+    credentials:{
+        accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!,
+}})
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,

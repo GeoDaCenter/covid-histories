@@ -1,25 +1,25 @@
 import { FileListReturn } from './types'
+import { SubmissionType } from './types'
+import { nanoid } from '@reduxjs/toolkit'
+import { DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 export const getFileList = async (
-	s3: any,
+	s3: S3Client,
 	Bucket: string,
 	Prefix: string
-): Promise<FileListReturn | undefined> => {
+): Promise<ListObjectsCommandOutput | undefined> => {
 	try {
-		const objects = await s3
-			.listObjects({
-				Bucket,
-				Prefix
-			})
-			.promise()
-		return objects
+		const command = new ListObjectsCommand({
+			Bucket,
+			Prefix
+		})
+		const response = await s3.send(command)
+		return response
 	} catch (err) {
 		console.log('Error', err)
 	}
 }
-
-import { SubmissionType } from './types'
-import { nanoid } from '@reduxjs/toolkit'
 
 const fileExtensionMap: { [fileType: string]: string } = {
 	'image/jpeg': '.jpg',
@@ -42,7 +42,7 @@ const config = {
 const URL_EXPIRATION_SECONDS = 60 * 5
 
 export async function getPresignedUrl(
-	s3: any,
+	s3: S3Client,
 	key: string,
 	ContentType: string,
 	prePath: string,
@@ -53,13 +53,12 @@ export async function getPresignedUrl(
 		const fileName: string = `${key || nanoid()}${ext}`
 		// Get signed URL from S3
 		const s3Params = {
-			Bucket: config.S3_BUCKET,
+			Bucket: config.S3_BUCKET!,
 			Key: prePath + fileName,
-			Expires: URL_EXPIRATION_SECONDS,
 			ContentType
-			// ACL: 'public-read'
 		}
-		const url = await s3.getSignedUrlPromise(operation, s3Params)
+		const command = new PutObjectCommand(s3Params);
+		const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRATION_SECONDS });
 		return {
 			url,
 			fileName,
@@ -68,12 +67,10 @@ export async function getPresignedUrl(
 	} else if (operation === 'getObject') {
 		const s3Params = {
 			Bucket: config.S3_BUCKET,
-			Key: prePath + key,
-			Expires: URL_EXPIRATION_SECONDS
-			// ACL: 'public-read'
+			Key: prePath + key
 		}
-		const url = await s3.getSignedUrlPromise(operation, s3Params)
-
+		const command = new GetObjectCommand(s3Params);
+		const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRATION_SECONDS });
 		return {
 			url,
 			fileName: key,
@@ -92,29 +89,28 @@ export async function uploadMeta(
 ) {
 	const now = new Date()
 	const uploadTimestamp = now.toISOString()
-	const uploadResult = await s3
-		.upload({
-			Bucket: config.S3_BUCKET,
-			ACL: 'private',
-			Key: `meta/${hashedEmail}/${key}.json`,
-			Body: JSON.stringify({
-				storyType,
-				uploadTimestamp
-			}),
-			ContentType: 'application/json'
-		})
-		.promise()
+	const command = new PutObjectCommand({
+		Bucket: config.S3_BUCKET,
+		ACL: 'private',
+		Key: `meta/${hashedEmail}/${key}.json`,
+		Body: JSON.stringify({
+			storyType,
+			uploadTimestamp
+		}),
+		ContentType: 'application/json'
+	})
+	const uploadResult = await s3.send(command)
 
 	return uploadResult
 }
 
-export async function deleteObject(s3: any, Bucket: string, Key: string) {
-	return s3
-		.deleteObject({
-			Bucket,
-			Key
-		})
-		.promise()
+export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
+	const command = new DeleteObjectCommand({
+		Bucket,
+		Key
+	});
+	const response = await s3.send(command);
+	return response
 }
 
 export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
@@ -124,7 +120,7 @@ export async function getSubmissionCounts(
 	Bucket: string,
 	prefix: string
 ) {
-	const currentFiles: FileListReturn | undefined = await getFileList(
+	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(
 		s3,
 		Bucket,
 		prefix
@@ -141,7 +137,7 @@ export async function getSubmissionCounts(
 	}
 
 	const fileNameList = currentFiles.Contents
-		.map(entry => entry.Key.split('/').pop()||'')
+		.map(entry => !!entry?.Key && entry.Key.split('/').pop()||'')
 	const uniqueIds = fileNameList
 		.map(entry => entry.split('.')[0].split('_meta')[0])
 		.filter(onlyUnique)

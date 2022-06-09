@@ -7,16 +7,16 @@ import { FileListReturn } from './types'
 import {getPresignedUrl} from './utils'
 import { current } from '@reduxjs/toolkit'
 // AWS
-const AWS = require('aws-sdk')
-AWS.config.update({ region: process.env.AWS_REGION })
+import { ListObjectsCommandOutput, S3Client } from "@aws-sdk/client-s3";
 
 const S3_BUCKET = process.env.APP_AWS_BUCKET || ""
 const REGION = process.env.APP_AWS_REGION || ""
-const s3 = new AWS.S3({
-	accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
-	secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
-	region: REGION
-})
+const s3 = new S3Client({
+	region: REGION,
+    credentials:{
+        accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!,
+}})
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
@@ -27,8 +27,8 @@ export default withApiAuthRequired(async function handler(
 	if (user) {
 		const encrypted = hash(user.email)
 		const prefix = `uploads/${encrypted}`
-		const currentFiles: FileListReturn | undefined = await getFileList(s3, S3_BUCKET, prefix)
-		const fileNames = currentFiles?.Contents.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified}))
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, prefix)
+		const fileNames = currentFiles?.Contents?.map(({Key, LastModified}) => ({Key: !!Key && Key.split('/').slice(-1)[0], LastModified}))
 		const presignedGets = await Promise.all(
 			fileNames?.map(({Key, LastModified}) => 
 				getPresignedUrl(s3, Key||'', '', `uploads/${encrypted}/`, 'getObject')
@@ -37,7 +37,7 @@ export default withApiAuthRequired(async function handler(
 		const metaData = await Promise.all(
 			presignedGets
 				.filter(f => f.fileName?.includes('_meta.json'))
-				.map(f => fetch(f.url).then(r => r.json()))
+				.map(f => !!f.url && fetch(f.url).then(r => r.json()))
 		)
 		const mergedData = metaData
 			.map((meta) => (
