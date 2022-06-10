@@ -1,7 +1,7 @@
 //  Next + auth
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
-import { setObjectTagging, getFileList, deleteObject } from '../files/utils'
+import { setObjectTagging, getFileList, deleteObject, getObjectTags } from '../files/utils'
 // AWS
 import { ListObjectsCommandOutput, S3Client } from '@aws-sdk/client-s3'
 
@@ -23,26 +23,31 @@ export default withApiAuthRequired(async function handler(
 	const { user } = getSession(req, res)
     const action = req.query.action // approve, reject, delete
     const fileId= Array.isArray(req.query.fileId) ? req.query.fileId[0] : req.query.fileId // approve, reject
+    const note = Array.isArray(req.query.note) ? req.query.note[0] : req.query.note // approve, reject
 	const isAdmin = user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 
 	if (isAdmin) {
 		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, `uploads/${fileId}`)
-        
+       
         if(currentFiles?.Contents && currentFiles?.Contents?.length > 0) {
             const files = currentFiles.Contents.map(file => file.Key || 'PLACEHOLDER_MISSING_KEY')
+            const entryTags = await Promise.all(
+                files?.map(file => getObjectTags(s3, S3_BUCKET, file).then((r) => r?.TagSet))
+            )
             switch(action){
                 case 'approve':
+                    const approveTags = [
+                        {Key: 'approved', Value: 'true'},
+                        {Key: 'reviewed', Value: 'true'},
+                        {Key: 'reviewed_by', Value: user.name},
+                    ]
                     const approveResponse = await Promise.all(
-                        files.map(file => 
+                        files.map((file,i) => 
                             setObjectTagging(
                                 s3, 
                                 S3_BUCKET, 
                                 file, 
-                                [
-                                    {Key: 'approved', Value: 'true'},
-                                    {Key: 'reviewed', Value: 'true'},
-                                    {Key: 'reviewed_by', Value: user.name},
-                                ]
+                                approveTags
                             )
                         )
                     )
@@ -53,25 +58,57 @@ export default withApiAuthRequired(async function handler(
                     )
                     break
                 case 'reject':
-                    const rejectResponse = await Promise.all(
-                        files.map(file => 
-                            setObjectTagging(
-                                s3, 
-                                S3_BUCKET, 
-                                file, 
-                                [
-                                    {Key: 'approved', Value: 'true'},
-                                    {Key: 'reviewed', Value: 'true'},
-                                    {Key: 'reviewed_by', Value: user.name},
-                                ]
+                    const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'false'))
+                    if (hasBeenRejected){
+                        const previousTags = entryTags[0]||[]
+                        const firstReviewer = previousTags.find(tag => tag.Key === 'reviewed_by')?.Value
+                        console.log(firstReviewer)
+                        const rejectTags =  [
+                            {Key: 'approved', Value: 'false'},
+                            {Key: 'reviewed', Value: 'true'},
+                            {Key: 'reviewed_by', Value: firstReviewer},
+                            {Key: 'confirmed', Value: 'true'},
+                            {Key: 'confirmed_by', Value: user.name},
+                            {Key: 'confirm_note', Value: note}
+                        ]
+                        const rejectResponse = await Promise.all(
+                            files.map(file => 
+                                setObjectTagging(
+                                    s3, 
+                                    S3_BUCKET, 
+                                    file, 
+                                    rejectTags
+                                )
                             )
                         )
-                    )
-                    res.status(200).json(
-                        JSON.stringify({
-                            files: rejectResponse
-                        })
-                    )
+                        res.status(200).json(
+                            JSON.stringify({
+                                files: rejectResponse
+                            })
+                        )
+                    } else {
+                        const rejectTags =  [
+                            {Key: 'approved', Value: 'false'},
+                            {Key: 'reviewed', Value: 'true'},
+                            {Key: 'reviewed_by', Value: user.name},
+                            {Key: 'note', Value: note}
+                        ]
+                        const rejectResponse = await Promise.all(
+                            files.map(file => 
+                                setObjectTagging(
+                                    s3, 
+                                    S3_BUCKET, 
+                                    file, 
+                                    rejectTags
+                                )
+                            )
+                        )
+                        res.status(200).json(
+                            JSON.stringify({
+                                files: rejectResponse
+                            })
+                        )
+                    }
                     break
                 case 'delete':
                     const deleteResponse = await Promise.all(
