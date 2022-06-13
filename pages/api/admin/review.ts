@@ -23,7 +23,7 @@ export default withApiAuthRequired(async function handler(
 	const { user } = getSession(req, res)
     const action = req.query.action // approve, reject, delete
     const fileId= Array.isArray(req.query.fileId) ? req.query.fileId[0] : req.query.fileId // approve, reject
-    const note = Array.isArray(req.query.note) ? req.query.note[0] : req.query.note // approve, reject
+    const note = Array.isArray(req.query.note) ? req.query.note[0] || '' : req.query.note || '' // approve, reject
 	const isAdmin = user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 
 	if (isAdmin) {
