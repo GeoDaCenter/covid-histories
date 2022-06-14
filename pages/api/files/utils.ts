@@ -1,8 +1,9 @@
 import { FileListReturn } from './types'
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
-import { DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput } from '@aws-sdk/client-s3'
+import { CopyObjectCommand, DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput, PutObjectCommandInput } from '@aws-sdk/client-s3'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import 'dotenv/config'
 
 // constants
 const config = {
@@ -139,7 +140,9 @@ export const getTaggedFileList = async (
 	const filterPredicate = TAG_FILTER_PREDICATES[tagFilter]
 	const filteredEntries = entriesToReview?.filter((_,i) => {
 		const tags = entryTagging?.[i]
-		return !tags || tags.some(filterPredicate)
+		// if no tags, then its not reviewed
+		// presigned urls appear to lose the capacity to add tags on upload :/
+		return (tagFilter === 'unreviewed' && tags && !tags.length) || (tags && tags.some(filterPredicate))
 	})
 	
 	return filteredEntries
@@ -157,10 +160,11 @@ export async function getPresignedUrl(
 		const ext: string = fileExtensionMap[ContentType]
 		const fileName: string = `${key || nanoid()}${ext}`
 		// Get signed URL from S3
-		const s3Params = {
+		const s3Params: PutObjectCommandInput = {
 			Bucket: config.S3_BUCKET!,
 			Key: prePath + fileName,
-			ContentType
+			ContentType,
+			// Tagging: "reviewed=false" // this does not work
 		}
 		const command = new PutObjectCommand(s3Params);
 		const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRATION_SECONDS });
@@ -209,6 +213,16 @@ export async function uploadMeta(
 	return uploadResult
 }
 
+export async function putObject(s3: S3Client, Bucket: string, Key: string, body: any) {
+	const command = new PutObjectCommand({
+		Bucket,
+		Key,
+		Body: body
+	});
+	const response = await s3.send(command);
+	return response
+}
+
 export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
 	const command = new DeleteObjectCommand({
 		Bucket,
@@ -216,6 +230,17 @@ export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
 	});
 	const response = await s3.send(command);
 	return response
+}
+
+export async function copyObject(s3: S3Client, region: string, accountId: string, bucket: string, originKey: string, destinationKey: string){
+	const command = new CopyObjectCommand({
+		Bucket: bucket,
+		CopySource: encodeURI(`/${bucket}/${originKey}`),
+		Key: destinationKey
+	});
+	const response = await s3.send(command);
+	return response
+
 }
 
 export async function getSubmissionCounts(
