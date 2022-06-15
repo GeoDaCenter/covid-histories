@@ -67,7 +67,6 @@ export default withApiAuthRequired(async function handler(
                             {Key: 'approved', Value: 'false'},
                             {Key: 'reviewed', Value: 'true'},
                             {Key: 'reviewed_by', Value: firstReviewer},
-                            {Key: 'confirmed', Value: 'true'},
                             {Key: 'confirmed_by', Value: user.name},
                             {Key: 'confirm_note', Value: note}
                         ]
@@ -88,7 +87,7 @@ export default withApiAuthRequired(async function handler(
                         )
                     } else {
                         const rejectTags =  [
-                            {Key: 'approved', Value: 'false'},
+                            {Key: 'approved', Value: 'needs_review'},
                             {Key: 'reviewed', Value: 'true'},
                             {Key: 'reviewed_by', Value: user.name},
                             {Key: 'note', Value: note}
