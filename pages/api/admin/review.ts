@@ -58,11 +58,10 @@ export default withApiAuthRequired(async function handler(
                     )
                     break
                 case 'reject':
-                    const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'false'))
+                    const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'needs_review'))
                     if (hasBeenRejected){
                         const previousTags = entryTags[0]||[]
                         const firstReviewer = previousTags.find(tag => tag.Key === 'reviewed_by')?.Value
-                        console.log(firstReviewer)
                         const rejectTags =  [
                             {Key: 'approved', Value: 'false'},
                             {Key: 'reviewed', Value: 'true'},
