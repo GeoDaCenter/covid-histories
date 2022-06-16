@@ -10,6 +10,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Icons } from '../components/Icons'
 import { useInView } from 'react-intersection-observer';
+import { SEO } from '../components/Interface/SEO';
 
 const StoryTypeContainer = styled(Box) <{ hideBorder?: boolean }>`
 	padding-top:2em;
@@ -105,7 +106,7 @@ const ScrollLinkButton: React.FC<ScrollLinkButtonProps> = ({
 			onClick={onClick}
 			className="cta-button"
 			sx={{
-				py: 0.5,
+				py: 0,
 				px: 0,
 				fontWeight: 'light',
 				textTransform: 'none',
@@ -115,8 +116,9 @@ const ScrollLinkButton: React.FC<ScrollLinkButtonProps> = ({
 			<span
 				className="material-icons"
 				style={{
-					transform: 'translateY(25%)',
-					marginRight: 5
+					transform: 'translateY(12.5%)',
+					marginRight: 5,
+					fontSize:12
 				}}
 			>keyboard_double_arrow_down
 			</span>
@@ -187,17 +189,9 @@ const Home: NextPage = () => {
 
 	return (
 		<div className={styles.container} style={{ background }} ref={containerRef}>
-			<Head>
-				<link
-					rel="stylesheet"
-					href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
-				/>
-				<link
-					rel="stylesheet"
-					href="https://fonts.googleapis.com/css?family=Sriracha&display=swap"
-				/>
-			</Head>
-
+			<SEO 
+				title="Atlas Stories :: Home"
+			/>
 			<ProgressIndicator containerRef={containerRef} />
 			<HomeSection
 				ref={homeRef}
@@ -205,7 +199,10 @@ const Home: NextPage = () => {
 				triggerFade={currSectionName === 'homeInView'}
 			>
 				<Grid container spacing={2} alignContent="center" alignItems="center">
+					
 					<Grid item xs={12} md={6}>
+           				
+						<a href="https://uscovidatlas.org/" target="_blank"><img src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="160px" height="auto" /></a>
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br />of the pandemic</Typography>
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
@@ -213,6 +210,11 @@ const Home: NextPage = () => {
 							This project collects stories behind the statistics and data.
 							We seek perspectives that represent the diversity of experiences in the United States,
 							in order to build a more holistic archive of the pandemic.
+						</Typography>
+						<br/>
+						<Typography>
+							<a href="https://uscovidatlas.org" style={{textDecoration:"underline"}} target="_blank">The US Covid Atlas</a> and Atlas Stories are led by the Healthy Regions and Policies Lab at the University of Chicago. This is a not-for-profit
+							research project that works to understand, archive, and represent the often unequal impact of the COVID-19 pandemic in the US.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
 							What was your experience of the pandemic?
@@ -249,7 +251,7 @@ const Home: NextPage = () => {
 								left={50}
 								top={25}
 								animationDelay={500}
-								src="/images/work.jpg"
+								src="/images/sample-usage.jpg"
 							/>
 							<FadeInPhoto
 								width={45}
