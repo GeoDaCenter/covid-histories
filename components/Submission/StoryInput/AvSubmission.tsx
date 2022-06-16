@@ -52,7 +52,7 @@ const initialAudioConstraints: MediaTrackConstraints = {
 	channelCount: 2
 }
 
-export const AvSubmission: React.FC<StoryInputProps> = ({
+const AvSubmission: React.FC<StoryInputProps> = ({
 	handleCacheStory,
 	dbActive,
 	storyId
@@ -327,3 +327,5 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 		</RecorderContainer>
 	)
 }
+
+export default AvSubmission;

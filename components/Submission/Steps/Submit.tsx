@@ -28,7 +28,6 @@ import {
 	selectTags,
 	setTags
 } from '../../../stores/submission'
-import * as StoryInput from '../StoryInput'
 import { db, resetDatabase } from '../../../stores/indexdb/db'
 import { StepComponentProps } from './types'
 import { CountySelect } from '../SubmissionUtil/CountySelect'

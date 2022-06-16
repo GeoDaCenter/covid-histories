@@ -251,7 +251,7 @@ const Home: NextPage = () => {
 								left={50}
 								top={25}
 								animationDelay={500}
-								src="/images/sample-usage.jpg"
+								src="/images/atlas_map.gif"
 							/>
 							<FadeInPhoto
 								width={45}

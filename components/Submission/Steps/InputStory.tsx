@@ -1,17 +1,27 @@
 import { Grid, Typography } from '@mui/material'
+import dynamic from 'next/dynamic'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectType } from '../../../stores/submission'
-import * as StoryInput from '../StoryInput'
+import { WrittenSubmission } from '../StoryInput/WrittenSubmission'
+import { PhotoSubmission } from '../StoryInput/PhotoSubmission'
 import { StoryInputProps } from '../StoryInput/types'
 import { StepComponentProps } from './types'
 
+const AvSubmission = dynamic(() => import('../StoryInput/AvSubmission'), {
+	loading: () => <p>...</p>,
+	ssr: false
+})
+
 const inputComponentMap: { [key: string]: React.FC<StoryInputProps> } = {
-	written: StoryInput.WrittenSubmission,
-	audio: StoryInput.AvSubmission,
-	video: StoryInput.AvSubmission,
-	photo: StoryInput.PhotoSubmission
+	written: WrittenSubmission,
+	// @ts-ignore
+	audio: AvSubmission,
+	// @ts-ignore
+	video:  AvSubmission,
+	photo: PhotoSubmission
 }
+
 export const InputStory: React.FC<StepComponentProps> = ({
 	handleCacheStory,
 	handleCacheAdditionalContent,
