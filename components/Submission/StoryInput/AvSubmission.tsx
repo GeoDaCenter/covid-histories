@@ -88,12 +88,12 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 	const onStop = async (_blobUrl: string, blob: Blob) => {
 		try {
 			handleToggleToast()
-			const fixedBlob = await fixWebmDuration(blob); 
+			const fixedBlob = await fixWebmDuration(blob);
 			handleCacheStory(fixedBlob)
 			setCachedStory('')
-		  } catch (error) {
+		} catch (error) {
 			console.log("fixWebmDuration error: ", error);
-		  }
+		}
 	}
 
 	const {
@@ -163,9 +163,9 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 				/* use the stream */
 			} catch (err) {
 				// @ts-ignore
-				if (err?.name){
+				if (err?.name) {
 					// @ts-ignore
-					switch(err.name){
+					switch (err.name) {
 						case 'NotAllowedError':
 							setMediaError('You must allow access to your microphone and/or camera to record your story.')
 							break;
@@ -196,11 +196,11 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 					video: videoConstraints
 				} as MediaStreamConstraints)
 			}
-		} else if (status === "recording"){
+		} else if (status === "recording") {
 			setMediaError('')
 		}
 	}, [status])
-	
+
 	return (
 		<RecorderContainer>
 			<Grid container spacing={3}>
@@ -248,13 +248,13 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 							</li>
 						</ul>
 					</Typography>
-					<br/>
+					<br />
 					<Typography>
 						Privacy Notice: When you click record, the audio and video (if selected) will be recorded to your device. Your recording will be sent to the Atlas Stories servers when you submit during the next step.
 					</Typography>
-					
+
 					<Snackbar open={hasRecorded && showSuccessToast} autoHideDuration={10000} onClose={handleToggleToast}>
-						<Alert onClose={handleToggleToast} severity="success" variant="filled" sx={{ width: '100%', maxWidth:'400px' }}>
+						<Alert onClose={handleToggleToast} severity="success" variant="filled" sx={{ width: '100%', maxWidth: '400px' }}>
 
 							Your story has been recorded! You can review your recording on
 							this page, and when you are happy with it please proceed to the
@@ -301,18 +301,17 @@ export const AvSubmission: React.FC<StoryInputProps> = ({
 						</Alert>
 					)}
 					<Recorder
-						{...{
-							length,
-							useVideo,
-							status,
-							startRecording,
-							stopRecording,
-							previewStream,
-							previewAudioStream,
-							hasRecorded,
-							mediaBlobUrl,
-							cachedStory
-						}}
+						length={length}
+						useVideo={useVideo}
+						status={status}
+						startRecording={startRecording}
+						stopRecording={stopRecording}
+						previewStream={previewStream}
+						previewAudioStream={previewAudioStream}
+						hasRecorded={hasRecorded}
+						// @ts-ignore
+						mediaBlobUrl={mediaBlobUrl}
+						cachedStory={cachedStory}
 					/>
 				</Grid>
 			</Grid>

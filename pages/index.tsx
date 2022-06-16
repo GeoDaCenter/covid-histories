@@ -202,7 +202,7 @@ const Home: NextPage = () => {
 					
 					<Grid item xs={12} md={6}>
            				
-						<a href="https://uscovidatlas.org/" target="_blank"><img src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="160px" height="auto" /></a>
+						<a href="https://uscovidatlas.org/" target="_blank" rel="noreferrer"><img src="/images/us-covid-atlas-cluster-logo.svg" alt="US COVID Atlas Cluster Logo" width="160px" height="auto" /></a>
 						<Typography variant="h2" component="h1">Share <span className="cursive" >your story</span><br />of the pandemic</Typography>
 						<Typography paddingTop="1em">
 							The COVID-19 pandemic highlighted community
@@ -213,7 +213,7 @@ const Home: NextPage = () => {
 						</Typography>
 						<br/>
 						<Typography>
-							<a href="https://uscovidatlas.org" style={{textDecoration:"underline"}} target="_blank">The US Covid Atlas</a> and Atlas Stories are led by the Healthy Regions and Policies Lab at the University of Chicago. This is a not-for-profit
+							<a href="https://uscovidatlas.org" style={{textDecoration:"underline"}} target="_blank" rel="noreferrer">The US Covid Atlas</a> and Atlas Stories are led by the Healthy Regions and Policies Lab at the University of Chicago. This is a not-for-profit
 							research project that works to understand, archive, and represent the often unequal impact of the COVID-19 pandemic in the US.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
