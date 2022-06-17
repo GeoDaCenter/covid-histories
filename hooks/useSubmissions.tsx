@@ -6,6 +6,6 @@ const fetcher = (url:string) => {
 }
 
 export const useSubmissions= (filter:TagFilter)=>{
-  const {data: submissions, error} = useSWR(`/api/admin/list_uploads?filter=${filter}`, fetcher)
-  return {submissions,error}
+  const {data: submissions, error, mutate} = useSWR(`/api/admin/list_uploads?filter=${filter}`, fetcher)
+  return {submissions,error, mutate}
 }

@@ -21,7 +21,7 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props
-	const { submissions, error } = useSubmissions(props.variant)
+	const { submissions, error, mutate} = useSubmissions(props.variant)
 	const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
 		null
 	)
@@ -51,6 +51,7 @@ function TabPanel(props: TabPanelProps) {
 										fileId={submission.fileId}
 										key={submission.fileId}
 										state={props.variant}
+                    onStateChange={()=> mutate()}
 									/>
 								</Grid>
 							))}
@@ -74,13 +75,15 @@ const Admin: NextPage<{ accessToken: string }> = ({ accessToken }) => {
 					onChange={(action, tab) => setSelectedTab(tab)}
 				>
 					<Tab label="unreviewd" id="unreviewd" />
+					<Tab label="Needs confirmation" id="confirmation" />
 					<Tab label="approved" id="approved" />
 					<Tab label="rejected" id="rejected" />
 				</Tabs>
 
 				<TabPanel index={0} value={selectedTab} variant="unreviewed" />
-				<TabPanel index={1} value={selectedTab} variant="approved" />
-				<TabPanel index={2} value={selectedTab} variant="rejected" />
+				<TabPanel index={1} value={selectedTab} variant="needs_confirmation" />
+				<TabPanel index={2} value={selectedTab} variant="approved" />
+				<TabPanel index={3} value={selectedTab} variant="rejected" />
 			</Box>
 		</div>
 	)

@@ -15,15 +15,22 @@ import { TagFilter } from '../../pages/api/files/utils'
 interface SubmissionReviewerCardProps {
 	fileId: string
 	state: TagFilter
-	onFocus: (fileId: string) => void
+	onFocus: (fileId: string) => void,
+  onStateChange: ()=>void
 }
 
 export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	fileId,
 	state,
-	onFocus
+  onFocus,
+  onStateChange
 }) => {
 	const { file, error, updateState } = useFile(fileId)
+
+  const submitStateChange =(state: "accept" | "reject" | "delete" )=>{
+    updateState(fileId,state, "")
+    onStateChange()
+  }
 
 	return (
 		<div>
@@ -55,7 +62,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							size="small"
 							variant={state === 'approved' ? 'contained' : 'text'}
 							color="success"
-							onClick={() => updateState(fileId, 'approve', '')}
+							onClick={() => updateState(fileId, 'accept', '')}
 						>
 							Approved
 						</Button>
@@ -66,14 +73,6 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							onClick={() => updateState(fileId, 'reject', '')}
 						>
 							Rejected
-						</Button>
-						<Button
-							size="small"
-							variant={state === 'unreviewed' ? 'contained' : 'text'}
-							color="info"
-							onClick={() => updateState(fileId, 'unreviewed', '')}
-						>
-							Unreviewd
 						</Button>
 					</CardActions>
 				</Card>

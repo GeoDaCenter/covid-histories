@@ -36,7 +36,7 @@ const fileExtensionMap: { [fileType: string]: string } = {
 export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
 
 // types
-export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all'
+export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all' | 'needs_confirmation'
 export interface UploadInfo {
 	Key: string | undefined
 	fileId: string | undefined
