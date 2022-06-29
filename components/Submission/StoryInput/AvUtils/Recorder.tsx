@@ -89,6 +89,7 @@ const Recorder: React.FC<RecorderProps> = ({
 	const [canPlayWebm, setCanPlayWebm] = useState(true)
 	useEffect(() => {
 		try {
+			// @ts-ignore
 			const webmOk = videoRef.current.canPlayType('video/webm') === 'maybe'
 			// @ts-ignore
 			setCanPlayWebm(webmOk)
