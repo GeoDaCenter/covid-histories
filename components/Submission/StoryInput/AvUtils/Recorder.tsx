@@ -59,6 +59,8 @@ const RecordingButton: React.FC<RecordingButtonProps> = ({
 		</Button>
 	)
 }
+
+
 interface RecorderProps {
 	useVideo: boolean
 	status: string
@@ -83,12 +85,25 @@ const Recorder: React.FC<RecorderProps> = ({
 	hasRecorded,
 	cachedStory
 }) => {
-	const mediaUrl = cachedStory ? cachedStory : mediaBlobUrl
+	const videoRef = useRef(null)
+	const [canPlayWebm, setCanPlayWebm] = useState(true)
+	useEffect(() => {
+		try {
+			const webmOk = videoRef.current.canPlayType('video/webm') === 'maybe'
+			// @ts-ignore
+			setCanPlayWebm(webmOk)
+		} catch{
+			// console.log('CANPLAYERROR')
+		}
+	},[status])
+
+	const mediaUrl = cachedStory && canPlayWebm ? cachedStory : mediaBlobUrl
+
 	return useVideo ? (
 		<>
 			{hasRecorded ? (
 				//@ts-ignore
-				<video src={mediaUrl} controls playsInline />
+				<video src={mediaUrl} controls playsInline ref={videoRef} />
 			) : (
 				<AudioVideoContainer>
 					{/* @ts-ignore */}
