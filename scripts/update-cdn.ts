@@ -76,6 +76,7 @@ async function main() {
 			LastModified,
 			id: Key && Key.split('/').slice(-1)[0].split('.')[0]
 		}))
+
 	const publicContents: FileObject[] | undefined =
 		publicFileList?.Contents?.filter(
 			({ Key }) => !!Key && !Key.includes('index.json')
