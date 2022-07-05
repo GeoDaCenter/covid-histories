@@ -88,7 +88,7 @@ async function main() {
 					.then((r) => r.url!)
 					.then((url) => doTranscode(url))
 					.then((data) => upload(s3, Key, 'video/mp4', data))
-				if (response['$metadata'].httpStatusCode) {
+				if (response['$metadata'].httpStatusCode === 200) {
 					completedRepairs.push(id)
 					writeFileSync(
 						'./scripts/completed-repairs.txt',
