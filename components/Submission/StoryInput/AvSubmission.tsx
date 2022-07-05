@@ -15,7 +15,7 @@ import { useReactMediaRecorder } from 'react-media-recorder'
 import { useGetMediaDevices } from '../../../hooks/useGetMediaDevices'
 import { AdvancedSettingsModal } from './AvUtils/AdvancedSettingsModal'
 import { AvSwitch } from './AvUtils/AvSwitch'
-import fixWebmDuration from 'webm-duration-fix'
+
 const Recorder = dynamic(() => import('./AvUtils/Recorder'), {
 	loading: () => <p>...</p>,
 	ssr: false
@@ -88,11 +88,10 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 	const onStop = async (_blobUrl: string, blob: Blob) => {
 		try {
 			handleToggleToast()
-			const fixedBlob = await fixWebmDuration(blob);
-			handleCacheStory(fixedBlob)
+			handleCacheStory(blob)
 			setCachedStory('')
 		} catch (error) {
-			console.log("fixWebmDuration error: ", error);
+			console.log("error: ", error);
 		}
 	}
 
@@ -108,7 +107,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 		audio: audioConstraints,
 		askPermissionOnMount: false,
 		blobPropertyBag: {
-			type: useVideo ? 'video/webm' : 'audio/webm'
+			type: useVideo ? 'video/mp4' : 'audio/mp3'
 		},
 		onStop
 		// mediaRecorderOptions: {
@@ -128,7 +127,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 	const hasRecorded =
 		status !== 'recording' && (mediaBlobUrl !== null || cachedStory !== '')
 	const mediaInUse = status === 'media_in_use'
-	const MIMETYPE = useVideo ? 'video/webm' : 'audio/webm'
+	const MIMETYPE = useVideo ? 'video/mp4' : 'audio/mp3'
 
 	// useEffect(() => {
 	// 	if (status === 'stopped' && mediaBlobUrl !== null) {

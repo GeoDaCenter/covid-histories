@@ -26,6 +26,8 @@ const fileExtensionMap: { [fileType: string]: string } = {
 	'image/bmp': '.bmp',
 	'audio/webm': '.webm',
 	'video/webm': '.webm',
+	'audio/mp3': '.mp3',
+	'video/mp4': '.mp4',
 	'text/markdown': '.md',
 	'application/json': '_meta.json',
 }
@@ -291,7 +293,7 @@ export async function getSubmissionCounts(
 		if (fileList.length === 3){ // photo -- meta, caption, and image
 			type = 'photo'
 		} 
-		if (fileList.length === 2 && (fileList.includes(`${id}.webm`) || fileList.includes(`${id}.mp4`) || fileList.includes(`${id}.wav`))){ 
+		if (fileList.length === 2 && (fileList.includes(`${id}.webm`) || fileList.includes(`${id}.mp4`) || fileList.includes(`${id}.mp3`))){ 
 			// av + legacy formats and meta file
 			type = 'av'
 		}
