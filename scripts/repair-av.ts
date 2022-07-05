@@ -1,26 +1,11 @@
-import { ListObjectsCommandOutput, S3Client } from '@aws-sdk/client-s3'
-import {
-	CloudFrontClient,
-	CreateInvalidationCommand,
-	CreateInvalidationCommandInput
-} from '@aws-sdk/client-cloudfront' // ES Modules import
-import {
-	getFileList,
-	getObjectTags,
-	deleteObject,
-	copyObject,
-	getPresignedUrl,
-	putObject,
-	upload
-} from '../pages/api/files/utils'
-import axios from 'axios'
+import { S3Client } from '@aws-sdk/client-s3'
+import { getFileList, getPresignedUrl,upload } from '../pages/api/files/utils'
 import 'dotenv/config'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
 import { writeFileSync, readFileSync } from 'fs'
 
 const S3_BUCKET = process.env.APP_AWS_BUCKET!
 const REGION = process.env.APP_AWS_REGION!
-const ACCOUNT_ID = process.env.APP_AWS_ACCOUNT_ID!
 const s3 = new S3Client({
 	region: REGION,
 	credentials: {
@@ -33,16 +18,6 @@ interface FileObject {
 	Key: string | undefined
 	id: string | undefined
 	LastModified: Date | undefined
-	fileType: string
-}
-
-interface DistributionMeta {
-	id: string
-	fileName: string
-	storyType: string
-	centroid: number[]
-	theme: string
-	tags: string[]
 	fileType: string
 }
 
@@ -61,7 +36,6 @@ async function initFfmpeg() {
 		log: false
 	})
 	await ffmpeg.load()
-	console.log('ffmpeg loaded')
 	return ffmpeg
 }
 
@@ -103,26 +77,23 @@ async function main() {
 		for (let i = 0; i < uploadContents.length; i++) {
 			const Key = uploadContents[i].Key!
 			const id = uploadContents[i].id!
-			const fileType = uploadContents[i].fileType!
 			try {
-				if (fileType === '.mp3' || fileType === '.mp4') {
-					const response = await getPresignedUrl(
-						s3,
-						Key,
-						'video/mp4',
-						'',
-						'getObject'
+				const response = await getPresignedUrl(
+					s3,
+					Key,
+					'video/mp4',
+					'',
+					'getObject'
+				)
+					.then((r) => r.url!)
+					.then((url) => doTranscode(url))
+					.then((data) => upload(s3, Key, 'video/mp4', data))
+				if (response['$metadata'].httpStatusCode) {
+					completedRepairs.push(id)
+					writeFileSync(
+						'./scripts/completed-repairs.txt',
+						completedRepairs.join(',')
 					)
-						.then((r) => r.url!)
-						.then((url) => doTranscode(url))
-						.then((data) => upload(s3, Key, 'video/mp4', data))
-					if (response['$metadata'].httpStatusCode) {
-						completedRepairs.push(id)
-						writeFileSync(
-							'./scripts/completed-repairs.txt',
-							completedRepairs.join(',')
-						)
-					}
 				}
 			} catch (e) {
 				console.log('Repair failed', id)
