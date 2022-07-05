@@ -1,7 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
 name: Repair AV files
-description: an hourly script to fix duration bugs with generated MP4 and MP3 files
+# description: an hourly script to fix duration bugs with generated MP4 and MP3 files
 
 on:
   schedule:
