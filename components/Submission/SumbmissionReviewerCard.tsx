@@ -176,7 +176,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							color="success"
 							onClick={() => updateState(fileId, 'accept', '')}
 						>
-							Approved
+							Approve
 						</Button>
 						<Button
 							size="small"
@@ -184,7 +184,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							color="error"
 							onClick={() => updateState(fileId, 'reject', '')}
 						>
-							Rejected
+							Reject
 						</Button>
 					</CardActions>
 				</Card>

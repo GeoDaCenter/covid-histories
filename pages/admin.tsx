@@ -76,7 +76,7 @@ const Admin: NextPage<{ accessToken: string }> = ({ accessToken }) => {
 					value={selectedTab}
 					onChange={(action, tab) => setSelectedTab(tab)}
 				>
-					<Tab label="unreviewd" id="unreviewd" />
+					<Tab label="unreviewed" id="unreviewed" />
 					<Tab label="Needs confirmation" id="confirmation" />
 					<Tab label="approved" id="approved" />
 					<Tab label="rejected" id="rejected" />
