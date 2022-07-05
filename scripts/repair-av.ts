@@ -33,6 +33,7 @@ interface FileObject {
 	Key: string | undefined
 	id: string | undefined
 	LastModified: Date | undefined
+	fileType: string
 }
 
 interface DistributionMeta {
@@ -69,15 +70,6 @@ async function main() {
 	// from uploads (raw)
 	// and public folders
 	const uploadFileList = await getFileList(s3, S3_BUCKET, 'uploads/')
-	const ffmpeg = await initFfmpeg()
-
-	const doTranscode = async (filePath: string) => {
-		ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(filePath))
-		await ffmpeg.run('-i', 'input.mp4', '-c', 'copy', 'output.mp4')
-		const data = ffmpeg.FS('readFile', 'output.mp4')
-		return data
-	}
-
 	// clean to essential data needed
 	let completedRepairs = readFileSync(
 		'./scripts/completed-repairs.txt',
@@ -89,39 +81,52 @@ async function main() {
 		.map(({ Key, LastModified }) => ({
 			Key: Key || '',
 			LastModified,
-			id: Key && Key.split('/').slice(-1)[0].split('.')[0]
+			id: Key && Key.split('/').slice(-1)[0].split('.')[0],
+			fileType: '.' + Key?.split('.').slice(-1)[0]
 		}))
-		.filter(({ id }) => !completedRepairs.includes(id!))!
-		
-	console.log('REPAIRING FILES')
+		.filter(
+			({ id, fileType }) =>
+				!completedRepairs.includes(id!) &&
+				(fileType === '.mp4' || fileType === '.mp3')
+		)!
 
-	for (let i = 0; i < uploadContents.length; i++) {
-		const Key = uploadContents[i].Key!
-		const id = uploadContents[i].id!
-		const fileType = '.' + Key?.split('.').slice(-1)[0]
-		try {
-			if (fileType === '.mp3' || fileType === '.mp4') {
-				const response = await getPresignedUrl(
-					s3,
-					Key,
-					'video/mp4',
-					'',
-					'getObject'
-				)
-					.then((r) => r.url!)
-					.then((url) => doTranscode(url))
-					.then((data) => upload(s3, Key, 'video/mp4', data))
-				if (response['$metadata'].httpStatusCode) {
-					completedRepairs.push(id)
-					writeFileSync(
-						'./scripts/completed-repairs.txt',
-						completedRepairs.join(',')
+	if (uploadContents.length === 0) {
+		console.log('No files to repair. Exiting.')
+	} else {
+		console.log(`Found ${uploadContents.length} files to repair.`)
+		const ffmpeg = await initFfmpeg()
+		const doTranscode = async (filePath: string) => {
+			ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(filePath))
+			await ffmpeg.run('-i', 'input.mp4', '-c', 'copy', 'output.mp4')
+			return ffmpeg.FS('readFile', 'output.mp4')
+		}
+		for (let i = 0; i < uploadContents.length; i++) {
+			const Key = uploadContents[i].Key!
+			const id = uploadContents[i].id!
+			const fileType = uploadContents[i].fileType!
+			try {
+				if (fileType === '.mp3' || fileType === '.mp4') {
+					const response = await getPresignedUrl(
+						s3,
+						Key,
+						'video/mp4',
+						'',
+						'getObject'
 					)
-					console.log('REPAIR COMPLETED', id)
+						.then((r) => r.url!)
+						.then((url) => doTranscode(url))
+						.then((data) => upload(s3, Key, 'video/mp4', data))
+					if (response['$metadata'].httpStatusCode) {
+						completedRepairs.push(id)
+						writeFileSync(
+							'./scripts/completed-repairs.txt',
+							completedRepairs.join(',')
+						)
+					}
 				}
+			} catch (e) {
+				console.log('Repair failed', id)
 			}
-		} catch (e) {
-			console.log('REPAIR FAILED', id)
 		}
 	}
 }
