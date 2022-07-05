@@ -24,9 +24,9 @@ export default withApiAuthRequired(async function handler(
 	const { user } = getSession(req, res)
 	const isAdmin =
 		user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
-    const { fileId } = req.query
+    const { fileId, folder } = req.query
 	if (isAdmin) {
-		const prefix = `uploads/${fileId}`
+		const prefix = `${folder || 'uploads'}/${fileId}`
 		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, prefix)
 		const fileNames = currentFiles?.Contents?.map(({Key, LastModified}) => ({Key, LastModified}))
 		const presignedGets = await Promise.all(
@@ -46,10 +46,15 @@ export default withApiAuthRequired(async function handler(
 						.map(f => ({...f, fileType: f.fileName?.split('.').slice(-1)[0]}))
 				}
 			))
+			
+		if (folder === 'previewGifs'){
+			res.status(200).json(JSON.stringify(presignedGets))
+		} else {
+			res.status(200).json(
+				JSON.stringify(mergedData)
+			)
+		}
 
-		res.status(200).json(
-			JSON.stringify(mergedData)
-		)
 	} else {
 		// Not Signed in
 		res.status(401).json(

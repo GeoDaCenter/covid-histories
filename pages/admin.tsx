@@ -11,7 +11,7 @@ import { useState } from 'react'
 import error from 'next/error'
 import { TagFilter } from './api/files/utils'
 import { SubmissionsReviewModal } from '../components/Submission/SubmissionReviewModal'
-
+import { NsfwProvider } from '../stores/nsfw'
 interface TabPanelProps {
 	children?: React.ReactNode
 	index: number
@@ -21,45 +21,47 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props
-	const { submissions, error, mutate} = useSubmissions(props.variant)
+	const { submissions, error, mutate } = useSubmissions(props.variant)
 	const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
 		null
 	)
 
 	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-		>
-			<SubmissionsReviewModal
-				fileId={focusedSubmission}
-				isOpen={focusedSubmission !== null}
-				onClose={() => setFocusedSubmission(null)}
-        onNext = {()=>console.log("Next")}
-			/>
-			{value === index && (
-				<Box sx={{ p: 3 }}>
-					{submissions && (
-						<Grid container spacing={2}>
-							{submissions.map((submission: Record<string, any>) => (
-								<Grid item xs={2}>
-									<SubmissionReviewerCard
-										onFocus={(fileId) => setFocusedSubmission(fileId)}
-										fileId={submission.fileId}
-										key={submission.fileId}
-										state={props.variant}
-                    onStateChange={()=> mutate()}
-									/>
-								</Grid>
-							))}
-						</Grid>
-					)}
-				</Box>
-			)}
-		</div>
+		<NsfwProvider>
+			<div
+				role="tabpanel"
+				hidden={value !== index}
+				id={`simple-tabpanel-${index}`}
+				aria-labelledby={`simple-tab-${index}`}
+				{...other}
+			>
+				<SubmissionsReviewModal
+					fileId={focusedSubmission}
+					isOpen={focusedSubmission !== null}
+					onClose={() => setFocusedSubmission(null)}
+					onNext={() => console.log("Next")}
+				/>
+				{value === index && (
+					<Box sx={{ p: 3 }}>
+						{submissions && (
+							<Grid container spacing={2}>
+								{submissions.map((submission: Record<string, any>) => (
+									<Grid item xs={12} sm={6} md={4} lg={3}>
+										<SubmissionReviewerCard
+											onFocus={(fileId) => setFocusedSubmission(fileId)}
+											fileId={submission.fileId}
+											key={submission.fileId}
+											state={props.variant}
+											onStateChange={() => mutate()}
+										/>
+									</Grid>
+								))}
+							</Grid>
+						)}
+					</Box>
+				)}
+			</div>
+		</NsfwProvider>
 	)
 }
 
