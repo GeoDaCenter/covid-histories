@@ -1,7 +1,7 @@
 import { FileListReturn } from './types'
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
-import { CopyObjectCommand, DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput, PutObjectCommandInput } from '@aws-sdk/client-s3'
+import { CopyObjectCommand, DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput, PutObjectCommandInput, PutObjectCommandOutput } from '@aws-sdk/client-s3'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import 'dotenv/config'
 
@@ -189,6 +189,22 @@ export async function getPresignedUrl(
 		return {}
 	}
 }
+export async function upload(
+	s3: any,
+	key: string,
+	ContentType: string,
+	body: any,
+): Promise<PutObjectCommandOutput> {
+	const command = new PutObjectCommand({
+		Bucket: config.S3_BUCKET,
+		ACL: 'private',
+		Key: key,
+		Body: body,
+		ContentType: ContentType
+	})
+	const uploadResult = await s3.send(command)
+	return uploadResult
+}
 
 export async function uploadMeta(
 	s3: any,
@@ -198,17 +214,16 @@ export async function uploadMeta(
 ) {
 	const now = new Date()
 	const uploadTimestamp = now.toISOString()
-	const command = new PutObjectCommand({
-		Bucket: config.S3_BUCKET,
-		ACL: 'private',
-		Key: `meta/${hashedEmail}/${key}.json`,
-		Body: JSON.stringify({
+
+	const uploadResult = await upload(
+		s3,
+		`meta/${hashedEmail}/${key}.json`,
+		'application/json',
+		JSON.stringify({
 			storyType,
 			uploadTimestamp
-		}),
-		ContentType: 'application/json'
-	})
-	const uploadResult = await s3.send(command)
+		})
+	)
 
 	return uploadResult
 }
