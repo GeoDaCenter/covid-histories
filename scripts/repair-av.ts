@@ -102,8 +102,7 @@ async function main() {
 					.then((r) => r.url!)
 					.then((url) => doTranscode(url, isVideo))
 					.then(({media, gif}) => {
-						const fileName = Key.split('.')[0]
-						isVideo && upload(s3, fileName + '.gif', 'image/gif', gif)
+						isVideo && upload(s3, `previewGifs/${id}.gif`, 'image/gif', gif)
 						const mediaResponse = upload(s3, Key, mimeType, media)
 						return mediaResponse
 					})
