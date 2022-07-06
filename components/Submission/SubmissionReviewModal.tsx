@@ -59,21 +59,21 @@ export const SubmissionsReviewModal: React.FC<SubmissionsReviewModalProps> = ({
         <TextField label="reasion" maxRows={3} multiline />
         <Box>
 				<Button size="small" color="success">
-					Approved
+					Approve
 				</Button>
 				<Button size="small" color="error">
-					Rejected
+					Rejecte
 				</Button>
 				<Button size="small" color="info">
-					Unreviewd
+					Return to review pool
 				</Button>
       </Box>
       <Box>
 				<Button color='primary' variant='contained' size="small" >
-			    Update	
+			    	Update	
 				</Button>
 				<Button color='secondary' variant='contained' size="small" >
-			    Skip 
+			    	Skip 
 				</Button>
       </Box>
 			</Box>

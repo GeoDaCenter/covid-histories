@@ -59,7 +59,7 @@ const detectNegativeGifContent = (predictions: { className: string, probability:
 		: 0
 
 	return {
-		status: `${negativeFrames.length}/${predictions.length} negative frames.`,
+		status: `${negativeFrames.length}/${predictions.length} 🍆 frames.`,
 		confidence: Math.round(negativeConfidence * 10000) / 100
 	}
 }
@@ -134,16 +134,19 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 				<Card sx={{ width: '100%' }}>
 					<CardContent>
 						<CardActionArea onClick={() => onFocus(fileId)}>
-							<Typography sx={{ fontSize: 14 }} gutterBottom>
+							<Typography variant="h6" gutterBottom>
 								{file.storyId}
 							</Typography>
+							<hr/>
 						</CardActionArea>
-						{['video', 'photo'].includes(file?.storyType) && <Grid container>
-							<Grid item xs={12} sm={6}>
-								<p>NSFW: {nsfwStatus.status}</p>
-								<p>Chance NSFW: {nsfwStatus.confidence}%</p>
+						{['video', 'photo'].includes(file?.storyType) && <Grid container alignItems={"center"} sx={{mb: 2, borderBottom: '1px solid white'}}>
+							<Grid item xs={12} sm={8}>
+								<p>
+									NSFW: {nsfwStatus.status}<br/>
+									Chance 😬: {nsfwStatus.confidence}%
+								</p>
 							</Grid>
-							<Grid item xs={12} sm={6}>
+							<Grid item xs={12} sm={4}>
 								<FormGroup>
 									<FormControlLabel control={<Switch checked={shouldBlur} onChange={() => setShouldBlur(prev => !prev)} />} label="Blur" />
 								</FormGroup>
