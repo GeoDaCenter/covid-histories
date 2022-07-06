@@ -141,14 +141,14 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 						{['video', 'photo'].includes(file?.storyType) && <Grid container>
 							<Grid item xs={12} sm={6}>
 								<p>NSFW: {nsfwStatus.status}</p>
-								<p>Confidence: {nsfwStatus.confidence}</p>
+								<p>Chance NSFW: {nsfwStatus.confidence}%</p>
 							</Grid>
 							<Grid item xs={12} sm={6}>
 								<FormGroup>
 									<FormControlLabel control={<Switch checked={shouldBlur} onChange={() => setShouldBlur(prev => !prev)} />} label="Blur" />
 								</FormGroup>
 							</Grid>
-							{['video', 'photo'].includes(file?.storyType) && <PreviewImg src={gifUrl || file.url} alt="preview" ref={previewRef} />
+							{['video', 'photo'].includes(file?.storyType) && <PreviewImg src={gifUrl || file.url} alt="preview" ref={previewRef} crossOrigin="anonymous" />
 							}
 						</Grid>
 						}
