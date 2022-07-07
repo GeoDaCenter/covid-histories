@@ -29,18 +29,17 @@ export default withApiAuthRequired(async function handler(
 	if (user) {	
 		const hashedEmail = hash(user.email)
 		const prefix = `meta/${hashedEmail}`
-        const metaCounts = await getSubmissionCounts(s3, S3_BUCKET, prefix)
+        const metaCounts = await getSubmissionCounts(prefix)
 		if (metaCounts[storyType] !== undefined && metaCounts[storyType] < 3) {
 			const prePath = 'uploads/' + hashedEmail + '/'
 			const { url: uploadURL, fileName, ContentType } = await getPresignedUrl(
-				s3,
 				type,
 				key,
 				fileType,
 				prePath,
 				'putObject'
 			)
-			const metaResult = await uploadMeta(s3, type, key, hashedEmail)
+			const metaResult = await uploadMeta(type, key, hashedEmail)
 			if (!metaResult || !uploadURL) {
 				res.status(500).json(
 					JSON.stringify({

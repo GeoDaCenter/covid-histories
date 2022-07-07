@@ -1,14 +1,14 @@
 import { FileListReturn } from './types'
+import hash from 'object-hash'
+import {s3,config} from './_s3'
 
 export const getFileList = async (
-	s3: any,
-	Bucket: string,
 	Prefix: string
 ): Promise<FileListReturn | undefined> => {
 	try {
 		const objects = await s3
 			.listObjects({
-				Bucket,
+				Bucket:config.S3_BUCKET,
 				Prefix
 			})
 			.promise()
@@ -54,16 +54,43 @@ const fileExtensionMap: { [fileType: string]: string } = {
 	'image/bmp': '.bmp'
 }
 
-const config = {
-	REGION: process.env.APP_AWS_REGION,
-	STAGE: 'dev',
-	S3_BUCKET: process.env.APP_AWS_BUCKET
-}
-
 const URL_EXPIRATION_SECONDS = 60 * 5
 
+
+
+export async function listFiles(userId:string){
+		const encrypted = hash(userId)
+		const prefix = `uploads/${encrypted}`
+		const currentFiles: FileListReturn | undefined = await getFileList(prefix)
+		const fileNames = currentFiles ? currentFiles?.Contents?.map(({Key, LastModified}) => ({Key: Key.split('/').slice(-1)[0], LastModified})) : []
+		const numberOfSubmissions = fileNames?.filter(f => f.Key?.includes('_meta.json')).length
+    return {numberOfSubmissions,fileNames}
+}
+
+export async function deleteStory(userId:string,storyId:string){
+
+		const encrypted = hash(userId)
+		const prefix = `uploads/${encrypted}/${storyId}`
+		const currentFiles: FileListReturn | undefined = await getFileList(prefix)
+        if (currentFiles?.Contents.length){
+            const files = [
+                ...currentFiles.Contents,
+                {Key: `meta/${encrypted}/${storyId}.json`},
+                {Key: `meta/${encrypted}/${storyId}_meta.json`}
+            ]
+            const deletionResults = await Promise.all(files.map(({Key}) => deleteObject(Key)))
+            const newFileList: FileListReturn | undefined = await getFileList(prefix)
+            if (newFileList?.Contents.length === 0) {
+                return {result:"AllDeleted", filesDeleted: deletionResults.length}
+            } else {
+                return {result:"FailedToDelete", filesRemaining: newFileList?.Contents.length}
+            }
+        } else {            
+          return {result:"NoFilesToDelete"}
+        }
+}
+
 export async function getPresignedUrl(
-	s3: any,
 	type: SubmissionType,
 	key: string,
 	fileType: string,
@@ -111,7 +138,6 @@ export async function getPresignedUrl(
 }
 
 export async function uploadMeta(
-	s3: any,
 	type: SubmissionType,
 	key: string,
 	hashedEmail: string
@@ -134,23 +160,19 @@ export async function uploadMeta(
 	return uploadResult
 }
 
-export async function deleteObject(s3: any, Bucket: string, Key: string) {
+export async function deleteObject( Key: string) {
 	return s3
 		.deleteObject({
-			Bucket,
+			Bucket: config.S3_BUCKET,
 			Key
 		})
 		.promise()
 }
 
 export async function getSubmissionCounts(
-	s3: any,
-	Bucket: string,
 	prefix: string
 ) {
 	const currentFiles: FileListReturn | undefined = await getFileList(
-		s3,
-		Bucket,
 		prefix
 	)
 	const fileNames = currentFiles
@@ -164,7 +186,7 @@ export async function getSubmissionCounts(
 	)
 	const metaResponse = await Promise.all(
 		filteredSubmissions?.map((f) =>
-			s3.getObject({ Bucket, Key: `${prefix}/${f.Key}` }).promise()
+			s3.getObject({ Bucket:config.S3_BUCKET, Key: `${prefix}/${f.Key}` }).promise()
 		)
 	)
 	const allMeta = metaResponse.map((r) => JSON.parse(r.Body.toString()))
