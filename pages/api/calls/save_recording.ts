@@ -7,6 +7,7 @@ import {
 	getUserRecord
 } from './_s3_utils'
 import { UserCallRecord } from './_types'
+import {sayOrPlay} from './_utils'
 const VoiceResponse = twilio.twiml.VoiceResponse
 
 export default function handler(
@@ -34,9 +35,10 @@ export default function handler(
 				}
 
 				createOrUpdateUserRecord(req.body.From, newUser).then(() => {
-          twiml.say(defaultVoice, "Thanks for your call, what would you like to do next?")
+          sayOrPlay(twiml, "CallThanksAndNext", user.language)
           twiml.redirect(`/api/calls/topic_options?topic_id=${topic_id}`)
 				})
+        
 			}
 
 			res.setHeader('content-type', 'text/xml')
