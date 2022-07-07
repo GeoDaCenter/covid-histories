@@ -1,22 +1,77 @@
 import { FileListReturn } from './types'
+import hash from 'object-hash'
+import { s3, config } from './_s3'
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
-import { CopyObjectCommand, DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput, PutObjectCommandInput, PutObjectCommandOutput } from '@aws-sdk/client-s3'
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import {
+	CopyObjectCommand,
+	DeleteObjectCommand,
+	ListObjectsCommand,
+	ListObjectsCommandOutput,
+	S3Client,
+	GetObjectCommand,
+	PutObjectCommand,
+	GetObjectTaggingCommandOutput,
+	GetObjectTaggingCommand,
+	Tag,
+	PutObjectTaggingCommand,
+	PutObjectTaggingCommandOutput,
+	PutObjectCommandInput,
+	PutObjectCommandOutput
+} from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import 'dotenv/config'
 
-// constants
-const config = {
-	REGION: process.env.APP_AWS_REGION,
-	STAGE: 'dev',
-	S3_BUCKET: process.env.APP_AWS_BUCKET
+export const getFileList = async (
+	Prefix: string
+): Promise<FileListReturn | undefined> => {
+	try {
+		const objects = await s3
+			.listObjects({
+				Bucket: config.S3_BUCKET,
+				Prefix
+			})
+			.promise()
+		return objects
+	} catch (err) {
+		console.log('Error', err)
+	}
 }
+
+const submissionTypeMap: {
+	[key: string]: { fileExtension: string; ContentType: string }
+} = {
+	audio: {
+		fileExtension: '.wav',
+		ContentType: 'audio/wav'
+	},
+	video: {
+		fileExtension: '.mp4',
+		ContentType: 'video/mp4'
+	},
+	written: {
+		fileExtension: '.md',
+		ContentType: 'text/markdown; charset=UTF-8'
+	},
+	photo: {
+		fileExtension: '.jpg',
+		ContentType: 'image/' // jpg, jpeg, png, tif, tiff, gif, bmp
+	},
+	meta: {
+		fileExtension: '.json',
+		ContentType: 'text/markdown; charset=UTF-8'
+	}
+}
+
 const URL_EXPIRATION_SECONDS = 60 * 5
 const TAG_FILTER_PREDICATES = {
-	'unreviewed': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'reviewed' && t.Value === 'false',
-	'rejected': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'false',
-	'approved': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'true',
-	'all': () => true
+	unreviewed: (t: Tag, _index: number, _array: Tag[]) =>
+		t.Key === 'reviewed' && t.Value === 'false',
+	rejected: (t: Tag, _index: number, _array: Tag[]) =>
+		t.Key === 'approved' && t.Value === 'false',
+	approved: (t: Tag, _index: number, _array: Tag[]) =>
+		t.Key === 'approved' && t.Value === 'true',
+	all: () => true
 }
 const fileExtensionMap: { [fileType: string]: string } = {
 	'image/jpeg': '.jpg',
@@ -29,36 +84,19 @@ const fileExtensionMap: { [fileType: string]: string } = {
 	'audio/mp3': '.mp3',
 	'video/mp4': '.mp4',
 	'text/markdown': '.md',
-	'application/json': '_meta.json',
+	'application/json': '_meta.json'
 }
-// helpers 
+// helpers
 
-export const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
+export const onlyUnique = (value: string, index: number, self: string[]) =>
+	self.indexOf(value) === index
 
 // types
 export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all'
 export interface UploadInfo {
 	Key: string | undefined
 	fileId: string | undefined
-	LastModified: Date  | undefined
-}
-
-
-export const getFileList = async (
-	s3: S3Client,
-	Bucket: string,
-	Prefix: string
-): Promise<ListObjectsCommandOutput | undefined> => {
-	try {
-		const command = new ListObjectsCommand({
-			Bucket,
-			Prefix
-		})
-		const response = await s3.send(command)
-		return response
-	} catch (err) {
-		console.log('Error', err)
-	}
+	LastModified: Date | undefined
 }
 
 export const getObjectTags = async (
@@ -88,9 +126,8 @@ export const setObjectTagging = async (
 		}
 	})
 	const response = await s3.send(command)
-	return response		
+	return response
 }
-
 
 export const getTaggedFileList = async (
 	s3: S3Client,
@@ -98,15 +135,15 @@ export const getTaggedFileList = async (
 	tagFilter: TagFilter
 ): Promise<UploadInfo[] | undefined> => {
 	const prefix = `uploads/`
-	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, Bucket, prefix)
+	const currentFiles = await getFileList(prefix)
 	const fileNames = currentFiles
 		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
 				Key,
 				fileId: Key?.split('uploads/')[1]?.split('.')[0],
-				LastModified
+				LastModified: new Date(LastModified)
 		  }))
 		: []
-		
+
 	const entriesToReview = fileNames
 		?.filter((f) => {
 			// to be ignored
@@ -140,19 +177,64 @@ export const getTaggedFileList = async (
 			)
 		))
 	const filterPredicate = TAG_FILTER_PREDICATES[tagFilter]
-	const filteredEntries = entriesToReview?.filter((_,i) => {
+	const filteredEntries = entriesToReview?.filter((_, i) => {
 		const tags = entryTagging?.[i]
 		// if no tags, then its not reviewed
 		// presigned urls appear to lose the capacity to add tags on upload :/
-		return (tagFilter === 'unreviewed' && tags && !tags.length) || (tags && tags.some(filterPredicate))
+		return (
+			(tagFilter === 'unreviewed' && tags && !tags.length) ||
+			(tags && tags.some(filterPredicate))
+		)
 	})
-	
+
 	return filteredEntries
 }
 
+export async function listFiles(userId: string) {
+	const encrypted = hash(userId)
+	const prefix = `uploads/${encrypted}`
+	const currentFiles: FileListReturn | undefined = await getFileList(prefix)
+	const fileNames = currentFiles
+		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
+				Key: Key.split('/').slice(-1)[0],
+				LastModified
+		  }))
+		: []
+	const numberOfSubmissions = fileNames?.filter((f) =>
+		f.Key?.includes('_meta.json')
+	).length
+	return { numberOfSubmissions, fileNames }
+}
+
+export async function deleteStory(userId: string, storyId: string) {
+	const encrypted = hash(userId)
+	const prefix = `uploads/${encrypted}/${storyId}`
+	const currentFiles: FileListReturn | undefined = await getFileList(prefix)
+	if (currentFiles?.Contents.length) {
+		const files = [
+			...currentFiles.Contents,
+			{ Key: `meta/${encrypted}/${storyId}.json` },
+			{ Key: `meta/${encrypted}/${storyId}_meta.json` }
+		]
+		const deletionResults = await Promise.all(
+			files.map(({ Key }) => deleteObject(Key))
+		)
+		const newFileList: FileListReturn | undefined = await getFileList(prefix)
+		if (newFileList?.Contents.length === 0) {
+			return { result: 'AllDeleted', filesDeleted: deletionResults.length }
+		} else {
+			return {
+				result: 'FailedToDelete',
+				filesRemaining: newFileList?.Contents.length
+			}
+		}
+	} else {
+		return { result: 'NoFilesToDelete' }
+	}
+}
 
 export async function getPresignedUrl(
-	s3: S3Client,
+	type: SubmissionType,
 	key: string,
 	ContentType: string,
 	prePath: string,
@@ -165,11 +247,13 @@ export async function getPresignedUrl(
 		const s3Params: PutObjectCommandInput = {
 			Bucket: config.S3_BUCKET!,
 			Key: prePath + fileName,
-			ContentType,
+			ContentType
 			// Tagging: "reviewed=false" // this does not work
 		}
-		const command = new PutObjectCommand(s3Params);
-		const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRATION_SECONDS });
+		const command = new PutObjectCommand(s3Params)
+		const url = await getSignedUrl(s3, command, {
+			expiresIn: URL_EXPIRATION_SECONDS
+		})
 		return {
 			url,
 			fileName,
@@ -180,8 +264,10 @@ export async function getPresignedUrl(
 			Bucket: config.S3_BUCKET,
 			Key: prePath + key
 		}
-		const command = new GetObjectCommand(s3Params);
-		const url = await getSignedUrl(s3, command, { expiresIn: URL_EXPIRATION_SECONDS });
+		const command = new GetObjectCommand(s3Params)
+		const url = await getSignedUrl(s3, command, {
+			expiresIn: URL_EXPIRATION_SECONDS
+		})
 		return {
 			url,
 			fileName: key,
@@ -195,7 +281,7 @@ export async function upload(
 	s3: any,
 	key: string,
 	ContentType: string,
-	body: any,
+	body: any
 ): Promise<PutObjectCommandOutput> {
 	const command = new PutObjectCommand({
 		Bucket: config.S3_BUCKET,
@@ -209,8 +295,7 @@ export async function upload(
 }
 
 export async function uploadMeta(
-	s3: any,
-	storyType: SubmissionType,
+	type: SubmissionType,
 	key: string,
 	hashedEmail: string
 ) {
@@ -222,7 +307,7 @@ export async function uploadMeta(
 		`meta/${hashedEmail}/${key}.json`,
 		'application/json',
 		JSON.stringify({
-			storyType,
+			storyType: type,
 			uploadTimestamp
 		})
 	)
@@ -230,100 +315,118 @@ export async function uploadMeta(
 	return uploadResult
 }
 
-export async function putObject(s3: S3Client, Bucket: string, Key: string, body: any) {
+export async function putObject(
+	s3: S3Client,
+	Bucket: string,
+	Key: string,
+	body: any
+) {
 	const command = new PutObjectCommand({
 		Bucket,
 		Key,
 		Body: body
-	});
-	const response = await s3.send(command);
+	})
+	const response = await s3.send(command)
 	return response
 }
 
-export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
-	const command = new DeleteObjectCommand({
-		Bucket,
-		Key
-	});
-	const response = await s3.send(command);
-	return response
-}
+// export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
+// 	const command = new DeleteObjectCommand({
+// 		Bucket,
+// 		Key
+// 	});
+// 	const response = await s3.send(command);
+// 	return response
+// }
 
-export async function copyObject(s3: S3Client, region: string, accountId: string, bucket: string, originKey: string, destinationKey: string){
+export async function copyObject(
+	s3: S3Client,
+	region: string,
+	accountId: string,
+	bucket: string,
+	originKey: string,
+	destinationKey: string
+) {
 	const command = new CopyObjectCommand({
 		Bucket: bucket,
 		CopySource: encodeURI(`/${bucket}/${originKey}`),
 		Key: destinationKey
-	});
-	const response = await s3.send(command);
+	})
+	const response = await s3.send(command)
 	return response
-
 }
 
-export async function getSubmissionCounts(
-	s3: any,
-	Bucket: string,
-	prefix: string
-) {
-	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(
-		s3,
-		Bucket,
-		prefix
-	)
+export async function deleteObject(Key: string) {
+	return s3
+		.deleteObject({
+			Bucket: config.S3_BUCKET,
+			Key
+		})
+		.promise()
+}
+
+export async function getSubmissionCounts(prefix: string) {
+	const currentFiles = await getFileList(prefix)
 
 	const baseCounts = {
 		written: 0,
 		av: 0,
 		photo: 0
 	}
-	
+
 	if (!currentFiles || !currentFiles.Contents) {
 		return baseCounts
 	}
 
-	const fileNameList = currentFiles.Contents
-		.map(entry => !!entry?.Key && entry.Key.split('/').pop()||'')
-	const uniqueIds = fileNameList
-		.map(entry => entry.split('.')[0].split('_meta')[0])
-		.filter(onlyUnique)
-	const counts = uniqueIds.map(id => {
-		let type;
-		const fileList = fileNameList.filter(f => f.includes(id))
-
-		if (fileList.length === 3){ // photo -- meta, caption, and image
-			type = 'photo'
-		} 
-		if (fileList.length === 2 && (fileList.includes(`${id}.webm`) || fileList.includes(`${id}.mp4`) || fileList.includes(`${id}.mp3`))){ 
-			// av + legacy formats and meta file
-			type = 'av'
-		}
-		if (fileList.length === 2 && (fileList.includes(`${id}.md`))){ 
-			type = 'written'
-		}
-		return {
-			type
-		}
-	}).filter(entry => !!entry.type)
-	
-	const combinedCounts = counts.reduce(
-		(acc, cur) => {
-			switch (cur.type) {
-				case 'written':
-					acc.written++
-					break
-				case 'av':
-					acc['av']++
-					break
-				case 'photo':
-					acc.photo++
-					break
-				default:
-					break
-			}
-			return acc
-		},
-		baseCounts
+	const fileNameList = currentFiles.Contents.map(
+		(entry) => (!!entry?.Key && entry.Key.split('/').pop()) || ''
 	)
-	
+	const uniqueIds = fileNameList
+		.map((entry) => entry.split('.')[0].split('_meta')[0])
+		.filter(onlyUnique)
+	const counts = uniqueIds
+		.map((id) => {
+			let type
+			const fileList = fileNameList.filter((f) => f.includes(id))
+
+			if (fileList.length === 3) {
+				// photo -- meta, caption, and image
+				type = 'photo'
+			}
+			if (
+				fileList.length === 2 &&
+				(fileList.includes(`${id}.webm`) ||
+					fileList.includes(`${id}.mp4`) ||
+					fileList.includes(`${id}.mp3`))
+			) {
+				// av + legacy formats and meta file
+				type = 'av'
+			}
+			if (fileList.length === 2 && fileList.includes(`${id}.md`)) {
+				type = 'written'
+			}
+			return {
+				type
+			}
+		})
+		.filter((entry) => !!entry.type)
+
+	const combinedCounts = counts.reduce((acc, cur) => {
+		switch (cur.type) {
+			case 'written':
+				acc.written++
+				break
+			case 'av':
+				acc['av']++
+				break
+			case 'photo':
+				acc.photo++
+				break
+			default:
+				break
+		}
+		return acc
+	}, baseCounts)
+
 	return combinedCounts
 }
