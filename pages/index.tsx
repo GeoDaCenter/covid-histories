@@ -259,7 +259,7 @@ const Home: NextPage = () => {
 								left={10}
 								top={50}
 								animationDelay={750}
-								src="/images/hero-1.jpg"
+								src="/images/family.jpg"
 							/>
 						</Box>
 					</Grid>

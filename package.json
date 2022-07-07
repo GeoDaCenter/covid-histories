@@ -61,7 +61,8 @@
     "swr": "^1.3.0",
     "twilio": "^3.73.0",
     "unified": "^10.1.2",
-    "webm-duration-fix": "^1.0.4"
+    "webm-duration-fix": "^1.0.4",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@aws-sdk/client-cloudfront": "^3.112.0",
