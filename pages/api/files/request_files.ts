@@ -23,7 +23,13 @@ export default withApiAuthRequired(async function handler(
 
 		const presignedGets = await Promise.all(
 			fileNames?.map(({ Key, LastModified }) =>
-				getPresignedUrl('', Key || '', '', `uploads/${encrypted}/`, 'getObject')
+				getPresignedUrl(
+					null,
+					Key || '',
+					'',
+					`uploads/${encrypted}/`,
+					'getObject'
+				)
 			) || []
 		)
 

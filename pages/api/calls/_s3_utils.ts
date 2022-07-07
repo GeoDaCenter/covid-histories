@@ -6,6 +6,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { UserCallRecord } from './_types'
 import hash from 'object-hash'
+import {uploadMeta} from '../files/utils'
 
 const REGION = 'us-west-2'
 const client = new S3Client({

@@ -234,7 +234,7 @@ export async function deleteStory(userId: string, storyId: string) {
 }
 
 export async function getPresignedUrl(
-	type: SubmissionType,
+	type: SubmissionType | null,
 	key: string,
 	ContentType: string,
 	prePath: string,

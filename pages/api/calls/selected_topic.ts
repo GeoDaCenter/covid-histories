@@ -27,10 +27,10 @@ export default function handler(
          if(previousSubmission){
            // If the user has previously sumbitted a recording, 
            // give them options
-            twiml.say(defaultVoice, PreviousRecording)
+            twiml.say(defaultVoice, previousSubmission.responseAudioUrl)
             twiml.redirect(
               {method: "POST"},
-              `/api/calls/topic_options?topic_id=${selectedOption}`
+              `/api/calls/prompt_topic_options?topic_id=${selectedOption}`
             )
          }
          else{

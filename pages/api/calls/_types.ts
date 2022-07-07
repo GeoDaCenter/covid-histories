@@ -10,5 +10,6 @@ export interface UserCallRecord{
   zipCode? : string,
   responses: Array<TopicResponse>,
   numberHash: string 
-  createdAt: Date
+  createdAt: Date,
+  language: "en" | "es" 
 }

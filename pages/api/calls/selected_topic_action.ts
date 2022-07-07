@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import { defaultVoice, FirstRecording, PreviousRecording, prompts } from "./_prompts";
 import {getUserRecord} from "./_s3_utils";
+import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -22,19 +22,30 @@ export default function handler(
       if(previousSubmission){
 
         switch(selectedAction){
+          // Listen to the topic
           case 0:
             twiml.play(previousSubmission.responseAudioUrl);
             twiml.redirect(`/api/calls/topic_options?topic_id=${topic_id}`)
             break
+
+          // Re-record the topic
           case 1:
-            twiml.say(defaultVoice, "We have deleted your story");
+            sayOrPlay(twiml, "RecordingPrelude", user!.language)
+            twiml.redirect(`/api/calls/record_topic?topic_id=${topic_id}`)
+            break
+
+          // Delete the topic 
+          case 2:
+            sayOrPlay(twiml, "DeletedStory", user!.language)
             twiml.redirect(`/api/calls/prompt_topic`)
             break
-          case 2:
+
+          // Select another topic 
+          case 3:
             twiml.redirect(`/api/calls/prompt_topic`)
             break
           default:
-            twiml.say(defaultVoice,"Sorry I didn't get that option")
+            sayOrPlay(twiml, "MissingOption",user!.language)
             twiml.redirect(`/api/calls/topic_options?topic_id${topic_id}`)
         }
       }
