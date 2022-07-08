@@ -62,7 +62,7 @@ export const SubmissionsReviewModal: React.FC<SubmissionsReviewModalProps> = ({
 					Approve
 				</Button>
 				<Button size="small" color="error">
-					Rejecte
+					Reject
 				</Button>
 				<Button size="small" color="info">
 					Return to review pool

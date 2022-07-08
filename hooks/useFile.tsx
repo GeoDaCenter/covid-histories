@@ -6,7 +6,7 @@ const fetcher = (url:string) => {
 
 export const useFile= (fileId:string | null, folder?: string | null)=>{
   const {data: file, error, mutate} = useSWR(fileId ? `/api/admin/get_file?fileId=${fileId}&folder=${folder||'uploads'}` : null, fetcher)
-  const updateState = async (fileId: string, state: "accept" | "reject" | "delete", note: string | null )=>{
+  const updateState = async (fileId: string, state: "approve" | "reject" | "delete", note: string | null )=>{
     const r = await fetch(`/api/admin/review?action=${state}&note=${note}&fileId=${fileId}`, {method: "POST"})
     return await r.json() 
   }

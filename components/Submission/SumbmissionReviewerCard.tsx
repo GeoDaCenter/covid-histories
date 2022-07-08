@@ -73,7 +73,19 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	onFocus,
 	onStateChange
 }) => {
-	const { file, error, updateState } = useFile(fileId)
+	const [hasInteracted, setHasInteracted]=useState(false)
+	const { file, error, updateState: _updateState } = useFile(fileId)
+
+	// @ts-ignore
+	const updateState = (...args) => {
+		// @ts-ignore
+		_updateState(...args)
+		setHasInteracted(true)
+	}
+
+	// nsfw stuff
+	const previewRef = useRef<HTMLImageElement>(null)
+	const [shouldBlur, setShouldBlur] = useState<boolean>(true)
 	useEffect(() => {
 		if (['video', 'photo'].includes(file?.storyType)) {
 			setShouldBlur(true)
@@ -82,9 +94,6 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 		}
 	}, [file?.storyType])
 
-	// nsfw stuff
-	const previewRef = useRef<HTMLImageElement>(null)
-	const [shouldBlur, setShouldBlur] = useState<boolean>(true)
 	const [nsfwStatus, setNsfwStatus] = useState<{ status: string, confidence: number }>({
 		status: '',
 		confidence: 0
@@ -123,13 +132,15 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 
 	}, [gifUrl, file?.storyType, nsfwReady])
 
-	const submitStateChange = (state: "accept" | "reject" | "delete") => {
+	const submitStateChange = (state: "approve" | "reject" | "delete") => {
 		updateState(fileId, state, "")
 		onStateChange()
 	}
+
+	if (hasInteracted) return null
 	
 	return (
-		<div>
+		<Grid item xs={12} sm={6} md={4} lg={3}>
 			{file && (
 				<Card sx={{ width: '100%' }}>
 					<CardContent>
@@ -156,18 +167,18 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 						</Grid>
 						}
 						<BlurWrapper shouldBlur={shouldBlur}>
-							<StoryPreview
+							{!!file?.content[0] && <StoryPreview
 								type={file.storyType}
 								content={file.content[0].url}
 								additionalContent={[]}
-							/>
+							/>}
 						</BlurWrapper>
 						<Typography sx={{ fontSize: 14 }} gutterBottom>
 							submitted : {file.date}
 						</Typography>
 						<Typography sx={{ fontSize: 14 }} gutterBottom>
 							tags:{' '}
-							{file.tags.map((tag: string) => (
+							{!!file?.tags && file.tags.map((tag: string) => (
 								<Chip label={tag} key={tag} />
 							))}
 						</Typography>
@@ -177,7 +188,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							size="small"
 							variant={state === 'approved' ? 'contained' : 'text'}
 							color="success"
-							onClick={() => updateState(fileId, 'accept', '')}
+							onClick={() => updateState(fileId, 'approve', '')}
 						>
 							Approve
 						</Button>
@@ -192,6 +203,6 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 					</CardActions>
 				</Card>
 			)}
-		</div>
+		</Grid>
 	)
 }

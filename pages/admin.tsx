@@ -25,6 +25,7 @@ function TabPanel(props: TabPanelProps) {
 	const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
 		null
 	)
+	console.log(submissions)
 
 	return (
 		<NsfwProvider>
@@ -41,20 +42,20 @@ function TabPanel(props: TabPanelProps) {
 					onClose={() => setFocusedSubmission(null)}
 					onNext={() => console.log("Next")}
 				/>
+				{submissions === undefined && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>Loading...</Box>}
+				{(submissions && !submissions.length) && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>No entries.</Box>}
 				{value === index && (
 					<Box sx={{ p: 3 }}>
 						{submissions && (
 							<Grid container spacing={2}>
 								{submissions.map((submission: Record<string, any>) => (
-									<Grid item xs={12} sm={6} md={4} lg={3}>
-										<SubmissionReviewerCard
-											onFocus={(fileId) => setFocusedSubmission(fileId)}
-											fileId={submission.fileId}
-											key={submission.fileId}
-											state={props.variant}
-											onStateChange={() => mutate()}
-										/>
-									</Grid>
+									<SubmissionReviewerCard
+										onFocus={(fileId) => setFocusedSubmission(fileId)}
+										fileId={submission.fileId}
+										key={submission.fileId}
+										state={props.variant}
+										onStateChange={() => mutate()}
+									/>
 								))}
 							</Grid>
 						)}
