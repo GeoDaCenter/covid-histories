@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prompts } from "./_prompts";
 import { getOrCreateUserRecord, createOrUpdateUserRecord } from "./_s3_utils";
+import {UserCallRecord} from "./_types";
 
 export default function handler(
   req: NextApiRequest,
@@ -11,7 +12,7 @@ export default function handler(
     const number = req.body.From;
     const topic_id = parseInt(req.query.topic_id as string);
     const category_id = parseInt(req.query.category_id as string);
-    const section = prompts[topic_id];
+    const topic = prompts[topic_id];
     
 
     getOrCreateUserRecord(number).then(user=>{
@@ -19,12 +20,14 @@ export default function handler(
       const transcription_uri = req.body.Uri
       const transcription_sid = req.body.Sid 
 
-      const new_user = {...user, transcriptions: [...user.transcriptions, {transcription, transcription_sid, transcription_uri, topic_id, category_id}]}  
+      const new_user: UserCallRecord = {
+        ...user, 
+        responses: user.responses.map(
+          response => response.topic === topic.name ?
+            {...response, responseTranscriptUrl: transcription_uri} 
+          : response ) }  
       
-      console.log('old user ', user )
-      console.log('new user ', new_user)
-
-      createOrUpdateUserRecord( number, new_user)
+      createOrUpdateUserRecord(number, new_user)
       res.send("ok")
     })
 

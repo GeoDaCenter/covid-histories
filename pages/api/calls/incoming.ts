@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import {prompts} from "./_prompts"
+import {Welcome,defaultVoice} from "./_prompts"
 import { getOrCreateUserRecord, createOrUpdateUserRecord } from "./_s3_utils";
+import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -9,14 +10,18 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
-  
-    console.log("request ", req)
-
-    getOrCreateUserRecord(req.body.From).then( user=>{
-      console.log("got user ",user)
+    getOrCreateUserRecord(req.body.From).then(user=>{
       const twiml = new VoiceResponse();
-      twiml.play("https://covid-histories.vercel.app/inital_prompt.mp3");
-      twiml.redirect({"method": "POST"}, "https://covid-histories.vercel.app/api/calls/prompt_topic")
+      sayOrPlay(twiml, "Welcome", 'en')
+
+      // twiml.say(defaultVoice, Welcome);
+
+      if(user.zipCode !== undefined || user.responses.length>0){
+        twiml.redirect({"method": "POST"}, "/api/calls/recap_previous")
+      }
+      else{
+        twiml.redirect({"method":"POST"}, "/api/calls/prompt_language")
+      }
 
       // Render the response as XML in reply to the webhook request
       res.setHeader("content-type",'text/xml');

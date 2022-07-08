@@ -4,20 +4,7 @@ import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
 import { nanoid } from '@reduxjs/toolkit'
 import hash from 'object-hash'
 // AWS
-const AWS = require('aws-sdk')
-AWS.config.update({ region: process.env.AWS_REGION })
-
-const s3 = new AWS.S3({
-	accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
-	secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
-	region: process.env.APP_AWS_REGION
-})
-
-const config = {
-	REGION: process.env.APP_AWS_REGION,
-	STAGE: 'dev',
-	S3_BUCKET: process.env.APP_AWS_BUCKET
-}
+import {s3,config} from '../files/_s3'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,

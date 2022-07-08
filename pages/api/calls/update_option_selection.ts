@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import {defaultVoice, prompts, PromptText} from "./_prompts"
 import {getOrCreateUserRecord} from "./_s3_utils";
-import {gather, sayOrPlay} from "./_utils";
+import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -10,12 +9,21 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
+    const twiml = new VoiceResponse();
     getOrCreateUserRecord(req.body.From).then( user=>{
 
-      const twiml = new VoiceResponse();
-      sayOrPlay(twiml, "PromptText", user.language)
+      const selectedAction= parseInt(req.body.Digits);
 
-      gather(twiml, "TopicSelectPrompt", user.language, {numDigits:1, action:"/api/calls/selected_topic", bargeIn:true}) 
+      if(selectedAction===1){
+        twiml.redirect("/api/calls/prompt_zipcode")
+      }
+      else if(selectedAction===2){
+        twiml.redirect("/api/calls/prompt_topic")
+      }
+      else{
+        sayOrPlay(twiml, MissingOption,user!.language)
+        twiml.redirect("/api/calls/prompt_update_option_select")
+      }
 
       // Render the response as XML in reply to the webhook request
       res.setHeader("content-type",'text/xml');
