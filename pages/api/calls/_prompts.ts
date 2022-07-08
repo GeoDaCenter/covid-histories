@@ -299,7 +299,7 @@ export const prompts = [
 			'Talk about the biggest challenge that you experienced during the pandemic.',
 			'What should people in the future take away or remember most, from your pandemic experience?'
 		]
-	}
+	},
 	{
 		name: 'Your Work',
 		categories: [
@@ -309,4 +309,3 @@ export const prompts = [
 		]
 	}
 ]
-
