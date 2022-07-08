@@ -59,6 +59,8 @@ const RecordingButton: React.FC<RecordingButtonProps> = ({
 		</Button>
 	)
 }
+
+
 interface RecorderProps {
 	useVideo: boolean
 	status: string
@@ -83,75 +85,76 @@ const Recorder: React.FC<RecorderProps> = ({
 	hasRecorded,
 	cachedStory
 }) => {
-	const mediaUrl = cachedStory ? cachedStory : mediaBlobUrl
-	return useVideo ? (
-		<>
-			{hasRecorded ? (
-				//@ts-ignore
-				<video src={mediaUrl} controls playsInline />
-			) : (
-				<AudioVideoContainer>
-					{/* @ts-ignore */}
-					<VideoPreview stream={previewStream} playsInline />
-					<AudioPreviewContainer>
-						<AudioPreview stream={previewAudioStream} />
-					</AudioPreviewContainer>
-				</AudioVideoContainer>
-			)}
-			<Grid container spacing={1} alignItems="center" alignContent="center">
-				<Grid item xs={12}>
-					{hasRecorded ? (
-						<Alert severity="warning" variant="outlined">
-							Warning: Recording a new story will delete your previous draft!
-						</Alert>
-					) : null}
+	const mediaUrl = !mediaBlobUrl ? cachedStory : mediaBlobUrl
+
+	if (useVideo) {
+		return (
+			<>
+				{hasRecorded ? (
+					//@ts-ignore
+					<video src={mediaUrl} controls playsInline />
+				) : (
+					<AudioVideoContainer>
+						{/* @ts-ignore */}
+						<VideoPreview stream={previewStream} playsInline />
+						<AudioPreviewContainer>
+							<AudioPreview stream={previewAudioStream} />
+						</AudioPreviewContainer>
+					</AudioVideoContainer>
+				)}
+				<Grid container spacing={1} alignItems="center" alignContent="center">
+					<Grid item xs={12}>
+						{hasRecorded ? (
+							<Alert severity="warning" variant="outlined">
+								Warning: Recording a new story will delete your previous draft!
+							</Alert>
+						) : null}
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<RecordingButton
+							startRecording={startRecording}
+							stopRecording={stopRecording}
+							status={status}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<Timer {...{ status, length }} />
+					</Grid>
 				</Grid>
-				<Grid item xs={12} md={6}>
-					<RecordingButton
-						startRecording={startRecording}
-						stopRecording={stopRecording}
-						status={status}
-					/>
+			</>
+		)
+	} else {
+		return (
+			<>
+				<Grid container spacing={1} alignItems="center" alignContent="center">
+					<Grid item xs={12}>
+						{hasRecorded ? (
+							<Alert severity="warning" variant="outlined">
+								Warning: Recording a new story will delete your previous draft!
+							</Alert>
+						) : null}
+					</Grid>
+					<Grid item xs={12} md={4}>
+						<RecordingButton
+							startRecording={startRecording}
+							stopRecording={stopRecording}
+							status={status}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						{hasRecorded ? (
+							<audio src={mediaUrl} controls />
+						) : (
+							<AudioPreview stream={previewAudioStream} />
+						)}
+					</Grid>
+					<Grid item xs={12} md={2}>
+						<Timer {...{ status, length }} />
+					</Grid>
 				</Grid>
-				<Grid item xs={12} md={6}>
-					<Timer {...{ status, length }} />
-				</Grid>
-			</Grid>
-		</>
-	) : (
-		<>
-			<Grid container spacing={1} alignItems="center" alignContent="center">
-				<Grid item xs={12}>
-					{hasRecorded ? (
-						<Alert severity="warning"  variant="outlined">
-							Warning: Recording a new story will delete your previous draft!
-						</Alert>
-					) : null}
-				</Grid>
-				<Grid item xs={12} md={4}>
-					<RecordingButton
-						startRecording={startRecording}
-						stopRecording={stopRecording}
-						status={status}
-					/>
-				</Grid>
-				<Grid item xs={12} md={6}>
-					{hasRecorded ? (
-						<audio controls>
-							{/* @ts-ignore */}
-							<source src={mediaUrl} />
-							Your browser does not support the audio element.
-						</audio>
-					) : (
-						<AudioPreview stream={previewAudioStream} />
-					)}
-				</Grid>
-				<Grid item xs={12} md={2}>
-					<Timer {...{ status, length }} />
-				</Grid>
-			</Grid>
-		</>
-	)
+			</>
+		)
+	}
 }
 
 export default Recorder

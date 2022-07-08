@@ -22,7 +22,7 @@ const Themes = [
 		questions: [
 			'How was your work or education affected by the pandemic? ',
 			'How did the way you work change during the pandemic? ',
-			'For students, how did the way you learned or go to school change during the pandemic? '
+			'For students, how did the way you learn or go to school change during the pandemic? '
 		]
 	},
 	{
@@ -30,14 +30,14 @@ const Themes = [
 		questions: [
 			'How did your family life change during the pandemic? ',
 			'Did you or anyone close to you contract COVID-19? How did you navigate that experience? ',
-			'Describe about any hardships or challenges your family faced during the pandemic.'
+			'Describe any hardships or challenges your family faced during the pandemic.'
 		]
 	},
 	{
 		title: 'Your Self',
 		questions: [
-			'Describe about a moment that you will remember most during this time. ',
-			'Describe about the biggest challenge that you experienced during the pandemic. ',
+			'Describe a moment that you will remember most during this time. ',
+			'Describe the biggest challenge that you experienced during the pandemic. ',
 			'What should people in the future take away or remember most, from your pandemic experience? '
 		]
 	}

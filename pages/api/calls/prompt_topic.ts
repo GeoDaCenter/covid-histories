@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import {prompts} from "./_prompts"
+import {defaultVoice, prompts, PromptText} from "./_prompts"
+import {getOrCreateUserRecord} from "./_s3_utils";
+import {gather, sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -8,17 +10,17 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
+    getOrCreateUserRecord(req.body.From).then( user=>{
 
-    const twiml = new VoiceResponse();
-    twiml.say({ voice: 'alice' }, 'What kind of story do you want to tell us ');
+      const twiml = new VoiceResponse();
+      sayOrPlay(twiml, "PromptText", user.language)
 
-    let option_prompt= prompts.map((prompt,index)=>`For a story about ${prompt.name} press ${index}`).join(", ");
+      gather(twiml, "TopicSelectPrompt", user.language, {numDigits:1, action:"/api/calls/selected_topic", bargeIn:true}) 
 
-    twiml.gather({numDigits:1, action:"https://covid-histories.vercel.app/api/calls/selected_topic", bargeIn:true}).say({voice:"alice"}, option_prompt);
-
-    // Render the response as XML in reply to the webhook request
-    res.setHeader("content-type",'text/xml');
-    res.send(twiml.toString());
+      // Render the response as XML in reply to the webhook request
+      res.setHeader("content-type",'text/xml');
+      res.send(twiml.toString());
+    })
   }
 }
 

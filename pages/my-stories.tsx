@@ -10,6 +10,7 @@ import useSWR from 'swr'
 import { StoryPreview } from '../components/Submission/StoryPreview'
 import CountyPreview from '../components/Submission/SubmissionUtil/CountyPreview'
 import { SubmissionTypes } from '../stores/submission/submissionSlice'
+import { SEO } from '../components/Interface/SEO';
 
 interface StoryProps {
 	title: string
@@ -187,16 +188,7 @@ const MyStories: NextPage = () => {
 
 	return (
 		<div className={styles.container}>
-			<Head>
-				<link
-					rel="stylesheet"
-					href="https://fonts.googleapis.com/icon?family=Material+Icons&display=swap"
-				/>
-				<link
-					rel="stylesheet"
-					href="https://fonts.googleapis.com/css?family=Sriracha&display=swap"
-				/>
-			</Head>
+			<SEO title="Atlas Stories :: My Stories" />
 			<HomeSection sx={{ minHeight: '100vh', width: '100%' }}>
 				{user?.email ? (
 					<Grid container sx={{ width: '100%' }}>

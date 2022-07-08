@@ -77,6 +77,8 @@ _Query Parameters_
  > Specifies the files to act on
 - action: 'approve' | 'reject' | 'delete'
  > The action to take on a given file
+- note: string
+ > A note to attach to the review
 
 _Returns_
 Response from AWS to confirm action success for each file tagged
