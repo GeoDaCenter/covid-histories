@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import {getOrCreateUserRecord} from "./_s3_utils";
+import {getUserRecord} from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
@@ -10,7 +10,7 @@ export default function handler(
 ) {
   if (req.method === 'POST') {
     const twiml = new VoiceResponse();
-    getOrCreateUserRecord(req.body.From).then( user=>{
+    getUserRecord(req.body.From).then( user=>{
 
       const selectedAction= parseInt(req.body.Digits);
 

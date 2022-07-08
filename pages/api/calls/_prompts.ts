@@ -45,7 +45,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	ReviewPrevious: {
 		en: {
-			text: `It looks like you have already contributed to the project. You can  stories for the following categories `,
+			text: `It looks like you have already contributed to the project.`,
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -71,7 +71,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	ZipOrTopicOptions: {
 		en: {
-			text: 'To change your zipcode press 1, to record a new story of update an exising one press 2',
+			text: 'To make a change to your reported location press 1, to record a new story or update an existing one press 2',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -250,9 +250,19 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
       audioUrl: null
     }
   },
-  TOSSMS:{
+  TOSTextContent:{
     en:{
       text: "You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license",
+      audioUrl:null
+    },
+    es:{
+      text:"",
+      audioUrl:null
+    }
+  },
+  TOS:{
+    en:{
+      text:"These are the terms of service",
       audioUrl:null
     },
     es:{

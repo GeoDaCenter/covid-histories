@@ -25,7 +25,7 @@ export default function handler(
           // Listen to the topic
           case 0:
             twiml.play(previousSubmission.responseAudioUrl);
-            twiml.redirect(`/api/calls/topic_options?topic_id=${topic_id}`)
+            twiml.redirect(`/api/calls/prompt_topic_options?topic_id=${topic_id}`)
             break
 
           // Re-record the topic
@@ -46,7 +46,7 @@ export default function handler(
             break
           default:
             sayOrPlay(twiml, "MissingOption",user!.language)
-            twiml.redirect(`/api/calls/topic_options?topic_id${topic_id}`)
+            twiml.redirect(`/api/calls/prompt_topic_options?topic_id${topic_id}`)
         }
       }
 

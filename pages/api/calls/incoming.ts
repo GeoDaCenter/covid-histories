@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import {Welcome,defaultVoice} from "./_prompts"
-import { getOrCreateUserRecord, createOrUpdateUserRecord } from "./_s3_utils";
+import { createOrUpdateUserRecord, getUserRecord } from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
@@ -10,14 +10,16 @@ export default function handler(
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
-    getOrCreateUserRecord(req.body.From).then(user=>{
+    getUserRecord(req.body.From).then(user=>{
+      console.log("got user ",user)
       const twiml = new VoiceResponse();
       sayOrPlay(twiml, "Welcome", 'en')
 
-      // twiml.say(defaultVoice, Welcome);
-
-      if(user.zipCode !== undefined || user.responses.length>0){
+      if(user && user.permission){
         twiml.redirect({"method": "POST"}, "/api/calls/recap_previous")
+      }
+      else if(user && !user.permission){
+        twiml.redirect({"method": "POST"}, "/api/calls/prompt_permission")
       }
       else{
         twiml.redirect({"method":"POST"}, "/api/calls/prompt_language")
