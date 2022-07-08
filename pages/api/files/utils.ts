@@ -3,35 +3,19 @@ import hash from 'object-hash'
 import { s3, config } from './_s3'
 import { SubmissionType } from './types'
 import { nanoid } from '@reduxjs/toolkit'
-import {
-	CopyObjectCommand,
-	DeleteObjectCommand,
-	ListObjectsCommand,
-	ListObjectsCommandOutput,
-	S3Client,
-	GetObjectCommand,
-	PutObjectCommand,
-	GetObjectTaggingCommandOutput,
-	GetObjectTaggingCommand,
-	Tag,
-	PutObjectTaggingCommand,
-	PutObjectTaggingCommandOutput,
-	PutObjectCommandInput,
-	PutObjectCommandOutput
-} from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { CopyObjectCommand, DeleteObjectCommand, ListObjectsCommand, ListObjectsCommandOutput, S3Client, GetObjectCommand, PutObjectCommand, GetObjectTaggingCommandOutput, GetObjectTaggingCommand, Tag, PutObjectTaggingCommand, PutObjectTaggingCommandOutput, PutObjectCommandInput, PutObjectCommandOutput } from '@aws-sdk/client-s3'
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import 'dotenv/config'
 
 export const getFileList = async (
 	Prefix: string
-): Promise<FileListReturn | undefined> => {
+): Promise<ListObjectsCommandOutput | undefined> => {
 	try {
-		const objects = await s3
-			.listObjects({
-				Bucket: config.S3_BUCKET,
-				Prefix
-			})
-			.promise()
+		const command = new ListObjectsCommand({
+			Bucket: config.S3_BUCKET,
+			Prefix
+		});
+		const objects = await s3.send(command);
 		return objects
 	} catch (err) {
 		console.log('Error', err)
@@ -65,14 +49,13 @@ const submissionTypeMap: {
 
 const URL_EXPIRATION_SECONDS = 60 * 5
 const TAG_FILTER_PREDICATES = {
-	unreviewed: (t: Tag, _index: number, _array: Tag[]) =>
-		t.Key === 'reviewed' && t.Value === 'false',
-	rejected: (t: Tag, _index: number, _array: Tag[]) =>
-		t.Key === 'approved' && t.Value === 'false',
-	approved: (t: Tag, _index: number, _array: Tag[]) =>
-		t.Key === 'approved' && t.Value === 'true',
-	all: () => true
+	'unreviewed': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'reviewed' && t.Value === 'false',
+	'needs_confirmation': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'needs_review',
+	'rejected': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'false',
+	'approved': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'true',
+	'all': () => true
 }
+
 const fileExtensionMap: { [fileType: string]: string } = {
 	'image/jpeg': '.jpg',
 	'image/png': '.png',
@@ -92,7 +75,7 @@ export const onlyUnique = (value: string, index: number, self: string[]) =>
 	self.indexOf(value) === index
 
 // types
-export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all'
+export type TagFilter = 'unreviewed' | 'approved' | 'rejected' | 'all' | 'needs_confirmation'
 export interface UploadInfo {
 	Key: string | undefined
 	fileId: string | undefined
@@ -100,12 +83,10 @@ export interface UploadInfo {
 }
 
 export const getObjectTags = async (
-	s3: S3Client,
-	Bucket: string,
 	Key: string
 ): Promise<GetObjectTaggingCommandOutput | undefined> => {
 	const command = new GetObjectTaggingCommand({
-		Bucket,
+		Bucket: config.S3_BUCKET,
 		Key
 	})
 	const response = await s3.send(command)
@@ -113,13 +94,11 @@ export const getObjectTags = async (
 }
 
 export const setObjectTagging = async (
-	s3: S3Client,
-	Bucket: string,
 	Key: string,
 	Tags: Tag[]
 ): Promise<PutObjectTaggingCommandOutput | undefined> => {
 	const command = new PutObjectTaggingCommand({
-		Bucket,
+		Bucket: config.S3_BUCKET,
 		Key,
 		Tagging: {
 			TagSet: Tags
@@ -130,8 +109,6 @@ export const setObjectTagging = async (
 }
 
 export const getTaggedFileList = async (
-	s3: S3Client,
-	Bucket: string,
 	tagFilter: TagFilter
 ): Promise<UploadInfo[] | undefined> => {
 	const prefix = `uploads/`
@@ -140,7 +117,7 @@ export const getTaggedFileList = async (
 		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
 				Key,
 				fileId: Key?.split('uploads/')[1]?.split('.')[0],
-				LastModified: new Date(LastModified)
+				LastModified
 		  }))
 		: []
 
@@ -173,7 +150,7 @@ export const getTaggedFileList = async (
 		(await Promise.all(
 			entriesToReview?.map(
 				({ Key }) =>
-					Key && getObjectTags(s3, Bucket, Key).then((r) => r?.TagSet)
+					Key && getObjectTags(Key).then((r) => r?.TagSet)
 			)
 		))
 	const filterPredicate = TAG_FILTER_PREDICATES[tagFilter]
@@ -181,10 +158,7 @@ export const getTaggedFileList = async (
 		const tags = entryTagging?.[i]
 		// if no tags, then its not reviewed
 		// presigned urls appear to lose the capacity to add tags on upload :/
-		return (
-			(tagFilter === 'unreviewed' && tags && !tags.length) ||
-			(tags && tags.some(filterPredicate))
-		)
+		return (tagFilter === 'unreviewed' && tags && !tags.length) || (tags && tags.some(filterPredicate))
 	})
 
 	return filteredEntries
@@ -193,10 +167,10 @@ export const getTaggedFileList = async (
 export async function listFiles(userId: string) {
 	const encrypted = hash(userId)
 	const prefix = `uploads/${encrypted}`
-	const currentFiles: FileListReturn | undefined = await getFileList(prefix)
+	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(prefix)
 	const fileNames = currentFiles
 		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
-				Key: Key.split('/').slice(-1)[0],
+				Key: Key && Key.split('/').slice(-1)[0],
 				LastModified
 		  }))
 		: []
@@ -209,20 +183,20 @@ export async function listFiles(userId: string) {
 export async function deleteStory(userId: string, storyId: string) {
 	const encrypted = hash(userId)
 	const prefix = `uploads/${encrypted}/${storyId}`
-	const currentFiles: FileListReturn | undefined = await getFileList(prefix)
-	if (currentFiles?.Contents.length) {
+	const currentFiles = await getFileList(prefix)
+	if (currentFiles?.Contents && currentFiles?.Contents.length) {
 		const files = [
 			...currentFiles.Contents,
 			{ Key: `meta/${encrypted}/${storyId}.json` },
 			{ Key: `meta/${encrypted}/${storyId}_meta.json` }
 		]
 		const deletionResults = await Promise.all(
-			files.map(({ Key }) => deleteObject(Key))
+			files.map(({ Key }) => Key && deleteObject(Key))
 		)
-		const newFileList: FileListReturn | undefined = await getFileList(prefix)
-		if (newFileList?.Contents.length === 0) {
+		const newFileList = await getFileList(prefix)
+		if (newFileList?.Contents && newFileList?.Contents.length === 0) {
 			return { result: 'AllDeleted', filesDeleted: deletionResults.length }
-		} else {
+		} else if (newFileList?.Contents) {
 			return {
 				result: 'FailedToDelete',
 				filesRemaining: newFileList?.Contents.length
@@ -233,21 +207,27 @@ export async function deleteStory(userId: string, storyId: string) {
 	}
 }
 
-export async function getPresignedUrl(
-	type: SubmissionType | null,
-	key: string,
-	ContentType: string,
-	prePath: string,
+interface PresignedUrlParams {
+	Key: string
 	operation: string
-) {
+	prePath?: string
+	ContentType?: string
+}
+
+export async function getPresignedUrl({
+	Key,
+	ContentType='',
+	prePath='',
+	operation
+}: PresignedUrlParams) {
 	if (operation === 'putObject') {
 		const ext: string = fileExtensionMap[ContentType]
-		const fileName: string = `${key || nanoid()}${ext}`
+		const fileName: string = `${Key || nanoid()}${ext}`
 		// Get signed URL from S3
 		const s3Params: PutObjectCommandInput = {
 			Bucket: config.S3_BUCKET!,
 			Key: prePath + fileName,
-			ContentType
+			ContentType,
 			// Tagging: "reviewed=false" // this does not work
 		}
 		const command = new PutObjectCommand(s3Params)
@@ -262,7 +242,7 @@ export async function getPresignedUrl(
 	} else if (operation === 'getObject') {
 		const s3Params = {
 			Bucket: config.S3_BUCKET,
-			Key: prePath + key
+			Key: prePath + Key
 		}
 		const command = new GetObjectCommand(s3Params)
 		const url = await getSignedUrl(s3, command, {
@@ -270,7 +250,7 @@ export async function getPresignedUrl(
 		})
 		return {
 			url,
-			fileName: key,
+			fileName: Key,
 			ContentType: null
 		}
 	} else {
@@ -295,7 +275,7 @@ export async function upload(
 }
 
 export async function uploadMeta(
-	type: SubmissionType,
+	type: SubmissionType | null,
 	key: string,
 	hashedEmail: string
 ) {
@@ -315,54 +295,36 @@ export async function uploadMeta(
 	return uploadResult
 }
 
-export async function putObject(
-	s3: S3Client,
-	Bucket: string,
-	Key: string,
-	body: any
-) {
+export async function putObject(Key: string, body: any) {
 	const command = new PutObjectCommand({
-		Bucket,
+		Bucket: config.S3_BUCKET,
 		Key,
 		Body: body
-	})
-	const response = await s3.send(command)
+	});
+	const response = await s3.send(command);
 	return response
 }
 
-// export async function deleteObject(s3: S3Client, Bucket: string, Key: string) {
-// 	const command = new DeleteObjectCommand({
-// 		Bucket,
-// 		Key
-// 	});
-// 	const response = await s3.send(command);
-// 	return response
-// }
-
-export async function copyObject(
-	s3: S3Client,
-	region: string,
-	accountId: string,
-	bucket: string,
-	originKey: string,
-	destinationKey: string
-) {
+export async function copyObject(originKey: string, destinationKey: string){
+	const bucket = config.S3_BUCKET
 	const command = new CopyObjectCommand({
 		Bucket: bucket,
 		CopySource: encodeURI(`/${bucket}/${originKey}`),
 		Key: destinationKey
+	});
+	const response = await s3.send(command);
+	return response
+
+}
+
+
+export async function deleteObject(Key: string) {
+	const command = new DeleteObjectCommand({
+		Bucket: config.S3_BUCKET,
+		Key
 	})
 	const response = await s3.send(command)
 	return response
-}
-
-export async function deleteObject(Key: string) {
-	return s3
-		.deleteObject({
-			Bucket: config.S3_BUCKET,
-			Key
-		})
-		.promise()
 }
 
 export async function getSubmissionCounts(prefix: string) {

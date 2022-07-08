@@ -13,13 +13,13 @@ export default withApiAuthRequired(async function handler(
 
 	if (user && storyId) {
 		let deleteResult = await deleteStory(user.email, storyId)
-		if (deleteResult.result === 'AllDeleted') {
+		if (deleteResult?.result === 'AllDeleted') {
 			res.status(200).json(
 				JSON.stringify({
 					message: `Successfully deleted files for ${storyId}. ${deleteResult?.filesDeleted} files deleted.`
 				})
 			)
-		} else if (deleteResult.result === 'FailedToDelete') {
+		} else if (deleteResult?.result === 'FailedToDelete') {
 			res.status(500).json(
 				JSON.stringify({
 					message: `Error deleting files for ${storyId}. ${deleteResult.filesRemaining} remain. Please contact uscovidatlas@gmail.com`

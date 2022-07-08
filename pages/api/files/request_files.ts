@@ -5,6 +5,7 @@ import { getFileList } from './utils'
 import hash from 'object-hash'
 import { FileListReturn } from './types'
 import { getPresignedUrl } from './utils'
+import { ListObjectsCommandOutput } from '@aws-sdk/client-s3'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
@@ -15,21 +16,19 @@ export default withApiAuthRequired(async function handler(
 	if (user) {
 		const encrypted = hash(user.email)
 		const prefix = `uploads/${encrypted}`
-		const currentFiles: FileListReturn | undefined = await getFileList(prefix)
-		const fileNames = currentFiles?.Contents.map(({ Key, LastModified }) => ({
-			Key: Key.split('/').slice(-1)[0],
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(prefix)
+		const fileNames = currentFiles?.Contents && currentFiles?.Contents.map(({ Key, LastModified }) => ({
+			Key: Key && Key.split('/').slice(-1)[0],
 			LastModified
 		}))
 
 		const presignedGets = await Promise.all(
 			fileNames?.map(({ Key, LastModified }) =>
-				getPresignedUrl(
-					null,
-					Key || '',
-					'',
-					`uploads/${encrypted}/`,
-					'getObject'
-				)
+				getPresignedUrl({
+					Key: Key as string,
+					operation: 'getObject',
+					prePath: `uploads/${encrypted}/`,
+				})
 			) || []
 		)
 

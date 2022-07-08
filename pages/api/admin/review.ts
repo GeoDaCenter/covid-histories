@@ -27,12 +27,12 @@ export default withApiAuthRequired(async function handler(
 	const isAdmin = user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 
 	if (isAdmin) {
-		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, `uploads/${fileId}`)
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(`uploads/${fileId}`)
        
         if(currentFiles?.Contents && currentFiles?.Contents?.length > 0) {
             const files = currentFiles.Contents.map(file => file.Key || 'PLACEHOLDER_MISSING_KEY')
             const entryTags = await Promise.all(
-                files?.map(file => getObjectTags(s3, S3_BUCKET, file).then((r) => r?.TagSet))
+                files?.map(file => getObjectTags(file).then((r) => r?.TagSet))
             )
             switch(action){
                 case 'approve':
@@ -44,8 +44,6 @@ export default withApiAuthRequired(async function handler(
                     const approveResponse = await Promise.all(
                         files.map((file,i) => 
                             setObjectTagging(
-                                s3, 
-                                S3_BUCKET, 
                                 file, 
                                 approveTags
                             )
@@ -58,24 +56,20 @@ export default withApiAuthRequired(async function handler(
                     )
                     break
                 case 'reject':
-                    const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'false'))
+                    const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'needs_review'))
                     if (hasBeenRejected){
                         const previousTags = entryTags[0]||[]
                         const firstReviewer = previousTags.find(tag => tag.Key === 'reviewed_by')?.Value
-                        console.log(firstReviewer)
                         const rejectTags =  [
                             {Key: 'approved', Value: 'false'},
                             {Key: 'reviewed', Value: 'true'},
                             {Key: 'reviewed_by', Value: firstReviewer},
-                            {Key: 'confirmed', Value: 'true'},
                             {Key: 'confirmed_by', Value: user.name},
                             {Key: 'confirm_note', Value: note}
                         ]
                         const rejectResponse = await Promise.all(
                             files.map(file => 
                                 setObjectTagging(
-                                    s3, 
-                                    S3_BUCKET, 
                                     file, 
                                     rejectTags
                                 )
@@ -88,7 +82,7 @@ export default withApiAuthRequired(async function handler(
                         )
                     } else {
                         const rejectTags =  [
-                            {Key: 'approved', Value: 'false'},
+                            {Key: 'approved', Value: 'needs_review'},
                             {Key: 'reviewed', Value: 'true'},
                             {Key: 'reviewed_by', Value: user.name},
                             {Key: 'note', Value: note}
@@ -96,8 +90,6 @@ export default withApiAuthRequired(async function handler(
                         const rejectResponse = await Promise.all(
                             files.map(file => 
                                 setObjectTagging(
-                                    s3, 
-                                    S3_BUCKET, 
                                     file, 
                                     rejectTags
                                 )
@@ -113,7 +105,7 @@ export default withApiAuthRequired(async function handler(
                 case 'delete':
                     const deleteResponse = await Promise.all(
                         files.map(file => 
-                            deleteObject(s3, S3_BUCKET, file)
+                            deleteObject(file)
                         )
                     )
                     res.status(200).json(

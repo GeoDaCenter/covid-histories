@@ -5,16 +5,7 @@ import { getPresignedUrl, getSubmissionCounts, uploadMeta } from './utils'
 import { QueryParams, SubmissionType } from './types'
 import hash from 'object-hash'
 // AWS
-import { S3Client } from "@aws-sdk/client-s3";
-
-const S3_BUCKET = process.env.APP_AWS_BUCKET || ""
-const REGION = process.env.APP_AWS_REGION || ""
-const s3 = new S3Client({
-	region: REGION,
-    credentials:{
-        accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!,
-}})
+import { s3, config } from '../files/_s3'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
@@ -45,7 +36,7 @@ export default withApiAuthRequired(async function handler(
 	if (user) {
 		const hashedEmail = hash(user.email)
 		const prefix = `uploads/${hashedEmail}`
-		const metaCounts = await getSubmissionCounts(s3, S3_BUCKET, prefix)
+		const metaCounts = await getSubmissionCounts(prefix)
 		// @ts-ignore
 		const cleanedStoryType: 'av' | 'written' | 'photo' = {
 			audio: 'av',
@@ -66,8 +57,13 @@ export default withApiAuthRequired(async function handler(
 				url: uploadURL,
 				fileName,
 				ContentType
-			} = await getPresignedUrl(s3, key, fileType, prePath, 'putObject')
-			const metaResult = await uploadMeta(s3, storyType, key, hashedEmail)
+			} = await getPresignedUrl({
+				Key: key, 
+				ContentType: fileType, 
+				prePath, 
+				operation: 'putObject'
+			})
+			const metaResult = await uploadMeta(storyType, key, hashedEmail)
 			if (!metaResult || !uploadURL) {
 				res.status(500).json(
 					JSON.stringify({

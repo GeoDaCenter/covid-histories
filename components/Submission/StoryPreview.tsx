@@ -4,6 +4,7 @@ import { db, resetDatabase } from '../../stores/indexdb/db'
 import { Box } from '@mui/material'
 import styled from 'styled-components'
 import ReactMarkdown from 'react-markdown'
+import useSWR from 'swr'
 
 const Container = styled(Box)`
 	max-width: 100%;
@@ -11,6 +12,13 @@ const Container = styled(Box)`
 		max-width: 100%;
 	}
 `
+
+const WrittenStory: React.FC<{content: string}> = ({ content }) => {
+	const fetcher = content.slice(0,5) === 'https' ? (content:string) => fetch(content).then(r => r.text()) : () => content
+	const { data } = useSWR(content, fetcher)
+	const text = data as string
+	return <ReactMarkdown>{text}</ReactMarkdown>
+}
 // @ts-ignore
 export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, additionalContent: any|null }> = ({ type, content, additionalContent }) => {
 	if (!content) return null
@@ -38,7 +46,7 @@ export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, 
 							padding: '0 1em'
 						}}
 					>
-						<ReactMarkdown>{content}</ReactMarkdown>
+						<WrittenStory content={content} />
 					</Box>
 				</Container>
 			)

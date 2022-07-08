@@ -33,7 +33,8 @@ export const createOrUpdateUserRecord = async (
 	const initial_data: UserCallRecord = {
 		numberHash: hashedNumber,
 		responses: [],
-		createdAt: new Date()
+		createdAt: new Date(),
+		language: "en" 
 	}
 
 	try {

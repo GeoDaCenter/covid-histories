@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import {getUserRecord} from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
+import { prompts } from "./_prompts";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(

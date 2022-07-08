@@ -43,7 +43,7 @@ async function main() {
 	// get the full file list
 	// from uploads (raw)
 	// and public folders
-	const uploadFileList = await getFileList(s3, S3_BUCKET, 'uploads/')
+	const uploadFileList = await getFileList('uploads/')
 	// running log of cleaned files, local to repo
 	let completedRepairs = readFileSync(
 		'./scripts/completed-repairs.txt',
@@ -92,13 +92,11 @@ async function main() {
 			const mimeType = fileType === 'mp4' ? 'video/mp4' : 'audio/mp3'
 			const isVideo = fileType === 'mp4'
 			try {
-				const response = await getPresignedUrl(
-					s3,
+				const response = await getPresignedUrl({
 					Key,
-					mimeType,
-					'',
-					'getObject'
-				)
+					ContentType: mimeType,
+					operation: 'getObject'
+				})
 					.then((r) => r.url!)
 					.then((url) => doTranscode(url, isVideo))
 					.then(({media, gif}) => {

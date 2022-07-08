@@ -24,7 +24,7 @@ export default withApiAuthRequired(async function handler(
 	if (user) {			
 		const encrypted = hash(user.email)
 		const prefix = `meta/${encrypted}/survey.json`
-		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, prefix)
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(prefix)
 		const hasCompleted = currentFiles ? currentFiles?.Contents && currentFiles?.Contents?.length > 0 : false
 
 		res.status(200).json(JSON.stringify({
