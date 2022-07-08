@@ -1,35 +1,41 @@
 // @ts-nocheck
-import { useUser } from "@auth0/nextjs-auth0";
-import Link from "next/link";
-import styles from "../styles/Home.module.css";
-import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
-import colors from "../config/colors";
-import { Button, Popover, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { signOut } from "next-auth/react"
-import { useRouter } from "next/router";
-import Image from "next/image";
+import { useUser } from '@auth0/nextjs-auth0'
+import Link from 'next/link'
+import styles from '../styles/Home.module.css'
+import React, { useState, useEffect } from 'react'
+import styled, { keyframes } from 'styled-components'
+import colors from '../config/colors'
+import {
+  Button,
+  Popover,
+  Typography,
+  useMediaQuery,
+  useTheme
+} from '@mui/material'
+import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import Image from 'next/image'
 
 const NavBarOuterContainer = styled.div`
   width: 100%;
   background: ${colors.skyblue};
-  @media(max-width: 1024px){
-    position:sticky;
-    top:0;
-    z-index:1;
+  @media (max-width: 1024px) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
-`;
+`
 const NavbarContainer = styled.nav`
   width: 100%;
   display: flex;
   margin: 0 auto;
   color: ${colors.darkgray};
   ul {
-    padding-inline-start:0;
+    padding-inline-start: 0;
   }
 
   button.close-mobile {
-    display: ${(props) => (props.navOpen ? "block" : "none")};
+    display: ${(props) => (props.navOpen ? 'block' : 'none')};
     background: none;
     border: none;
     position: fixed;
@@ -43,19 +49,18 @@ const NavbarContainer = styled.nav`
     }
   }
   .mobile {
-    display:none;
+    display: none;
   }
 
-  @media (max-width:1024px){ 
-    
+  @media (max-width: 1024px) {
     .desktop {
-      display:none; 
+      display: none;
     }
     .mobile {
-      display:initial;
+      display: initial;
     }
   }
-`;
+`
 
 const NavLogo = styled.div`
   align-items: center;
@@ -65,20 +70,20 @@ const NavLogo = styled.div`
   display: flex;
   /* justify-content: center; */
   align-items: center;
-  padding-left:1em;
-`;
+  padding-left: 1em;
+`
 
 const NavItems = styled.div`
   font-size: 1.25em;
   flex-grow: 0;
-  z-index:1;
+  z-index: 1;
   ul {
     list-style: none;
     margin: 0;
     order: 1;
     @media (min-width: 1025px) {
       display: flex;
-      margin: "0 0 0 auto";
+      margin: '0 0 0 auto';
     }
     li {
       @media (min-width: 1024px) {
@@ -121,7 +126,7 @@ const NavItems = styled.div`
   }
   @media (max-width: 1024px) {
     /* @ts-ignore */
-    display: ${(props) => (props.navOpen ? "flex" : "none")};
+    display: ${(props) => (props.navOpen ? 'flex' : 'none')};
     position: fixed;
     width: 100%;
     height: 100%;
@@ -136,7 +141,7 @@ const NavItems = styled.div`
       font-size: 2rem;
     }
   }
-`;
+`
 
 const NavHamburger = styled(Button)`
   margin: 0 0 0 auto !important;
@@ -145,8 +150,8 @@ const NavHamburger = styled(Button)`
   padding: 0.125em !important;
   pointer-events: all;
   overflow: hidden;
-  background:none;
-  border:none;
+  background: none;
+  border: none;
   &::after {
     display: none;
   }
@@ -154,68 +159,68 @@ const NavHamburger = styled(Button)`
     display: none;
   }
   img {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
   }
-`;
+`
 
 const DropDownNav = styled.ul`
   list-style: none;
-  margin-left:0;
-  padding:0 1em;
+  margin-left: 0;
+  padding: 0 1em;
   li {
-    text-decoration:underline;  
+    text-decoration: underline;
     padding: 0.25em;
   }
 `
 
 const GoogleTranslateDiv = styled.div`
-  font-size:.75rem;
-  margin:.5em .5em;
-  background:rgb(245,245,245);
-  border-radius:.25em;
-  padding:.25rem .5rem 0 .5rem;
-  box-shadow:0 0 5px rgba(0,0,0,0.5);
+  font-size: 0.75rem;
+  margin: 0.5em 0.5em;
+  background: rgb(245, 245, 245);
+  border-radius: 0.25em;
+  padding: 0.25rem 0.5rem 0 0.5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   a {
-    font-size:.75rem;
+    font-size: 0.75rem;
   }
 `
 
 export const TopBar: React.FC = () => {
-  const { pathname } = useRouter();
-  const { user } = useUser();
+  const { pathname } = useRouter()
+  const { user } = useUser()
 
-  const theme = useTheme();
-  const md = useMediaQuery(theme.breakpoints.up('md'));
-  
-  const [navOpen, setNavOpen] = useState<boolean>(false);
-  const [translateOpen, setTranslateOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const theme = useTheme()
+  const md = useMediaQuery(theme.breakpoints.up('md'))
+
+  const [navOpen, setNavOpen] = useState<boolean>(false)
+  const [translateOpen, setTranslateOpen] = useState<boolean>(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
-  const toggleNavOpen = () => setNavOpen((prev) => !prev);
+  const toggleNavOpen = () => setNavOpen((prev) => !prev)
 
   const invokeGoogleTranslate = () => {
     try {
       new window.google.translate.TranslateElement(
-        {pageLanguage: 'en'}, 
+        { pageLanguage: 'en' },
         'google_translate_element'
-      ); 
+      )
       setTranslateOpen(true)
     } catch {
-      console.log("Google translate failed to load");
+      console.log('Google translate failed to load')
     }
   }
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
 
   return (
     <NavBarOuterContainer>
@@ -227,7 +232,8 @@ export const TopBar: React.FC = () => {
               <Typography fontSize="1.5rem">
                 Atlas <span className="cursive">Stories</span>
               </Typography>
-            </a></Link>
+            </a>
+          </Link>
         </NavLogo>
         {/* @ts-ignore */}
         <NavItems navOpen={navOpen}>
@@ -242,17 +248,34 @@ export const TopBar: React.FC = () => {
                 <a>ABOUT</a>
               </Link>
             </li>
-            <li style={{ marginRight: '.25em'}}>
+            <li style={{ marginRight: '.25em' }}>
               <Link href="/privacy">
                 <a>PRIVACY</a>
               </Link>
             </li>
             {user ? (
               <>
-              <li className="desktop">
-                <Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{ whiteSpace: "nowrap", padding: '0.5em', marginLeft: '0.5em', background: colors.orange }}>
-                  {user.name} <img src="/down-arrow.svg" width="10px" height="10px" style={{ margin: '0 2px' }} alt="" />
-                </Button>
+                <li className="desktop">
+                  <Button
+                    aria-describedby={id}
+                    variant="contained"
+                    onClick={handleClick}
+                    sx={{
+                      whiteSpace: 'nowrap',
+                      padding: '0.5em',
+                      marginLeft: '0.5em',
+                      background: colors.orange
+                    }}
+                  >
+                    {user.name}{' '}
+                    <img
+                      src="/down-arrow.svg"
+                      width="10px"
+                      height="10px"
+                      style={{ margin: '0 2px' }}
+                      alt=""
+                    />
+                  </Button>
                   <Popover
                     id={id}
                     open={open}
@@ -260,7 +283,7 @@ export const TopBar: React.FC = () => {
                     onClose={handleClose}
                     anchorOrigin={{
                       vertical: 'bottom',
-                      horizontal: 'left',
+                      horizontal: 'left'
                     }}
                     usePortal={false}
                   >
@@ -282,34 +305,52 @@ export const TopBar: React.FC = () => {
                       </li>
                     </DropDownNav>
                   </Popover>
-              </li>
+                </li>
                 <span className="mobile">
-                  <hr/>
-                <li>
-                  <Link href="/my-stories">
-                    <a>My Stories</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/resources">
-                    <a>Resources</a>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/api/auth/logout">
-                    <a>Logout</a>
-                  </Link>
-                </li>
+                  <hr />
+                  <li>
+                    <Link href="/my-stories">
+                      <a>My Stories</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/resources">
+                      <a>Resources</a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/api/auth/logout">
+                      <a>Logout</a>
+                    </Link>
+                  </li>
                 </span>
               </>
             ) : (
-              <li><Link href={`/api/auth/login?redirect=${pathname}`}><a>LOGIN</a></Link></li>
+              <li>
+                <Link href={`/api/auth/login?redirect=${pathname}`}>
+                  <a>LOGIN</a>
+                </Link>
+              </li>
             )}
-            <li style={{alignItems: 'flex-start'}}>
-              {!translateOpen && <Button title="Translate this page" onClick={invokeGoogleTranslate} sx={{color:'black', whiteSpace: 'nowrap'}}>
-                <Image src="/translate.svg" alt="Translate this page" width="20px" height="20px" />
-                </Button>}
-              <GoogleTranslateDiv style={{visibility: translateOpen ? 'visible' : 'hidden'}} id="google_translate_element"></GoogleTranslateDiv>
+            <li style={{ alignItems: 'flex-start' }}>
+              {!translateOpen && (
+                <Button
+                  title="Translate this page"
+                  onClick={invokeGoogleTranslate}
+                  sx={{ color: 'black', whiteSpace: 'nowrap' }}
+                >
+                  <Image
+                    src="/translate.svg"
+                    alt="Translate this page"
+                    width="20px"
+                    height="20px"
+                  />
+                </Button>
+              )}
+              <GoogleTranslateDiv
+                style={{ visibility: translateOpen ? 'visible' : 'hidden' }}
+                id="google_translate_element"
+              ></GoogleTranslateDiv>
             </li>
           </ul>
         </NavItems>
@@ -321,5 +362,5 @@ export const TopBar: React.FC = () => {
         </button>
       </NavbarContainer>
     </NavBarOuterContainer>
-  );
-};
+  )
+}

@@ -13,83 +13,105 @@ import { TagFilter } from './api/files/utils'
 import { SubmissionsReviewModal } from '../components/Submission/SubmissionReviewModal'
 import { NsfwProvider } from '../stores/nsfw'
 interface TabPanelProps {
-	children?: React.ReactNode
-	index: number
-	value: number
-	variant: TagFilter
+  children?: React.ReactNode
+  index: number
+  value: number
+  variant: TagFilter
 }
 
 function TabPanel(props: TabPanelProps) {
-	const { children, value, index, ...other } = props
-	const { submissions, error, mutate } = useSubmissions(props.variant)
-	const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
-		null
-	)
-	console.log(submissions)
+  const { children, value, index, ...other } = props
+  const { submissions, error, mutate } = useSubmissions(props.variant)
+  const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
+    null
+  )
+  console.log(submissions)
 
-	return (
-		<NsfwProvider>
-			<div
-				role="tabpanel"
-				hidden={value !== index}
-				id={`simple-tabpanel-${index}`}
-				aria-labelledby={`simple-tab-${index}`}
-				{...other}
-			>
-				<SubmissionsReviewModal
-					fileId={focusedSubmission}
-					isOpen={focusedSubmission !== null}
-					onClose={() => setFocusedSubmission(null)}
-					onNext={() => console.log("Next")}
-				/>
-				{submissions === undefined && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>Loading...</Box>}
-				{(submissions && !submissions.length) && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>No entries.</Box>}
-				{value === index && (
-					<Box sx={{ p: 3 }}>
-						{submissions && (
-							<Grid container spacing={2}>
-								{submissions.map((submission: Record<string, any>) => (
-									<SubmissionReviewerCard
-										onFocus={(fileId) => setFocusedSubmission(fileId)}
-										fileId={submission.fileId}
-										key={submission.fileId}
-										state={props.variant}
-										onStateChange={() => mutate()}
-									/>
-								))}
-							</Grid>
-						)}
-					</Box>
-				)}
-			</div>
-		</NsfwProvider>
-	)
+  return (
+    <NsfwProvider>
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        <SubmissionsReviewModal
+          fileId={focusedSubmission}
+          isOpen={focusedSubmission !== null}
+          onClose={() => setFocusedSubmission(null)}
+          onNext={() => console.log('Next')}
+        />
+        {submissions === undefined && (
+          <Box
+            sx={{
+              width: '100%',
+              fontSize: '2rem',
+              padding: '2rem',
+              textAlign: 'center'
+            }}
+          >
+            Loading...
+          </Box>
+        )}
+        {submissions && !submissions.length && (
+          <Box
+            sx={{
+              width: '100%',
+              fontSize: '2rem',
+              padding: '2rem',
+              textAlign: 'center'
+            }}
+          >
+            No entries.
+          </Box>
+        )}
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            {submissions && (
+              <Grid container spacing={2}>
+                {submissions.map((submission: Record<string, any>) => (
+                  <SubmissionReviewerCard
+                    onFocus={(fileId) => setFocusedSubmission(fileId)}
+                    fileId={submission.fileId}
+                    key={submission.fileId}
+                    state={props.variant}
+                    onStateChange={() => mutate()}
+                  />
+                ))}
+              </Grid>
+            )}
+          </Box>
+        )}
+      </div>
+    </NsfwProvider>
+  )
 }
 
 const Admin: NextPage<{ accessToken: string }> = ({ accessToken }) => {
-	const [selectedTab, setSelectedTab] = useState(0)
+  const [selectedTab, setSelectedTab] = useState(0)
 
-	return (
-		<div className={styles.container}>
-			<h1>Admin</h1>
-			<Box>
-				<Tabs
-					value={selectedTab}
-					onChange={(action, tab) => setSelectedTab(tab)}
-				>
-					<Tab label="unreviewed" id="unreviewed" />
-					<Tab label="Needs confirmation" id="confirmation" />
-					<Tab label="approved" id="approved" />
-					<Tab label="rejected" id="rejected" />
-				</Tabs>
+  return (
+    <div className={styles.container}>
+      <h1>Admin</h1>
+      <Box>
+        <Tabs
+          value={selectedTab}
+          onChange={(action, tab) => setSelectedTab(tab)}
+        >
+          <Tab label="unreviewed" id="unreviewed" />
+          <Tab label="Needs confirmation" id="confirmation" />
+          <Tab label="approved" id="approved" />
+          <Tab label="rejected" id="rejected" />
+        </Tabs>
 
-				<TabPanel index={0} value={selectedTab} variant="unreviewed" />
-				<TabPanel index={1} value={selectedTab} variant="needs_confirmation" />
-				<TabPanel index={2} value={selectedTab} variant="approved" />
-				<TabPanel index={3} value={selectedTab} variant="rejected" />
-			</Box>
-		</div>
-	)
+        <TabPanel index={0} value={selectedTab} variant="unreviewed" />
+        <TabPanel index={1} value={selectedTab} variant="needs_confirmation" />
+        <TabPanel index={2} value={selectedTab} variant="approved" />
+        <TabPanel index={3} value={selectedTab} variant="rejected" />
+      </Box>
+    </div>
+  )
 }
 
 export default withPageAuthRequired(Admin)

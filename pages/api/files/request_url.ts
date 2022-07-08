@@ -9,71 +9,71 @@ const AWS = require('aws-sdk')
 AWS.config.update({ region: process.env.AWS_REGION })
 
 const s3 = new AWS.S3({
-	accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
-	secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
-	region: process.env.APP_AWS_REGION
+  accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY,
+  region: process.env.APP_AWS_REGION
 })
 const S3_BUCKET = process.env.APP_AWS_BUCKET || ''
 
 export default withApiAuthRequired(async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse<string>
+  req: NextApiRequest,
+  res: NextApiResponse<string>
 ) {
-	const { query } = req
-	// @ts-ignore
-	const { storyType, type, fileType, key }: QueryParams = query
+  const { query } = req
+  // @ts-ignore
+  const { storyType, type, fileType, key }: QueryParams = query
 
-	const session = getSession(req, res)
-	const user = session?.user
+  const session = getSession(req, res)
+  const user = session?.user
 
-	if (user) {
-		const hashedEmail = hash(user.email)
-		const prefix = `meta/${hashedEmail}`
-		const metaCounts = await getSubmissionCounts(prefix)
+  if (user) {
+    const hashedEmail = hash(user.email)
+    const prefix = `meta/${hashedEmail}`
+    const metaCounts = await getSubmissionCounts(prefix)
 
-		if (metaCounts[storyType] !== undefined && metaCounts[storyType] < 3) {
-			const prePath = 'uploads/' + hashedEmail + '/'
-			const {
-				url: uploadURL,
-				fileName,
-				ContentType
-			} = await getPresignedUrl({
-				Key: key,
-				ContentType: fileType,
-				prePath,
-				operation: 'putObject'
-			})
-			const metaResult = await uploadMeta(type, key, hashedEmail)
-			if (!metaResult || !uploadURL) {
-				res.status(500).json(
-					JSON.stringify({
-						error: 'The server failed to upload, please try again.'
-					})
-				)
-			} else {
-				res.status(200).json(
-					JSON.stringify({
-						uploadURL,
-						fileName,
-						ContentType
-					})
-				)
-			}
-		} else {
-			res.status(400).json(
-				JSON.stringify({
-					error:
-						'You have reached the maximum number of submissions for this story type.'
-				})
-			)
-		}
-	} else {
-		// Not Signed in
-		res.status(401).json(
-			JSON.stringify({
-				error: 'Not Signed In'
-			})
-		)
-	}
-	res.end()
+    if (metaCounts[storyType] !== undefined && metaCounts[storyType] < 3) {
+      const prePath = 'uploads/' + hashedEmail + '/'
+      const {
+        url: uploadURL,
+        fileName,
+        ContentType
+      } = await getPresignedUrl({
+        Key: key,
+        ContentType: fileType,
+        prePath,
+        operation: 'putObject'
+      })
+      const metaResult = await uploadMeta(type, key, hashedEmail)
+      if (!metaResult || !uploadURL) {
+        res.status(500).json(
+          JSON.stringify({
+            error: 'The server failed to upload, please try again.'
+          })
+        )
+      } else {
+        res.status(200).json(
+          JSON.stringify({
+            uploadURL,
+            fileName,
+            ContentType
+          })
+        )
+      }
+    } else {
+      res.status(400).json(
+        JSON.stringify({
+          error:
+            'You have reached the maximum number of submissions for this story type.'
+        })
+      )
+    }
+  } else {
+    // Not Signed in
+    res.status(401).json(
+      JSON.stringify({
+        error: 'Not Signed In'
+      })
+    )
+  }
+  res.end()
 })
