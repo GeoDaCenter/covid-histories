@@ -5,6 +5,7 @@ import { nanoid } from '@reduxjs/toolkit'
 import hash from 'object-hash'
 // AWS
 import {s3,config} from '../files/_s3'
+import { uploadMeta } from '../files/utils'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
@@ -17,7 +18,7 @@ export default withApiAuthRequired(async function handler(
 	if (user) {
 		const hashedEmail = hash(user.email)
 		const key = 'meta/' + hashedEmail + '/' + 'survey.json'
-		const metaResult = await uploadMeta(key, body)
+		const metaResult = await uploadMeta(null, key, body)
 		if (!metaResult) {
 			res.status(500).json(
 				JSON.stringify({
@@ -41,20 +42,3 @@ export default withApiAuthRequired(async function handler(
 	}
 	res.end()
 })
-
-async function uploadMeta(
-	key: string,
-	content: string
-) {
-	const uploadResult = await s3
-		.upload({
-			Bucket: config.S3_BUCKET,
-			ACL: 'private',
-			Key: key,
-			Body:content,
-			ContentType: 'application/json'
-		})
-		.promise()
-
-	return uploadResult
-}

@@ -53,8 +53,8 @@ async function main() {
     // get the full file list
     // from uploads (raw)
     // and public folders
-	const uploadFileList = await getFileList(s3, S3_BUCKET, 'uploads/')
-	const publicFileList = await getFileList(s3, S3_BUCKET, 'public/')
+	const uploadFileList = await getFileList('uploads/')
+	const publicFileList = await getFileList('public/')
 
     // clean to essential data needed
 	const uploadContents: FileObject[] | undefined =
@@ -82,7 +82,7 @@ async function main() {
     // get all object tagging for uploads
     // these govern and record the approval state
 	const uploadTags = await Promise.all(
-		uploadContents.map(({ Key }) => getObjectTags(s3, S3_BUCKET, Key!))
+		uploadContents.map(({ Key }) => getObjectTags(Key!))
 	)
 
     // loop through all files
@@ -101,9 +101,9 @@ async function main() {
         if (approvalStatus === 'true' && publicFile !== undefined) {
             continue
         } else if (approvalStatus === 'true' && publicFile === undefined) {
-            const _response = await copyObject(s3, REGION, ACCOUNT_ID, S3_BUCKET, Key!, `public/${id}.${fileType}`)
+            const _response = await copyObject(Key!, `public/${id}.${fileType}`)
         } else if (approvalStatus === 'false' && publicFile !== undefined) {
-            const _response = await deleteObject(s3, S3_BUCKET, publicFile.Key!)
+            const _response = await deleteObject(publicFile.Key!)
         }
 	}
 
@@ -115,18 +115,15 @@ async function main() {
         const uploadFile = uploadContents.find(({ id: uploadId }) => uploadId === id)
 
         if (uploadFile === undefined) {
-            const _response = await deleteObject(s3, S3_BUCKET, Key!)
+            const _response = await deleteObject(Key!)
         }
     }
 
 	// build index file
-	const existingMeta: PublicSubmission[] = await getPresignedUrl(
-		s3,
-		'public/index.json',
-		'',
-		'',
-		'getObject'
-	)
+	const existingMeta: PublicSubmission[] = await getPresignedUrl({
+		Key: 'public/index.json',
+		operation: 'getObject'
+	})
 		.then(response => {
 			if (response && response?.url) {
 				return fetch(response.url)
@@ -142,13 +139,10 @@ async function main() {
 		if (existingEntry !== undefined) {
 			return existingEntry
 		} else {
-			return getPresignedUrl(
-				s3,
-				`${Key.split(fileType)[0]}_meta.json`,
-				'',
-				'',
-				'getObject'
-			).then(fileMetaUrl => {
+			return getPresignedUrl({
+				Key: `${Key.split(fileType)[0]}_meta.json`,
+				operation: 'getObject'
+			}).then(fileMetaUrl => {
 				if (fileMetaUrl && fileMetaUrl?.url) {
 				return fetch(fileMetaUrl.url)
 					.then(data => {
@@ -193,8 +187,6 @@ async function main() {
 	})
 	const fileMeta: PublicSubmission[] = await Promise.all(fileIndexPromises).then(results => results.filter(({id}) => id.length))
 	const _fileMetaResponse = await putObject(
-		s3,
-		S3_BUCKET,
 		'public/index.json',
 		JSON.stringify(fileMeta)
 	)

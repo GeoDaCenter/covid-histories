@@ -37,7 +37,12 @@ export default withApiAuthRequired(async function handler(
 				url: uploadURL,
 				fileName,
 				ContentType
-			} = await getPresignedUrl(type, key, fileType, prePath, 'putObject')
+			} = await getPresignedUrl({
+				Key: key,
+				ContentType: fileType,
+				prePath,
+				operation: 'putObject'
+			})
 			const metaResult = await uploadMeta(type, key, hashedEmail)
 			if (!metaResult || !uploadURL) {
 				res.status(500).json(

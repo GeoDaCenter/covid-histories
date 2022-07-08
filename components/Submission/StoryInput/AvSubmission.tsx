@@ -198,7 +198,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 		} else if (status === "recording") {
 			setMediaError('')
 		}
-	}, [status])
+	}, [status, JSON.stringify({audioConstraints, videoConstraints, useVideo})])
 
 	return (
 		<RecorderContainer>

@@ -25,7 +25,7 @@ export default function handler(
       }
       else if(selection==1){
         sayOrPlay(twiml, "TOSSMS", user.language)
-        client.message.create({
+        client.messages.create({
           body: Prompts["TOSTextContent"][user.language || 'en'].text,
           from: "+8336062260",
           to: req.body.From

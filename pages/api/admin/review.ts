@@ -27,12 +27,12 @@ export default withApiAuthRequired(async function handler(
 	const isAdmin = user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 
 	if (isAdmin) {
-		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, `uploads/${fileId}`)
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(`uploads/${fileId}`)
        
         if(currentFiles?.Contents && currentFiles?.Contents?.length > 0) {
             const files = currentFiles.Contents.map(file => file.Key || 'PLACEHOLDER_MISSING_KEY')
             const entryTags = await Promise.all(
-                files?.map(file => getObjectTags(s3, S3_BUCKET, file).then((r) => r?.TagSet))
+                files?.map(file => getObjectTags(file).then((r) => r?.TagSet))
             )
             switch(action){
                 case 'approve':
@@ -44,8 +44,6 @@ export default withApiAuthRequired(async function handler(
                     const approveResponse = await Promise.all(
                         files.map((file,i) => 
                             setObjectTagging(
-                                s3, 
-                                S3_BUCKET, 
                                 file, 
                                 approveTags
                             )
@@ -72,8 +70,6 @@ export default withApiAuthRequired(async function handler(
                         const rejectResponse = await Promise.all(
                             files.map(file => 
                                 setObjectTagging(
-                                    s3, 
-                                    S3_BUCKET, 
                                     file, 
                                     rejectTags
                                 )
@@ -94,8 +90,6 @@ export default withApiAuthRequired(async function handler(
                         const rejectResponse = await Promise.all(
                             files.map(file => 
                                 setObjectTagging(
-                                    s3, 
-                                    S3_BUCKET, 
                                     file, 
                                     rejectTags
                                 )
@@ -111,7 +105,7 @@ export default withApiAuthRequired(async function handler(
                 case 'delete':
                     const deleteResponse = await Promise.all(
                         files.map(file => 
-                            deleteObject(s3, S3_BUCKET, file)
+                            deleteObject(file)
                         )
                     )
                     res.status(200).json(

@@ -27,11 +27,14 @@ export default withApiAuthRequired(async function handler(
     const { fileId, folder } = req.query
 	if (isAdmin) {
 		const prefix = `${folder || 'uploads'}/${fileId}`
-		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(s3, S3_BUCKET, prefix)
+		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(prefix)
 		const fileNames = currentFiles?.Contents?.map(({Key, LastModified}) => ({Key, LastModified}))
 		const presignedGets = await Promise.all(
 			fileNames?.map(({Key, LastModified}) => 
-				getPresignedUrl(s3, Key||'', '', '', 'getObject')
+				getPresignedUrl({
+					Key: Key as string,
+					operation: 'getObject'
+				})
 			)||[])	
 		const metaData = await Promise.all(
 			presignedGets

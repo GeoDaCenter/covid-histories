@@ -25,12 +25,7 @@ export default withApiAuthRequired(async function handler(
 	const isAdmin =
 		user && user['https://stories.uscovidatlas.org/roles'].includes('Admin')
 	if (isAdmin) {
-		const unreviewedEntries = await getTaggedFileList(
-			s3,
-			S3_BUCKET,
-			// @ts-ignore
-			filter
-		)
+		const unreviewedEntries = await getTaggedFileList(filter)
 		
 		res.status(200).json(
 			JSON.stringify(unreviewedEntries)
