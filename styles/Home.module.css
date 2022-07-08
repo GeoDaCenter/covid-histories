@@ -1,23 +1,23 @@
 .container {
   padding: 0;
-  transition: 500ms all;
+  transition:500ms all;
 }
 
-.topBar {
+.topBar{
   background-color: gray;
-  color: white;
+  color:white;
   height: 40px;
-  display: flex;
-  flex-direction: row;
+  display:flex;
+  flex-direction:row;
   align-items: center;
   justify-content: end;
-  box-sizing: border-box;
+  box-sizing:border-box;
   padding: 0px 20px;
-  width: 100%;
+  width:100%;
 }
 
-.topBar > * {
-  margin-left: 10px;
+.topBar > *{
+  margin-left:10px
 }
 
 .main {
@@ -127,21 +127,15 @@
 }
 
 .fadeIn {
-  opacity: 0;
+  opacity:0;
   animation: fadeIn 2s linear 1;
   animation-fill-mode: forwards;
-  animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  animation-timing-function:cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 @keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0px);
-  }
+  0% {opacity:0;transform:translateY(30px);}
+  100% {opacity:1;transform:translateY(0px);}
 }
 
 @media (max-width: 600px) {

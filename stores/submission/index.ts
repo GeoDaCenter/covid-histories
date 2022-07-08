@@ -1,7 +1,10 @@
-import { store, persistor } from '../store'
-import { selectors, actions } from './submissionSlice'
+import { store, persistor } from "../store";
+import {
+    selectors,
+    actions,
+} from "./submissionSlice";
 
-const {
+const {    
   resetSubmission,
   incrementStep,
   decrementStep,
@@ -19,28 +22,29 @@ const {
   setTags,
   setEmailVerified,
   setHasEnteredContent
-} = actions
+} = actions;
 
 const {
-  selectStep,
-  selectType,
-  selectTheme,
-  selectQuestions,
-  selectCounty,
-  selectTitle,
-  selectConsent,
-  selectOptInResearch,
-  selectId,
-  selectIsUploading,
-  selectUploadProgress,
-  selectTags,
-  selectCanProgress,
-  selectCanGoBack
-} = selectors
+    selectStep,
+    selectType,
+    selectTheme,
+    selectQuestions,
+    selectCounty,
+    selectTitle,
+    selectConsent,
+    selectOptInResearch,
+    selectId,
+    selectIsUploading,
+    selectUploadProgress,
+    selectTags,
+    selectCanProgress,
+    selectCanGoBack
+} = selectors;
 
 export {
-  store,
+  store, 
   persistor,
+   
   resetSubmission,
   incrementStep,
   decrementStep,
@@ -58,6 +62,7 @@ export {
   setTags,
   setEmailVerified,
   setHasEnteredContent,
+
   selectStep,
   selectType,
   selectTheme,
@@ -72,4 +77,4 @@ export {
   selectTags,
   selectCanProgress,
   selectCanGoBack
-}
+};

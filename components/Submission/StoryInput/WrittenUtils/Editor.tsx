@@ -7,7 +7,7 @@ import {
   Transforms,
   createEditor,
   Descendant,
-  Element as SlateElement
+  Element as SlateElement,
 } from 'slate'
 import { withHistory } from 'slate-history'
 
@@ -17,15 +17,18 @@ const HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
-  'mod+`': 'code'
+  'mod+`': 'code',
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
-const RichTextExample = ({ value, handleChange }) => {
-  const renderElement = useCallback((props) => <Element {...props} />, [])
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, [])
+const RichTextExample = ({
+    value,
+    handleChange
+}) => {
+  const renderElement = useCallback(props => <Element {...props} />, [])
+  const renderLeaf = useCallback(props => <Leaf {...props} />, [])
   const editor = useMemo(() => withHistory(withReact(createEditor())), [])
 
   return (
@@ -36,7 +39,7 @@ const RichTextExample = ({ value, handleChange }) => {
         placeholder="Write your story here…"
         spellCheck
         autoFocus
-        onKeyDown={(event) => {
+        onKeyDown={event => {
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event as any)) {
               event.preventDefault()
@@ -46,8 +49,8 @@ const RichTextExample = ({ value, handleChange }) => {
           }
         }}
         style={{
-          maxHeight: '50vh',
-          overflowY: 'auto'
+          maxHeight:'50vh',
+          overflowY:'auto'
         }}
       />
     </Slate>
@@ -63,21 +66,21 @@ const toggleBlock = (editor, format) => {
   const isList = LIST_TYPES.includes(format)
 
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
+    match: n =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(format),
-    split: true
+    split: true,
   })
   let newProperties: Partial<SlateElement>
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
-      align: isActive ? undefined : format
+      align: isActive ? undefined : format,
     }
   } else {
     newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : format
+      type: isActive ? 'paragraph' : isList ? 'list-item' : format,
     }
   }
   Transforms.setNodes<SlateElement>(editor, newProperties)
@@ -105,10 +108,10 @@ const isBlockActive = (editor, format, blockType = 'type') => {
   const [match] = Array.from(
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, selection),
-      match: (n) =>
+      match: n =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        n[blockType] === format
+        n[blockType] === format,
     })
   )
 
@@ -197,7 +200,7 @@ const BlockButton = ({ format, icon }) => {
         format,
         TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
       )}
-      onMouseDown={(event) => {
+      onMouseDown={event => {
         event.preventDefault()
         toggleBlock(editor, format)
       }}
@@ -212,7 +215,7 @@ const MarkButton = ({ format, icon }) => {
   return (
     <Button
       active={isMarkActive(editor, format)}
-      onMouseDown={(event) => {
+      onMouseDown={event => {
         event.preventDefault()
         toggleMark(editor, format)
       }}

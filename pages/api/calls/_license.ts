@@ -1,7 +1,7 @@
 export const License = {
-  en: {
-    audioUrl: '',
-    text: `
+	en: {
+		audioUrl: '',
+		text: `
   License & Terms of Use
 },
 Thank you for participating in the US Covid Atlas Oral Histories program (the "Program"). The Program's goal is to compile a record of our collective experiences during, and as a result of, the COVID-19 pandemic. Our intent is to make donated material widely accessible to researchers and the public for the purpose of conducting research and archiving our individual and shared experiences of this extraordinary time. This license sets forth the terms that will govern our use of any materials you choose to contribute to the Program.
@@ -50,9 +50,9 @@ I waive any right to inspect or claim any form of remuneration for the use of th
 
 These terms and conditions are governed by Illinois law.
 `
-  },
-  es: {
-    text: '',
-    audioUrl: ''
-  }
+	},
+	es: {
+		text: '',
+		audioUrl: ''
+	}
 }
