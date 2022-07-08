@@ -217,7 +217,7 @@ const Home: NextPage = () => {
 							research project that works to understand, archive, and represent the often unequal impact of the COVID-19 pandemic in the US.
 						</Typography>
 						<CtaLink href="/submit" className="cta-button">
-							What was your experience of the pandemic?
+							Share your story
 						</CtaLink>
 						<Typography>
 							Learn more by scrolling down, or jump to a topic below.

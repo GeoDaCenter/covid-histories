@@ -26,15 +26,15 @@ export const GettingStarted: React.FC<StepComponentProps> = () => {
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="h4">About Atlas Histories</Typography>
+            <Typography variant="h4">About Atlas Stories</Typography>
             <Typography>
-              The oral history project curates stories illustrative of statistical trends to contribute more holistic and visceral audio-visual evidence to the Atlas. The perspectives included aspire to accurately represent the diversity of experience and opinion in the United States. Some of these perspectives may be scientifically inaccurate and/or harmful, and include disclaimers and qualifying text.
+              This project collects stories that show the experience behind the numbers. These experiences provide a more complete understanding of the pandemic to the growing Atlas archive. The perspectives included aspire to accurately represent the diversity of experience and opinion in the United States. Some of these perspectives may be scientifically inaccurate and/or harmful, and include disclaimers and qualifying text.
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" fontStyle="italic" fontSize="1em" color="rgba(160,160,160)">Disclaimer</Typography>
             <Typography fontStyle="italic" color="rgba(160,160,160)">
-              Oral histories represent individual experiences. The US Covid Atlas team reserves the right to limit misinformation, racism, xenophobia, gender or sexual biases and harmful type of content. The views expressed do not necessarily reflect the views of the US Covid Atlas, T&D, University of Chicago, RWJF.
+              Oral histories represent individual experiences. The US Covid Atlas team reserves the right to limit misinformation, racism, xenophobia, gender or sexual biases and other harmful types of content. The views expressed do not necessarily reflect the views of the US Covid Atlas, T&D, University of Chicago, RWJF.
             </Typography>
           </Grid>
         </Grid>
