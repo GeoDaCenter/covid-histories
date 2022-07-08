@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import { defaultVoice, FirstRecording, PreviousRecording, prompts } from "./_prompts";
 import {getPreviousCalls, getUserRecord} from "./_s3_utils";
+import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -17,6 +18,8 @@ export default function handler(
         const selectedOption= parseInt(req.body.Digits)-1;
         const selectedTopic = prompts[selectedOption] 
 
+        console.log("Previous calls ", previousCalls)
+
         const previousSubmission=  previousCalls.find(response=> response.topicId === selectedTopic.name)
 
         if (selectedOption< prompts.length) {
@@ -26,23 +29,23 @@ export default function handler(
             `Thanks! You selected ${selectedTopic.name}`
           );
            if(previousSubmission){
-             // If the user has previously sumbitted a recording, 
+             // If the user has previously submitted a recording, 
              // give them options
               twiml.redirect(
                 {method: "POST"},
-                `/api/calls/prompt_topic_options?topic_id=${selectedOption}`
+                `/api/calls/prompt_topic_options?topicId=${selectedOption}`
               )
            }
            else{
-              twiml.say(defaultVoice, FirstRecording)
+               sayOrPlay(twiml, "FirstRecording", user.language)
               twiml.redirect(
                 {method: "POST"},
-                `/api/calls/record_topic?topic_id=${selectedOption}`
+                `/api/calls/record_topic?topicId=${selectedOption}`
               )
 
            }
         } else {
-          twiml.say("Sorry please choose one of the specified options");
+          sayOrPlay(twiml, "MissingOption", user.lanaguge)
           twiml.redirect(
             { method: "POST" },
             "/api/calls/prompt_topic"

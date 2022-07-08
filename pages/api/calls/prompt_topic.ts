@@ -12,7 +12,6 @@ export default function handler(
     getUserRecord(req.body.From).then( user=>{
 
       const twiml = new VoiceResponse();
-      sayOrPlay(twiml, "PromptText", user.language)
 
       gather(twiml, "TopicSelectPrompt", user.language, {numDigits:1, action:"/api/calls/selected_topic", bargeIn:true}) 
 

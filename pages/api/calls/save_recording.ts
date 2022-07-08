@@ -16,15 +16,22 @@ export default function handler(
 	res: NextApiResponse<string>
 ) {
 	if (req.method === 'POST') {
-		const topicId = parseInt(req.query.topic_id as string)
+    const twiml = new VoiceResponse();
+		const topicId = parseInt(req.query.topicId as string)
 		const topic = prompts[topicId]
 
 		getUserRecord(req.body.From).then((user) => {
 			if (req.body.RecordingUrl && user) {
+        console.log("Recording url is ", req.body.RecordingUrl)
         saveCallStory(req.body.From, topic.name, req.body.RecordingUrl).then(()=>{
-          console.log("Saved story")
+        
+        twiml.say("Thanks for your recording")
+        twiml.redirect(`/api/calls/prompt_topic_options?topicId=${topicId}`)
+        res.setHeader("content-type", "text/xml");
+        res.send(twiml.toString());
         })
 			}
 		})
 	}
+
 }

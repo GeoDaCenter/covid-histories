@@ -4,12 +4,14 @@ import {Welcome,defaultVoice} from "./_prompts"
 import { createOrUpdateUserRecord, getUserRecord } from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
+import hash from 'object-hash'
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
+    console.log("User hash is ", hash(req.body.From))
     getUserRecord(req.body.From).then(user=>{
       console.log("got user ",user)
       const twiml = new VoiceResponse();

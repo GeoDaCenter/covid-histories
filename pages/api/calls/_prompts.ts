@@ -26,6 +26,13 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		},
 		es: { text: '', audioUrl: null }
 	},
+	FirstRecording: {
+		en: {
+			text: 'Record your story after the tone. Press the hash key to end recording',
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
 	ZipCodeRecap: {
 		en: { text: 'You previously told us your zip code was', audioUrl: null },
 		es: { text: '', audioUrl: null }
@@ -85,13 +92,13 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		es: { text: '', audioUrl: null }
 	},
 
-  DeletedStory:{
-    en:{
-      text:"We have deleted your story",
-      audioUrl:null,
-    },
-    es:{text:'', audioUrl:null}
-  },
+	DeletedStory: {
+		en: {
+			text: 'We have deleted your story',
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
 
 	TopicActions: {
 		en: {
@@ -116,165 +123,165 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		},
 		es: { text: '', audioUrl: null }
 	},
-  TopicSelectPrompt:{
-    en: {
-      text: "For a story about your community, press one, about your family press two, for your self press three and for your work pres four",
-      audioUrl:null
-    },
-    es:{text: '', audioUrl:null}
-  },
-  ZipCodeNoReply:{
-    en:{
-      text:"I didn't get a zip code there. Try typing again",
-      audioUrl:null
-    },
-    es:{text:'', audioUrl:null}
-  },
-  Thanks:{
-    en:{
-      text:"Thank you",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  CallThanksAndNext:{
-    en:{
-      text:"Thanks for your story, what would you like to do next?",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  TOSAgreement:{
-    en:{
-      text:`Thanks for agreeing to our terms of service`,
-      audioUrl:null
-    },
-    es:{
-      text:``,
-      audioUrl:null
-    }
-  },
-  TOSLinkSent:{
-    en:{
-      text:"Thanks! Look for a link sent to your phone. Read the terms of conditions and call back if you would like to agree to them",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  TOSReadOutPrelude:{
-    en:{
-      text:"You can stop playback and return to the menu at any time by pressing 0",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  CountyNotFound:{
-    en:{
-      text:"We could not find a county that mapped your zip code",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  WhatCountyAreYouPartOf:{
-    en:{
-      text:"What county are you part of?",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  PressOneFor:{
-    en:{
-      text:"Press one for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressTwoFor:{
-    en:{
-      text:"Press two for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressThreeFor:{
-    en:{
-      text:"Press three for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressFourFor:{
-    en:{
-      text:"Press four for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressFiveFor:{
-    en:{
-      text:"Press five for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  TOSTextContent:{
-    en:{
-      text: "You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  TOS:{
-    en:{
-      text:"These are the terms of service",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  }
+	TopicSelectPrompt: {
+		en: {
+			text: 'For a story about your community, press one, about your family press two, for your self press three and for your work pres four',
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
+	ZipCodeNoReply: {
+		en: {
+			text: "I didn't get a zip code there. Try typing again",
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
+	Thanks: {
+		en: {
+			text: 'Thank you',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	CallThanksAndNext: {
+		en: {
+			text: 'Thanks for your story, what would you like to do next?',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSAgreement: {
+		en: {
+			text: `Thanks for agreeing to our terms of service`,
+			audioUrl: null
+		},
+		es: {
+			text: ``,
+			audioUrl: null
+		}
+	},
+	TOSLinkSent: {
+		en: {
+			text: 'Thanks! Look for a link sent to your phone. Read the terms of conditions and call back if you would like to agree to them',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSReadOutPrelude: {
+		en: {
+			text: 'You can stop playback and return to the menu at any time by pressing 0',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	CountyNotFound: {
+		en: {
+			text: 'We could not find a county that mapped your zip code',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	WhatCountyAreYouPartOf: {
+		en: {
+			text: 'What county are you part of?',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressOneFor: {
+		en: {
+			text: 'Press one for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressTwoFor: {
+		en: {
+			text: 'Press two for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressThreeFor: {
+		en: {
+			text: 'Press three for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressFourFor: {
+		en: {
+			text: 'Press four for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressFiveFor: {
+		en: {
+			text: 'Press five for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSTextContent: {
+		en: {
+			text: 'You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOS: {
+		en: {
+			text: 'These are the terms of service',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	}
 }
 
-export const PromptLanguage: Prompt= {
-		text: 'To continue in english press 1, para continuar en español presione 2',
-		audioUrl: null
+export const PromptLanguage: Prompt = {
+	text: 'To continue in english press 1, para continuar en español presione 2',
+	audioUrl: null
 }
 
 export const prompts = [
@@ -302,5 +309,14 @@ export const prompts = [
 			'Talk about the biggest challenge that you experienced during the pandemic.',
 			'What should people in the future take away or remember most, from your pandemic experience?'
 		]
-	}
+	},
+	{
+		name: 'Your Self',
+		categories: [
+			'Talk about a moment that you will remember most during this time.',
+			'Talk about the biggest challenge that you experienced during the pandemic.',
+			'What should people in the future take away or remember most, from your pandemic experience?'
+		]
+	},
+
 ]

@@ -13,7 +13,7 @@ export default function handler(
     getUserRecord(req.body.From).then( user=>{
 
       const twiml = new VoiceResponse();
-      gather(twiml, RecodingOptionsText, user.language, {numDigits:1, action:`/api/calls/selected_topic_action?topicId=${req.query.topicId}`, bargeIn:true})
+      gather(twiml, "RecodingOptionsText", user.language, {numDigits:1, action:`/api/calls/selected_topic_action?topicId=${req.query.topicId}`, bargeIn:true})
 
       // Render the response as XML in reply to the webhook request
       res.setHeader("content-type",'text/xml');
