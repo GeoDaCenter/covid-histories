@@ -1,44 +1,34 @@
-import Head from 'next/head'
+import { SEO } from '../components/Interface/SEO'
 
-<Head>
-    <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Kalam:wght@300&display=swap"
-    />
-</Head>
+<SEO title="Atlas Stories :: About" />
 
 # About
 
-The [US Covid Atlas](http://uscovidatlas.org) works to
-understand, archive, and represent the impact of the
-COVID-19 pandemic in the United States. The Atlas is a free, interactive
-data visualization tool connecting COVID-19 data with community health
-indicators to deliver insights about the pandemic across the country.
-After more than two years of mapping and visualizing the numbers behind
+The [US Covid Atlas](http://uscovidatlas.org) works to understand, archive, and
+represent the impact of the COVID-19 pandemic in the United States. The Atlas is
+a free, interactive data visualization tool connecting COVID-19 data with
+community health indicators to deliver insights about the pandemic across the
+country. After more than two years of mapping and visualizing the numbers behind
 the pandemic, we're now turning to the stories behind the statistics.
 
-**Atlas Stories aims to elevate the human perspective
-alongside the data of the pandemic.** The pandemic has impacted
-everyone's life. And everyone has a story to tell about their
-experience. By participating in this pandemic oral histories project --
-whether you decide to record a video or audio, write about your
-experience, upload a picture, or call-in your story -- you will 
-be lifting up the stories behind the data. Your story helps humanize the
-statistics within the pandemic experience.
+**Atlas Stories aims to elevate the human perspective alongside the data of the
+pandemic.** The pandemic has impacted everyone's life. And everyone has a story
+to tell about their experience. By participating in this pandemic oral histories
+project -- whether you decide to record a video or audio, write about your
+experience, upload a picture, or call-in your story -- you will be lifting up
+the stories behind the data. Your story helps humanize the statistics within the
+pandemic experience.
 
-**How will your story be visualized on the Atlas?** The only information
-that we require for you to share along with your story submission is
-your county of residence (or county most relevant to your pandemic
-experience) in the United States. This allows us to geo-tag your story in a random location
-in that county, to match with other county-level data currently
-featured on the Atlas.
+**How will your story be visualized on the Atlas?** The only information that we
+require for you to share along with your story submission is your county of
+residence (or county most relevant to your pandemic experience) in the United
+States. This allows us to geo-tag your story in a random location in that
+county, to match with other county-level data currently featured on the Atlas.
 
-To learn more, read our **[Story Submission Overview](/submission-overview)** and
-review our **[Privacy License & Terms of
-Use](/privacy)**. If you're
-ready to share your story, go ahead and **[Submit your
-Story](/submit)** now!
+To learn more, read our **[Story Submission Overview](/submission-overview)**
+and review our **[Privacy License & Terms of Use](/privacy)**. If you're ready
+to share your story, go ahead and **[Submit your Story](/submit)** now!
 
+export default ({children}) => <div className="md-content standard-page-width">{children}</div
 
-
-export default ({children}) => <div className="md-content standard-page-width">{children}</div>
+>

@@ -6,7 +6,7 @@ import {
 } from '@aws-sdk/client-s3'
 import { UserCallRecord } from './_types'
 import hash from 'object-hash'
-import {listFiles, uploadMeta} from '../files/utils'
+import {listFiles} from '../files/utils'
 import {s3,config} from '../files/_s3'
 import { nanoid } from '@reduxjs/toolkit'
 import fs from 'fs';
@@ -25,11 +25,11 @@ export const getUserRecord= async(
 	const hashedNumber = hashPhoneNo(phoneNo)
   console.log("Bucket is ",config.S3_BUCKET, " path is  ", `meta/${hashedNumber}/call.json`)
   try{
-    const result = await s3.getObject({
+    const result = await s3.send( new GetObjectCommand({
           Bucket: config.S3_BUCKET,
           Key: `meta/${hashedNumber}/call.json`,
-    }).promise();
-    return JSON.parse(result.Body.toString()) 
+    }));
+      return JSON.parse(result.Body!.toString()) 
   }
   catch(err){
     console.log("error getting user ", err)
@@ -42,21 +42,21 @@ export const getStoryMeta = async(
  key:string 
 )=>{
   console.log("Getting story meta for ", key)
-  let result = await s3.getObject({
+  let result = await s3.send(new GetObjectCommand({
     Bucket: config.S3_BUCKET,
     Key: `uploads/${userHash}/${key}`
-  }).promise();
-  return { ...JSON.parse(result.Body.toString()), key: key}
+  }));
+  return { ...JSON.parse(result.Body!.toString()), key: key}
 }
 
 export const getPreviousCalls = async(
   phoneNo:string,
 )=>{
   let userHash = hashPhoneNo(phoneNo)
-  let files = await listFiles(phoneNo);
+  let {fileNames} = await listFiles(phoneNo);
   let result = await Promise.all(
-       files.fileNames.filter(f=>f.Key.includes("_meta.json"))
-       .map(f=> getStoryMeta(userHash,f.Key)))
+       fileNames!.filter(f=>f.Key!.includes("_meta.json"))
+       .map(f=> getStoryMeta(userHash,f.Key!)))
   return result
 }
 
@@ -79,13 +79,13 @@ export const copyAudioFromTwillioToS3 = async(hashedPhone:string, storyId:string
   try{
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'covid_calls'));
     let file = await downloadFile(tmpDir, audioUrl) 
-    await s3.upload({
+    await s3.send(new PutObjectCommand({
         Bucket: config.S3_BUCKET,
         ACL: 'private',
         Key: `uploads/${hashedPhone}/${storyId}.wav`,
         Body:  fs.readFileSync(file),
         ContentType: 'audio/wav'
-      }).promise()
+      }))
   }
   finally{
     if(tmpDir){
@@ -96,7 +96,7 @@ export const copyAudioFromTwillioToS3 = async(hashedPhone:string, storyId:string
 
 export const getExistingStories = async(phoneNo:string)=>{
   const {fileNames} = await listFiles(phoneNo)
-  return Promise.all(fileNames.filter(f => f.Key?.includes('_meta.json'))
+  return Promise.all(fileNames!.filter(f => f.Key?.includes('_meta.json'))
            .map(f => s3.send(new GetObjectCommand({
               Bucket: config.S3_BUCKET,
               Key: f.Key!
@@ -109,7 +109,7 @@ export const saveCallStory = async(phoneNo: string, topicId: string, audioUrl: s
 
   await copyAudioFromTwillioToS3( hashedPhone, storyId, audioUrl)
 
-	await s3.upload({
+	await s3.send(new PutObjectCommand({
 			Bucket: config.S3_BUCKET,
 			ACL: 'private',
 			Key: `uploads/${hashedPhone}/${storyId}_meta.json`,
@@ -119,8 +119,7 @@ export const saveCallStory = async(phoneNo: string, topicId: string, audioUrl: s
         uploadTimestamp: (new Date()).toISOString()
 			}),
 			ContentType: 'application/json'
-		}).promise()
-
+		}))
 }
 
 export const createOrUpdateUserRecord = async (
@@ -141,13 +140,13 @@ export const createOrUpdateUserRecord = async (
   console.log("Update is ", {...base,...update})
 
 	try {
-		const result = await  s3.upload({
+		const result = await  s3.send( new PutObjectCommand({
 				Bucket: config.S3_BUCKET,
 				Key: `meta/${hashedNumber}/call.json`,
 				Body: JSON.stringify({...base, ...update}),
 				ACL: 'private',
         ContentType:'application/json'
-    }).promise()
+    }))
 
     console.log("UPLOAD RESULT ",result)
 		return user ? user : initial_data

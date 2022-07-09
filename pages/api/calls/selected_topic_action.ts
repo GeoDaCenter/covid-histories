@@ -1,9 +1,12 @@
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import {config, s3} from "../files/_s3";
 import {prompts} from "./_prompts";
 import {getPreviousCalls, getUserRecord, hashPhoneNo} from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -26,14 +29,12 @@ export default function handler(
         const previousSubmission= previousCalls.find(response=> response.topicId === selectedTopic.name)
         if(previousSubmission){
 
-          const s3Params = {
+          const s3Params = new GetObjectCommand({
             Bucket: config.S3_BUCKET,
             Key: `uploads/${hashPhoneNo(req.body.From)}/${previousSubmission.key.replace("_meta.json",'.wav')}`,
-            Expires: 600
-            // ACL: 'public-read'
-          }
-          s3.getSignedUrlPromise("getObject", s3Params).then(audioUrl=>{
-            console.log("Presigned audio url ", audioUrl)
+          })
+
+          getSignedUrl(s3, s3Params, {expiresIn:600}).then((audioUrl:string)=>{
               switch(selectedAction){
                 // Listen to the topic
                 case 0:
@@ -71,5 +72,4 @@ export default function handler(
       })
     })
   }
-  // Render the response as XML in reply to the webhook request
 }

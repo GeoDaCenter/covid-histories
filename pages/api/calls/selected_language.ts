@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import { defaultVoice, FirstRecording, PreviousRecording, prompts } from "./_prompts";
-import {createOrUpdateUserRecord, getUserRecord} from "./_s3_utils";
+import {createOrUpdateUserRecord} from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 

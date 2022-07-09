@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import twilio from 'twilio'
-import { defaultVoice, prompts, RecordingActions} from './_prompts'
+import { prompts } from './_prompts'
 
 import {
-	createOrUpdateUserRecord,
 	getUserRecord,
   saveCallStory
 } from './_s3_utils'

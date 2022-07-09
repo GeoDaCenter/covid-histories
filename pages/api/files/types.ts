@@ -1,14 +1,12 @@
 export interface FileListReturn {
-	Contents: Array<{
-		Key: string
-		LastModified: string
-	}>
+  Contents: Array<{
+    Key: string
+    LastModified: string
+  }>
 }
-
+export type SubmissionType = 'av' | 'written' | 'photo'
 export interface QueryParams {
-	type: SubmissionType
-	fileType: string
-	key: string
+  fileType: string
+  storyId: string
+  storyType: SubmissionType
 }
-
-export  type SubmissionType = 'audio' | 'video' | 'written' | 'photo' | 'meta' | ''

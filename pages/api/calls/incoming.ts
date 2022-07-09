@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
-import {Welcome,defaultVoice} from "./_prompts"
-import { createOrUpdateUserRecord, getUserRecord } from "./_s3_utils";
+import { getUserRecord } from "./_s3_utils";
 import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 import hash from 'object-hash'
@@ -28,9 +27,8 @@ export default function handler(
       }
 
       // Render the response as XML in reply to the webhook request
-      res.setHeader("content-type",'text/xml');
-      res.send(twiml.toString());
+      res.setHeader('content-type', 'text/xml')
+      res.send(twiml.toString())
     })
   }
 }
-

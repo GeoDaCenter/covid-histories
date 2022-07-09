@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import {getUserRecord} from "./_s3_utils";
-import {gather, sayOrPlay} from "./_utils";
+import {gather} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
@@ -21,4 +21,3 @@ export default function handler(
     })
   }
 }
-

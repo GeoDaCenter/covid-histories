@@ -21,7 +21,7 @@ export default function handler(
         twiml.redirect("/api/calls/prompt_topic")
       }
       else{
-        sayOrPlay(twiml, MissingOption,user!.language)
+        sayOrPlay(twiml, "MissingOption",user!.language)
         twiml.redirect("/api/calls/prompt_update_option_select")
       }
 
