@@ -1,22 +1,18 @@
 # Admin Endpoints
 
-1. You must be logged in through that web browser and have the Admin user role
-   with Auth0
+1. You must be logged in through that web browser and have the Admin user role with Auth0
 
 ## list_uploads
 
-_Purpose_ Returns a list of relevant uploads
+_Purpose_
+Returns a list of relevant uploads
 
 _Query Parameters_
-
-- filter: 'unreviewed' | 'approved' | 'rejected' | 'all'
-  > Filters entries based on current tags
+- filter: 'unreviewed' | 'approved' | 'rejected' | 'all' 
+ > Filters entries based on current tags
 
 _Returns_
-
-- Array of entry information with AWS Key, file ID with generated user and file
-  ID, and last modified date
-
+- Array of entry information with AWS Key, file ID with generated user and file ID, and last modified date
 ```
 UploadInfo {
 	Key: string | undefined
@@ -31,18 +27,15 @@ _Example_
 
 ## get_file
 
-_Purpose_ Retrieves presigned get URLs and metadata for a given file
+_Purpose_
+Retrieves presigned get URLs and metadata for a given file
 
 _Query Parameters_
-
 - fileId: string
-  > Retrieves files that match a given ID
+ > Retrieves files that match a given ID
 
 _Returns_
-
-- JSON containing the submission metadata (title, county, centroid, consent,
-  etc.) and an array `content` with URLs and fileTypes to access files:
-
+- JSON containing the submission metadata (title, county, centroid, consent, etc.) and an array `content` with URLs and fileTypes to access files:
 ```
 [
     {
@@ -68,8 +61,7 @@ _Returns_
 ]
 ```
 
-Note, Image entries will have two files, the image itself (variable filetype
-based on entry) and a caption markdown file.
+Note, Image entries will have two files, the image itself (variable filetype based on entry) and a caption markdown file.
 
 _Example_
 
@@ -77,22 +69,19 @@ _Example_
 
 ## review
 
-_Purpose_ Tags files for a given fileId (metadata, media files) based on an
-admin review. Approved files will be tagged with `approved: true`,
-`reviewed: true`, and `reviewed_by: user`. rejected the same, but
-`approved: false`, and deleted entries will be immediately deleted.
+_Purpose_
+Tags files for a given fileId (metadata, media files) based on an admin review. Approved files will be tagged with `approved: true`, `reviewed: true`, and `reviewed_by: user`. rejected the same, but `approved: false`, and deleted entries will be immediately deleted.
 
 _Query Parameters_
-
 - fileId: string
-  > Specifies the files to act on
+ > Specifies the files to act on
 - action: 'approve' | 'reject' | 'delete'
-  > The action to take on a given file
+ > The action to take on a given file
 - note: string
-  > A note to attach to the review
+ > A note to attach to the review
 
-_Returns_ Response from AWS to confirm action success for each file tagged
-
+_Returns_
+Response from AWS to confirm action success for each file tagged
 ```
 {
     "files": [

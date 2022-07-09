@@ -27,8 +27,9 @@ export default function handler(
       }
 
       // Render the response as XML in reply to the webhook request
-      res.setHeader('content-type', 'text/xml')
-      res.send(twiml.toString())
+      res.setHeader("content-type",'text/xml');
+      res.send(twiml.toString());
     })
   }
 }
+

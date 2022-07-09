@@ -9,60 +9,57 @@ import colors from '../config/colors'
 import Script from 'next/script'
 
 const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: colors.yellow
-    },
-    background: {
-      default: colors.darkgray
-    },
-    text: {
-      primary: colors.white
-    },
-    secondary: {
-      main: '#f50057'
-    }
-  },
-  typography: {
-    h1: {
-      fontWeight: 'bold'
-    },
-    h2: {
-      fontWeight: 'bold'
-    },
-    h3: {
-      fontWeight: 'bold'
-    },
-    h4: {
-      fontWeight: 'bold'
-    }
-  },
-  components: {
-    MuiButton: {
-      defaultProps: {
-        sx: {
-          textTransform: 'none'
-        }
-      }
-    }
-  }
+	palette: {
+		mode: 'dark',
+		primary: {
+			main: colors.yellow
+		},
+		background: {
+			default: colors.darkgray
+		},
+		text: {
+			primary: colors.white
+		},
+		secondary: {
+			main: '#f50057'
+		}
+	},
+	typography: {
+		h1: {
+			fontWeight: 'bold'
+		},
+		h2: {
+			fontWeight: 'bold'
+		},
+		h3: {
+			fontWeight: 'bold'
+		},
+		h4: {
+			fontWeight: 'bold'
+		}
+	},
+	components: {
+		MuiButton: {
+			defaultProps: {
+				sx: {
+					textTransform: 'none'
+				}
+			}
+		}
+	}
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <UserProvider>
-      <ThemeProvider theme={theme}>
-        <TopBar />
-        <Script
-          type="text/javascript"
-          src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit"
-        />
-        <Component {...pageProps} />
-        <Footer />
-      </ThemeProvider>
-    </UserProvider>
-  )
+	return (
+		<UserProvider>
+			<ThemeProvider theme={theme}>
+				<TopBar />
+				<Script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
+				<Component {...pageProps} />
+				<Footer />
+			</ThemeProvider>
+		</UserProvider>
+	)
 }
 
 export default MyApp

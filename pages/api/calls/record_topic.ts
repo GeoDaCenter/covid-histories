@@ -9,7 +9,6 @@ export default function handler(
 ) {
   if (req.method === "POST") {
     const topicId= parseInt(req.query.topicId as string);
-    const section = prompts[topicId];
 
       const twiml = new VoiceResponse();
 

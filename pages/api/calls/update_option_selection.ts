@@ -5,8 +5,8 @@ import {sayOrPlay} from "./_utils";
 const VoiceResponse = twilio.twiml.VoiceResponse;
 
 export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<string>
+	req: NextApiRequest,
+	res: NextApiResponse<string>
 ) {
   if (req.method === 'POST') {
     const twiml = new VoiceResponse();

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import twilio from 'twilio'
-import { prompts } from './_prompts'
+import { prompts} from './_prompts'
 
 import {
 	getUserRecord,
