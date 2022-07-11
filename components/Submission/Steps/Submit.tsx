@@ -191,6 +191,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 					title,
 					county,
 					consent,
+					optInResearch,
 					storyId,
 					storyType,
 					theme,
