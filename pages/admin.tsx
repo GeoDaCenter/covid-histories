@@ -19,6 +19,9 @@ function TabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props
 	const { submissions, error, mutate } = useSubmissions(props.variant)
 
+	if (submissions?.error){
+		return <h1>{submissions.error}</h1>
+	}
 	return (
 		<NsfwProvider>
 			<div
