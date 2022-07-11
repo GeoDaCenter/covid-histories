@@ -14,14 +14,14 @@ type Prompt = {
 export const Prompts: Record<string, Record<Language, Prompt>> = {
 	Welcome: {
 		en: {
-			text: 'Welcome to the Covid Atlas Histories project. We are collecting oral histories about peoples experience of the pandemic.',
+			text: 'Welcome to Atlas Stories, a project of the US Covid Atlas, from the Healthy Regions & Policies Lab and University of Chicago. The US Covid Atlas is a non-profit research project that works to understand, archive, and represent the often unequal impact of the pandemic across the United States. With Atlas Stories, we are collecting oral histories about peoples experiences during the pandemic, to breathe life into the data and statistics of COVID-19. To learn more, visit stories dot us covid atlas dot org. ',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
 	},
 	ZipCodePrompt: {
 		en: {
-			text: 'We would like to place your stories in context on a map. To do so we need your zip code. Type it on your phone keypad now',
+			text: ' Thanks for your interest in sharing your story. We would like to place your story in context on a map of the United States. To do so we need your zip code. Type in your 5-digit zip code on your phone keypad now',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -32,7 +32,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	InvalidZip: {
 		en: {
-			text: 'I am sorry, that zip code was invalid. Please enter another',
+			text: 'Im sorry, that zip code was invalid. Please enter another',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -45,7 +45,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	ReviewPrevious: {
 		en: {
-			text: `It looks like you have already contributed to the project. You can  stories for the following categories `,
+			text: `It looks like you have already contributed to the Atlas Stories project. You can submit more stories for the following categories `,
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -57,7 +57,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 
 	ZipSuccess: {
-		en: { text: 'Thanks for tell us your zip code', audioUrl: null },
+		en: { text: 'Thanks for telling us your zip code', audioUrl: null },
 		es: { text: '', audioUrl: null }
 	},
 
@@ -71,7 +71,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	ZipOrTopicOptions: {
 		en: {
-			text: 'To change your zipcode press 1, to record a new story of update an exising one press 2',
+			text: 'To change your zipcode, press 1. To record a new story or update an exising story, press 2',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -79,7 +79,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	RecordingPrelude: {
 		en: {
-			text: 'Simply tell us your story and then once your done, press the hash key',
+			text: 'Simply tell us your story, and then, once youre finished, press the hash or pound key',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -94,7 +94,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	TopicActions: {
 		en: {
-			text: 'To listen to your story, press 1, to re-record your story press 2, to delete your story press 3 and to record another story about a different topic, press 4',
+			text: 'To listen to your story, press 1.  To re-record your story, press 2. To delete your story, press 3. To record another story about a different topic, press 4',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -102,7 +102,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	RecodingOptionsText: {
 		en: {
-			text: 'To listen to your story press 1, to re-record your story press 2, to delete your story press 3 and to select another topic, press 4',
+			text: 'To listen to your story, press 1. To re-record your story, press 2. To delete your story, press 3. To record another story about a different topic, press 4',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -110,21 +110,21 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 
 	PermissionsText: {
 		en: {
-			text: 'Portions of this call will be recorded to provide content for the atlas website. We need your permission to be able to post your stories. To agree to our terms of service press 0, to have a link to the terms of service texted to your phone, press 1, to hear the terms of service read out, press 2',
+			text: 'Portions of this call will be recorded to share your story on the US Covid Atlas website at us covid atlas dot org. We need your permission to share your story. To agree to our Terms of Service, please press 0. To have a link to the Terms of Service texted to your phone, press 1. To hear the Terms of Service read outloud, press 2',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
 	},
 	TopicSelectPrompt: {
 		en: {
-			text: 'For a story about your community, press one, about your family press two, for your self press three and for your work pres four',
+			text: 'To share a story about Your Community, please press 1. To share a story about Your Family, press 2. For a story about Your Self or your own experience, press 3. For a story about Your Work or School, press 4',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
 	},
 	ZipCodeNoReply: {
 		en: {
-			text: "I didn't get a zip code there. Try typing again",
+			text: "I didn't get a zip code there. Try typing it in again",
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -141,7 +141,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	CallThanksAndNext: {
 		en: {
-			text: 'Thanks for your story, what would you like to do next?',
+			text: 'Thanks for submitting your story. What would you like to do next?',
 			audioUrl: null
 		},
 		es: {
@@ -151,7 +151,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	TOSAgreement: {
 		en: {
-			text: `Thanks for agreeing to our terms of service`,
+			text: `Thanks for agreeing to our Terms of Service`,
 			audioUrl: null
 		},
 		es: {
@@ -161,7 +161,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	TOSLinkSent: {
 		en: {
-			text: 'Thanks! Look for a link sent to your phone. Read the terms of conditions and call back if you would like to agree to them',
+			text: 'Thanks! Look for a link sent to your phone. Read the Terms of Service and call back if you would like to agree to them. You can hang up now to reaad the Terms of Service.',
 			audioUrl: null
 		},
 		es: {
@@ -181,7 +181,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	CountyNotFound: {
 		en: {
-			text: 'We could not find a county that mapped your zip code',
+			text: 'We could not find a county that mapped to your zip code',
 			audioUrl: null
 		},
 		es: {
@@ -191,7 +191,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	WhatCountyAreYouPartOf: {
 		en: {
-			text: 'What county are you part of?',
+			text: 'What county do you live in?',
 			audioUrl: null
 		},
 		es: {
@@ -201,7 +201,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	PressOneFor: {
 		en: {
-			text: 'Press one for ',
+			text: 'Press 1 for ',
 			audioUrl: null
 		},
 		es: {
@@ -211,7 +211,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	PressTwoFor: {
 		en: {
-			text: 'Press two for ',
+			text: 'Press 2 for ',
 			audioUrl: null
 		},
 		es: {
@@ -221,7 +221,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	PressThreeFor: {
 		en: {
-			text: 'Press three for ',
+			text: 'Press 3 for ',
 			audioUrl: null
 		},
 		es: {
@@ -231,7 +231,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	PressFourFor: {
 		en: {
-			text: 'Press four for ',
+			text: 'Press 4 for ',
 			audioUrl: null
 		},
 		es: {
@@ -241,7 +241,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	PressFiveFor: {
 		en: {
-			text: 'Press five for ',
+			text: 'Press 5 for ',
 			audioUrl: null
 		},
 		es: {
@@ -251,7 +251,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	TOSSMS: {
 		en: {
-			text: 'You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license',
+			text: 'You can find the Terms of Service for the US Covid Atlas Stories project at this link: https://stories.uscovidatlas.org/license',
 			audioUrl: null
 		},
 		es: {
@@ -262,7 +262,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 }
 
 export const PromptLanguage: Prompt = {
-	text: 'To continue in english press 1, para continuar en español presione 2',
+	text: 'To continue in English, press 1. Para continuar en español, presione 2',
 	audioUrl: null
 }
 
@@ -270,7 +270,7 @@ export const prompts = [
 	{
 		name: 'Your Community',
 		categories: [
-			'How has your community been impacted by the pandemic? Some examples of your community may be your neighborhood, city, school, religious community, sports teams, or others.',
+			'How has your community been impacted by the pandemic? Some examples of your community may be your neighborhood, city, school, faith community, sports teams, or others.',
 			'What are some things you didn’t know about your community until the pandemic? Was anything revealed during this time?',
 			'How have you stayed connected to your community during the pandemic?'
 		]
@@ -295,7 +295,7 @@ export const prompts = [
 ]
 
 export const Welcome =
-	'Welcome to the Covid Atlas Histories project. We are collecting oral histories about peoples experince of the pandemic.'
+	'Welcome to Atlas Stories, a project of the US Covid Atlas. We are collecting oral histories about peoples experince of the pandemic.'
 
 export const ZipCodePrompt =
 	'We would like to place your stories in context on a map. To do so we need your zip code. Type it on your phone keypad now'
