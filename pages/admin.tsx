@@ -1,17 +1,13 @@
-import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0'
-import type { NextPage, GetServerSideProps } from 'next'
-import Link from 'next/link'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import type { NextPage } from 'next'
 import { useSubmissions } from '../hooks/useSubmissions'
 import styles from '../styles/Home.module.css'
-import { getAccessToken, useUser } from '@auth0/nextjs-auth0'
 import { SubmissionReviewerCard } from '../components/Submission/SumbmissionReviewerCard'
 import { Box, Grid, Tab, Tabs, Typography } from '@mui/material'
-import { HomeSection } from '../components/HomeSection'
 import { useState } from 'react'
-import error from 'next/error'
 import { TagFilter } from './api/files/utils'
-import { SubmissionsReviewModal } from '../components/Submission/SubmissionReviewModal'
 import { NsfwProvider } from '../stores/nsfw'
+import { SEO } from '../components/Interface/SEO'
 interface TabPanelProps {
 	children?: React.ReactNode
 	index: number
@@ -22,10 +18,6 @@ interface TabPanelProps {
 function TabPanel(props: TabPanelProps) {
 	const { children, value, index, ...other } = props
 	const { submissions, error, mutate } = useSubmissions(props.variant)
-	const [focusedSubmission, setFocusedSubmission] = useState<string | null>(
-		null
-	)
-	console.log(submissions)
 
 	return (
 		<NsfwProvider>
@@ -36,12 +28,6 @@ function TabPanel(props: TabPanelProps) {
 				aria-labelledby={`simple-tab-${index}`}
 				{...other}
 			>
-				<SubmissionsReviewModal
-					fileId={focusedSubmission}
-					isOpen={focusedSubmission !== null}
-					onClose={() => setFocusedSubmission(null)}
-					onNext={() => console.log('Next')}
-				/>
 				{submissions === undefined && (
 					<Box
 						sx={{
@@ -72,11 +58,11 @@ function TabPanel(props: TabPanelProps) {
 							<Grid container spacing={2}>
 								{submissions.map((submission: Record<string, any>) => (
 									<SubmissionReviewerCard
-										onFocus={(fileId) => setFocusedSubmission(fileId)}
 										fileId={submission.fileId}
 										key={submission.fileId}
 										state={props.variant}
-										onStateChange={() => mutate()}
+										adminTags={submission.adminTags}
+										// onStateChange={() => mutate()}
 									/>
 								))}
 							</Grid>
@@ -92,7 +78,8 @@ const Admin: NextPage<{ accessToken: string }> = ({ accessToken }) => {
 	const [selectedTab, setSelectedTab] = useState(0)
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} style={{padding:'1em'}}>
+			<SEO title="Admin" />
 			<h1>Admin</h1>
 			<Box>
 				<Tabs

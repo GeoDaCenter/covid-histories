@@ -12,16 +12,20 @@ import {
 	Switch,
 	FormGroup,
 	FormControlLabel,
-	Grid
+	Grid,
+	TextField,
+	Popper
 } from '@mui/material'
 import { TagFilter } from '../../pages/api/files/utils'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useNsfw } from '../../stores/nsfw'
-import * as nsfwjs from 'nsfwjs'
+import { SubmissionsReviewModal } from './SubmissionReviewModal'
 
 const BlurWrapper = styled.div<{ shouldBlur: boolean }>`
 	filter: ${({ shouldBlur }) => (shouldBlur ? 'blur(10px)' : 'none')};
+	height: 300px;
+	overflow-y :auto;
 `
 const PreviewImg = styled.img`
 	position: fixed;
@@ -33,8 +37,9 @@ const PreviewImg = styled.img`
 interface SubmissionReviewerCardProps {
 	fileId: string
 	state: TagFilter
-	onFocus: (fileId: string) => void
-	onStateChange: () => void
+	adminTags: Array<{ Key: string, Value: string }>
+	// onFocus: (fileId: string) => void
+	// onStateChange: () => void
 }
 
 const detectNegativeImgContent = (
@@ -47,7 +52,7 @@ const detectNegativeImgContent = (
 		.flat()
 	const negativeConfidence = negativeFrames.length
 		? negativeFrames.reduce((acc, curr) => acc + curr.probability, 0) /
-		  negativeFrames.length
+		negativeFrames.length
 		: 0
 	return {
 		status: `${negativeFrames.length}/${prediction.length} detected.`,
@@ -65,7 +70,7 @@ const detectNegativeGifContent = (
 		.flat()
 	const negativeConfidence = negativeFrames.length
 		? negativeFrames.reduce((acc, curr) => acc + curr.probability, 0) /
-		  negativeFrames.length
+		negativeFrames.length
 		: 0
 
 	return {
@@ -80,10 +85,12 @@ const sleep = async (ms: number) => {
 export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	fileId,
 	state,
-	onFocus,
-	onStateChange
+	adminTags
+	// onFocus,
+	// onStateChange
 }) => {
 	const [hasInteracted, setHasInteracted] = useState(false)
+	const [modalOpen, setModalOpen] = useState(false)
 	const { file, error, updateState: _updateState } = useFile(fileId)
 
 	// @ts-ignore
@@ -121,6 +128,20 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	// @ts-ignore
 	const { nsfw, nsfwReady } = useNsfw()
 
+	// note
+	const [note, setNote] = useState<string>('')
+	const [deletePopperOpen, setDeletePopperOpen] = useState<boolean>(false)
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+		setAnchorEl(anchorEl ? null : event.currentTarget);
+		setDeletePopperOpen(true)
+	  };
+
+	const handleAction = (action: 'approve' | 'reject' | 'delete' | 'unreview' | 'delete') => updateState(fileId, action, note)
+	const handleNote = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNote(event.target.value);
+	};
+
 	useEffect(() => {
 		if (!nsfwReady || !file?.storyType || nsfwStatus.status !== '') {
 			// do nothing
@@ -149,11 +170,6 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 		}
 	}, [gifUrl, file?.storyType, nsfwReady])
 
-	const submitStateChange = (state: 'approve' | 'reject' | 'delete') => {
-		updateState(fileId, state, '')
-		onStateChange()
-	}
-
 	if (hasInteracted) return null
 
 	return (
@@ -161,11 +177,10 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 			{file && (
 				<Card sx={{ width: '100%' }}>
 					<CardContent>
-						<CardActionArea onClick={() => onFocus(fileId)}>
+						<CardActionArea onClick={() => setModalOpen(true)}>
 							<Typography variant="h6" gutterBottom>
 								{file.storyId}
 							</Typography>
-							<hr />
 						</CardActionArea>
 						{['video', 'photo'].includes(file?.storyType) && (
 							<Grid
@@ -215,32 +230,69 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 						<Typography sx={{ fontSize: 14 }} gutterBottom>
 							submitted : {file.date}
 						</Typography>
-						<Typography sx={{ fontSize: 14 }} gutterBottom>
-							tags:{' '}
-							{!!file?.tags &&
-								file.tags.map((tag: string) => <Chip label={tag} key={tag} />)}
-						</Typography>
+						{!!file?.tags && !!file.tags.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
+							User Tags:{' '}
+							{file.tags.map((tag: string) => <Chip label={tag} key={tag} />)}
+						</Typography>}
+						{!!adminTags?.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
+							Admin Tags:{' '}
+							<ul>
+								{adminTags.map((tag) => <li>{tag.Key}: {tag.Value}</li>)}
+							</ul>
+						</Typography>}
 					</CardContent>
+					<TextField sx={{ mx: 2 }} label="reason" maxRows={3} multiline value={note} onChange={handleNote} />
 					<CardActions>
 						<Button
 							size="small"
-							variant={state === 'approved' ? 'contained' : 'text'}
 							color="success"
-							onClick={() => updateState(fileId, 'approve', '')}
+							onClick={() => handleAction('approve')}
 						>
 							Approve
 						</Button>
 						<Button
 							size="small"
-							variant={state === 'rejected' ? 'contained' : 'text'}
 							color="error"
-							onClick={() => updateState(fileId, 'reject', '')}
+							onClick={() => handleAction('reject')}
 						>
 							Reject
 						</Button>
+						<Button
+							size="small"
+							color="info"
+							onClick={() => handleAction('unreview')}
+						>
+							Return to review pool
+						</Button>
+						<Button
+							size="small"
+							color="error"
+							onClick={handleClick}
+						>
+							Immediately delete
+						</Button>
+						<Popper open={deletePopperOpen}  anchorEl={anchorEl}>
+							<Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+								Deleting this content will immediately remove it from the server.
+								<br/>
+								<Button
+									size="small"
+									color="error"
+									onClick={() => handleAction('delete')}
+								>
+									Yes, permanently delete.
+								</Button>
+							</Box>
+						</Popper>
 					</CardActions>
 				</Card>
 			)}
+			<SubmissionsReviewModal
+				isOpen={modalOpen}
+				onClose={() => setModalOpen(false)}
+				updateState={updateState}
+				file={file}
+			/>
 		</Grid>
 	)
 }

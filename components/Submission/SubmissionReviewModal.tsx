@@ -7,6 +7,7 @@ import {
 	TextField,
 	Typography
 } from '@mui/material'
+import { useState } from 'react'
 import { useFile } from '../../hooks/useFile'
 import { StoryPreview } from './StoryPreview'
 
@@ -27,23 +28,32 @@ const style = {
 }
 
 interface SubmissionsReviewModalProps {
-	fileId: string | null
+	// fileId: string | null
 	isOpen: boolean
 	onClose: () => void
-	onNext: () => void
+	// onNext: () => void
+	file: any
+	updateState: (fileId: string,
+		state: 'approve' | 'reject' | 'delete' | 'unreview',
+		note: string | null) => void
 }
 
 export const SubmissionsReviewModal: React.FC<SubmissionsReviewModalProps> = ({
-	fileId,
+	file,
 	isOpen,
 	onClose,
-	onNext
+	updateState
 }) => {
-	const { file, error } = useFile(fileId)
+	const [note, setNote] = useState<string>('')
+
+	const handleAction = (action: 'approve' | 'reject' | 'delete' | 'unreview') => updateState(file.storyId, action, note)
+	const handleNote = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setNote(event.target.value);
+	};
 
 	return (
 		<Modal onClose={onClose} open={isOpen}>
-			{fileId && file && (
+			{(file && file?.content[0]) && (
 				<Box sx={style}>
 					<Typography sx={{ fontSize: 14 }} gutterBottom>
 						{file.storyId}
@@ -62,26 +72,26 @@ export const SubmissionsReviewModal: React.FC<SubmissionsReviewModalProps> = ({
 							<Chip label={tag} key={tag} />
 						))}
 					</Typography>
-					<TextField label="reasion" maxRows={3} multiline />
+					<TextField label="reason" maxRows={3} multiline value={note} onChange={handleNote} />
 					<Box>
-						<Button size="small" color="success">
+						<Button size="small" color="success" onClick={() => handleAction('approve')}>
 							Approve
 						</Button>
-						<Button size="small" color="error">
+						<Button size="small" color="error" onClick={() => handleAction('reject')}>
 							Reject
 						</Button>
-						<Button size="small" color="info">
+						<Button size="small" color="info" onClick={() => handleAction('unreview')}>
 							Return to review pool
 						</Button>
 					</Box>
-					<Box>
+					{/* <Box>
 						<Button color="primary" variant="contained" size="small">
 							Update
 						</Button>
 						<Button color="secondary" variant="contained" size="small">
 							Skip
 						</Button>
-					</Box>
+					</Box> */}
 				</Box>
 			)}
 		</Modal>

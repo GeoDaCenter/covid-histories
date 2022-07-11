@@ -177,16 +177,29 @@ export const getTaggedFileList = async (
 			)
 		))
 	const filterPredicate = TAG_FILTER_PREDICATES[tagFilter]
-	const filteredEntries = entriesToReview?.filter((_, i) => {
-		const tags = entryTagging?.[i]
+	
+	if (entryTagging === undefined || entriesToReview === undefined){
+		return []
+	}
+	
+	const mappedEntries = entriesToReview.map((entry, i) => {
+		const tags = entryTagging[i]
 		// if no tags, then its not reviewed
 		// presigned urls appear to lose the capacity to add tags on upload :/
-		return (
+		if (
 			(tagFilter === 'unreviewed' && tags && !tags.length) ||
 			(tags && tags.some(filterPredicate))
-		)
+		) {
+			return {
+				...entry,
+				adminTags: tags
+			}
+		} else {
+			return false
+		}
 	})
-
+	
+	const filteredEntries = mappedEntries?.filter((f) => !!f) as UploadInfo[]
 	return filteredEntries
 }
 

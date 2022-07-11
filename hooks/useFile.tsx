@@ -17,7 +17,7 @@ export const useFile = (fileId: string | null, folder?: string | null) => {
 	)
 	const updateState = async (
 		fileId: string,
-		state: 'approve' | 'reject' | 'delete',
+		state: 'approve' | 'reject' | 'delete' | 'unreview' | 'delete',
 		note: string | null
 	) => {
 		const r = await fetch(
