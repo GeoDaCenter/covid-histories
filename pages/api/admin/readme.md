@@ -70,12 +70,12 @@ _Example_
 ## review
 
 _Purpose_
-Tags files for a given fileId (metadata, media files) based on an admin review. Approved files will be tagged with `approved: true`, `reviewed: true`, and `reviewed_by: user`. rejected the same, but `approved: false`, and deleted entries will be immediately deleted.
+Tags files for a given fileId (metadata, media files) based on an admin review. Approved files will be tagged with `status: approved`, and `reviewed_by: user`. rejected the same, but `status: rejected`, and deleted entries will be immediately deleted. Unreviewing retuns a file to the pool of unreviewed submissions.
 
 _Query Parameters_
 - fileId: string
  > Specifies the files to act on
-- action: 'approve' | 'reject' | 'delete'
+- action: 'approve' | 'reject' | 'delete' | 'unreview'
  > The action to take on a given file
 - note: string
  > A note to attach to the review

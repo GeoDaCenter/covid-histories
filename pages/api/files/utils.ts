@@ -49,10 +49,10 @@ const submissionTypeMap: {
 
 const URL_EXPIRATION_SECONDS = 60 * 5
 const TAG_FILTER_PREDICATES = {
-	'unreviewed': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'reviewed' && t.Value === 'false',
-	'needs_confirmation': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'needs_review',
-	'rejected': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'false',
-	'approved': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'approved' && t.Value === 'true',
+	'unreviewed': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'status' && t.Value === 'unreviewed',
+	'needs_confirmation': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'status' && t.Value === 'needs_review',
+	'rejected': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'status' && t.Value === 'rejected',
+	'approved': (t: Tag, _index: number, _array: Tag[]) => t.Key === 'status' && t.Value === 'approved',
 	'all': () => true
 }
 

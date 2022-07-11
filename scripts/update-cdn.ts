@@ -99,16 +99,16 @@ async function main() {
 		const publicFile = publicContents.find(
 			({ id: publicId }) => publicId === id
 		)
-		const approvalStatus = TagSet?.find((f) => f.Key === 'approved')?.Value
+		const approvalStatus = TagSet?.find((f) => f.Key === 'status')?.Value
 
-		if (approvalStatus === 'true')
+		if (approvalStatus === 'approved')
 			publicFiles.push({ id: id!, Key: Key!, fileType: fileType! })
 
-		if (approvalStatus === 'true' && publicFile !== undefined) {
+		if (approvalStatus === 'approved' && publicFile !== undefined) {
 			continue
-		} else if (approvalStatus === 'true' && publicFile === undefined) {
+		} else if (approvalStatus === 'approved' && publicFile === undefined) {
 			const _response = await copyObject(Key!, `public/${id}.${fileType}`)
-		} else if (approvalStatus === 'false' && publicFile !== undefined) {
+		} else if (approvalStatus !== 'approved' && publicFile !== undefined) {
 			const _response = await deleteObject(publicFile.Key!)
 		}
 	}
