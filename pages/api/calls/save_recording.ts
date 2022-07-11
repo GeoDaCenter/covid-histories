@@ -3,8 +3,8 @@ import twilio from 'twilio'
 import { prompts} from './_prompts'
 
 import {
-	createOrUpdateUserRecord,
-	getUserRecord
+	getUserRecord,
+  saveCallStory
 } from './_s3_utils'
 import { UserCallRecord } from './_types'
 import {sayOrPlay} from './_utils'
@@ -15,34 +15,22 @@ export default function handler(
 	res: NextApiResponse<string>
 ) {
 	if (req.method === 'POST') {
-		const topic_id = parseInt(req.query.topic_id as string)
-		const topic = prompts[topic_id]
-		const twiml = new VoiceResponse()
+    const twiml = new VoiceResponse();
+		const topicId = parseInt(req.query.topicId as string)
+		const topic = prompts[topicId]
 
 		getUserRecord(req.body.From).then((user) => {
 			if (req.body.RecordingUrl && user) {
-				const newUser: UserCallRecord = {
-					...user,
-					responses: [
-						...user.responses,
-						{
-							topic: topic.name,
-							responseAudioUrl: req.body.RecordingUrl,
-							duration: req.body.RecordingDuration,
-							createdAt: new Date()
-						}
-					]
-				}
-
-				createOrUpdateUserRecord(req.body.From, newUser).then(() => {
-          sayOrPlay(twiml, "CallThanksAndNext", user.language)
-          twiml.redirect(`/api/calls/topic_options?topic_id=${topic_id}`)
-				})
+        console.log("Recording url is ", req.body.RecordingUrl)
+        saveCallStory(req.body.From, topic.name, req.body.RecordingUrl).then(()=>{
         
+        twiml.say("Thanks for your recording")
+        twiml.redirect(`/api/calls/prompt_topic_options?topicId=${topicId}`)
+        res.setHeader("content-type", "text/xml");
+        res.send(twiml.toString());
+        })
 			}
-
-			res.setHeader('content-type', 'text/xml')
-			res.send(twiml.toString())
 		})
 	}
+
 }

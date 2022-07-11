@@ -3,7 +3,7 @@ import twilio from 'twilio'
 import {
 	Prompts,
 } from './_prompts'
-import { getOrCreateUserRecord } from './_s3_utils'
+import { createOrUpdateUserRecord, getUserRecord} from './_s3_utils'
 import { zip_to_counties } from '../../../utils/zip_to_counties'
 import { sayOrPlay, VoiceForLanguage } from './_utils'
 
@@ -15,7 +15,7 @@ export default function handler(
 ) {
 	if (req.method === 'POST') {
 		const twiml = new VoiceResponse()
-		getOrCreateUserRecord(req.body.From).then((user) => {
+		getUserRecord(req.body.From).then((user) => {
 			const zip = req.body.Digits
 			const potential_counties = zip_to_counties(zip)
 
@@ -28,11 +28,12 @@ export default function handler(
 
 			if (potential_counties.length === 0) {
 				sayOrPlay(twiml, 'CountyNotFound', user.language)
+        createOrUpdateUserRecord(req.body.From, user,{county:potential_counties[0].CountyName})
 				twiml.redirect('/api/calls/prompt_zipcode')
 			}
 
-			if (potential_counties.length > 0) {
-				sayOrPlay(twiml, 'WhatCountryAreYouPartOf', user.language)
+			if (potential_counties.length > 1) {
+				sayOrPlay(twiml, 'WhatCountyAreYouPartOf', user.language)
 
         //TODO add readout for this
 				const prompt = potential_counties
@@ -44,6 +45,7 @@ export default function handler(
 							'PressFourFor',
 							'PressFiveFor'
 						]
+            //@ts-ignore
 						const prefix = Prompts[prefixKey[index]][user.language].text
 
 						return `${prefix} ${county.CountyName}`
@@ -56,6 +58,7 @@ export default function handler(
 						action: `/api/calls/selected_county?zip=${zip}`,
 						bargeIn: true
 					})
+          //@ts-ignore
 					.say(VoiceForLanguage[user.language], prompt)
 			}
 

@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
 import { getFileList } from './utils'
 import hash from 'object-hash'
-import { FileListReturn } from './types'
 import { getPresignedUrl } from './utils'
 import { ListObjectsCommandOutput } from '@aws-sdk/client-s3'
 

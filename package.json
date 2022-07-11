@@ -39,7 +39,7 @@
     "next": "12.1.5",
     "next-auth": "^3.29.3",
     "next-transpile-modules": "^9.0.0",
-    "node-fetch": "2.6.7",
+    "node-fetch": "^3.2.6",
     "nsfwjs": "^2.4.1",
     "object-hash": "^3.0.0",
     "react": "18.0.0",

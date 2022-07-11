@@ -1,10 +1,8 @@
 //  Next + auth
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
-import { nanoid } from '@reduxjs/toolkit'
 import hash from 'object-hash'
 // AWS
-import {s3,config} from '../files/_s3'
 import { uploadMeta } from '../files/utils'
 
 export default withApiAuthRequired(async function handler(

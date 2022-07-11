@@ -1,9 +1,8 @@
 //  Next + auth
 import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
-import { getFileList, getSubmissionCounts } from './utils'
+import { getSubmissionCounts } from './utils'
 import hash from 'object-hash'
-import { FileListReturn } from './types'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,

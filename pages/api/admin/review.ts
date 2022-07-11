@@ -3,17 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
 import { setObjectTagging, getFileList, deleteObject, getObjectTags } from '../files/utils'
 // AWS
-import { ListObjectsCommandOutput, S3Client } from '@aws-sdk/client-s3'
-
-const S3_BUCKET = process.env.APP_AWS_BUCKET || ''
-const REGION = process.env.APP_AWS_REGION || ''
-const s3 = new S3Client({
-	region: REGION,
-	credentials: {
-		accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID!,
-		secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!
-	}
-})
+import { ListObjectsCommandOutput } from '@aws-sdk/client-s3'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
@@ -37,8 +27,7 @@ export default withApiAuthRequired(async function handler(
             switch(action){
                 case 'approve':
                     const approveTags = [
-                        {Key: 'approved', Value: 'true'},
-                        {Key: 'reviewed', Value: 'true'},
+                        {Key: 'status', Value: 'approved'},
                         {Key: 'reviewed_by', Value: user.name},
                     ]
                     const approveResponse = await Promise.all(
@@ -59,11 +48,12 @@ export default withApiAuthRequired(async function handler(
                     const hasBeenRejected = entryTags.some(tags => tags && tags.some(tag => tag.Key === 'approved' && tag.Value === 'needs_review'))
                     if (hasBeenRejected){
                         const previousTags = entryTags[0]||[]
-                        const firstReviewer = previousTags.find(tag => tag.Key === 'reviewed_by')?.Value
+                        const firstReviewer = previousTags.find(tag => tag.Key === 'reviewed_by')?.Value || ''
+                        const firstNote = previousTags.find(tag => tag.Key === 'note')?.Value || ''
                         const rejectTags =  [
-                            {Key: 'approved', Value: 'false'},
-                            {Key: 'reviewed', Value: 'true'},
+                            {Key: 'status', Value: 'rejected'},
                             {Key: 'reviewed_by', Value: firstReviewer},
+                            {Key: 'note', Value: firstNote},
                             {Key: 'confirmed_by', Value: user.name},
                             {Key: 'confirm_note', Value: note}
                         ]
@@ -82,8 +72,7 @@ export default withApiAuthRequired(async function handler(
                         )
                     } else {
                         const rejectTags =  [
-                            {Key: 'approved', Value: 'needs_review'},
-                            {Key: 'reviewed', Value: 'true'},
+                            {Key: 'status', Value: 'needs_review'},
                             {Key: 'reviewed_by', Value: user.name},
                             {Key: 'note', Value: note}
                         ]
@@ -111,6 +100,26 @@ export default withApiAuthRequired(async function handler(
                     res.status(200).json(
                         JSON.stringify({
                             files: deleteResponse
+                        })
+                    )
+                    break
+                case 'unreview': 
+                    const unreviewTags =  [
+                        {Key: 'status', Value: 'unreviewed'},
+                        {Key: 'reviewed_by', Value: user.name},
+                        {Key: 'note', Value: note}
+                    ]
+                    const unreviewResponse = await Promise.all(
+                        files.map(file => 
+                            setObjectTagging(
+                                file, 
+                                unreviewTags
+                            )
+                        )
+                    )
+                    res.status(200).json(
+                        JSON.stringify({
+                            files: unreviewResponse
                         })
                     )
                     break

@@ -4,8 +4,6 @@ import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0'
 import { getPresignedUrl, getSubmissionCounts, uploadMeta } from './utils'
 import { QueryParams, SubmissionType } from './types'
 import hash from 'object-hash'
-// AWS
-import { s3, config } from '../files/_s3'
 
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
