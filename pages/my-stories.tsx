@@ -12,7 +12,7 @@ import CountyPreview from '../components/Submission/SubmissionUtil/CountyPreview
 import { SubmissionTypes } from '../stores/submission/submissionSlice'
 import { SEO } from '../components/Interface/SEO';
 
-interface StoryProps {
+export interface StoryProps {
 	title: string
 	county: {
 		label: string

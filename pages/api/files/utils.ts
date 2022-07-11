@@ -214,12 +214,18 @@ interface PresignedUrlParams {
 	ContentType?: string
 }
 
+interface PresignedUrlResponse {
+	url: string;
+	fileName: string;
+	ContentType: string | null;
+}
+
 export async function getPresignedUrl({
 	Key,
 	ContentType='',
 	prePath='',
 	operation
-}: PresignedUrlParams) {
+}: PresignedUrlParams): Promise<PresignedUrlResponse> {
 	if (operation === 'putObject') {
 		const ext: string = fileExtensionMap[ContentType]
 		const fileName: string = `${Key || nanoid()}${ext}`
@@ -254,9 +260,14 @@ export async function getPresignedUrl({
 			ContentType: null
 		}
 	} else {
-		return {}
+		return {
+			url: '',
+			fileName: '',
+			ContentType: null
+		}
 	}
 }
+
 export async function upload(
 	s3: any,
 	key: string,
