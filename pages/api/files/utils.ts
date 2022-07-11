@@ -23,12 +23,14 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import 'dotenv/config'
 
 export const getFileList = async (
-	Prefix: string
+	Prefix: string,
+	Delimiter?: string,
 ): Promise<ListObjectsCommandOutput | undefined> => {
 	try {
 		const command = new ListObjectsCommand({
 			Bucket: config.S3_BUCKET,
-			Prefix
+			Prefix,
+			Delimiter: Delimiter ? Delimiter : undefined,
 		})
 		const objects = await s3.send(command)
 		return objects
@@ -219,6 +221,43 @@ export async function listFiles(userId: string) {
 		f.Key?.includes('_meta.json')
 	).length
 	return { numberOfSubmissions, fileNames }
+}
+
+export async function listUsers(): Promise<string[]> {
+	const prefix = `uploads/`
+	const delimiter = '/'
+	const response: ListObjectsCommandOutput | undefined = await getFileList(
+		prefix,
+		delimiter
+	)	
+	
+	if (response === undefined){
+		return []
+	} 
+
+	const users = response?.CommonPrefixes?.map((p) => p?.Prefix?.split('/').slice(-2)[0])
+		.filter(f => !!f)
+	// @ts-ignore
+	return users
+}
+
+
+export async function listMeta(userId: string) {
+	const prefix = `uploads/${userId}`
+	const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(
+		prefix
+	)
+	
+	const fileNames = currentFiles
+		? currentFiles?.Contents?.map(({ Key, LastModified }) => ({
+				Key: Key && Key.split('/').slice(-1)[0],
+				LastModified
+		  }))
+		: []
+	const meta = fileNames?.filter((f) =>
+		f.Key?.includes('_meta.json')
+	)
+	return meta
 }
 
 export async function deleteStory(userId: string, storyId: string) {

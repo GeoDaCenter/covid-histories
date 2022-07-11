@@ -8,6 +8,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"update-cdn": "ts-node ./scripts/update-cdn.ts",
+		"crawl-surveys": "ts-node ./scripts/update-survey.ts",
 		"repair-av": "node --experimental-wasm-threads --experimental-wasm-bulk-memory -r ts-node/register ./scripts/repair-av.ts"
 	},
 	"dependencies": {
@@ -42,6 +43,7 @@
 		"node-fetch": "^3.2.6",
 		"nsfwjs": "^2.4.1",
 		"object-hash": "^3.0.0",
+		"papaparse": "^5.3.2",
 		"react": "18.0.0",
 		"react-audio-player": "^0.17.0",
 		"react-dom": "18.0.0",

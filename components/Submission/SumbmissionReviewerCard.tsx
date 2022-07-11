@@ -237,7 +237,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 						{!!adminTags?.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
 							Admin Tags:{' '}
 							<ul>
-								{adminTags.map((tag) => <li>{tag.Key}: {tag.Value}</li>)}
+								{adminTags.map((tag, i) => <li key={i}>{tag.Key}: {tag.Value}</li>)}
 							</ul>
 						</Typography>}
 					</CardContent>

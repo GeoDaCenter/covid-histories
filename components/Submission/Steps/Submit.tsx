@@ -36,6 +36,7 @@ import dynamic from 'next/dynamic'
 import { TagSelect } from '../SubmissionUtil/TagSelect'
 import Link from 'next/link'
 import { SubmissionUploadModal } from '../SubmissionUploadModal'
+import { useUser } from '@auth0/nextjs-auth0'
 
 const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 	ssr: false
@@ -82,6 +83,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 	const [additionalContent, setAdditionalContent] = useState<any | null>(null)
 	const [isUploading, setIsUploading] = useState<boolean>(false)
 	const canSubmit = consent && county?.label?.length
+	const {user} = useUser()
 
 	// load cached content
 	useEffect(() => {
@@ -196,7 +198,8 @@ export const Submit: React.FC<StepComponentProps> = ({
 					storyType,
 					theme,
 					tags,
-					date: new Date().toISOString()
+					date: new Date().toISOString(),
+					email: user?.email
 					// additionalTags
 				}
 				const metaBlob = str2blob(JSON.stringify(meta))
