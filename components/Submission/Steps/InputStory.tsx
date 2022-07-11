@@ -18,7 +18,7 @@ const inputComponentMap: { [key: string]: React.FC<StoryInputProps> } = {
 	// @ts-ignore
 	audio: AvSubmission,
 	// @ts-ignore
-	video:  AvSubmission,
+	video: AvSubmission,
 	photo: PhotoSubmission
 }
 

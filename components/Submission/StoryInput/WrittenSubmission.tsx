@@ -18,7 +18,7 @@ export const WrittenSubmission: React.FC<StoryInputProps> = ({
 	handleCacheStory,
 	storyId,
 	dbActive,
-	isAdditionalContent=false
+	isAdditionalContent = false
 }) => {
 	const [text, setText] = useState<Descendant[]>(initialValue)
 	const handleChange = (newText: Descendant[]) => {
@@ -29,16 +29,18 @@ export const WrittenSubmission: React.FC<StoryInputProps> = ({
 			typeof md === 'string' && handleCacheStory(md)
 		}
 	}
-	const getCachedEntry = isAdditionalContent 
+	const getCachedEntry = isAdditionalContent
 		? (entry: SubmissionDraft | undefined) => entry?.additionalContent
 		: (entry: SubmissionDraft | undefined) => entry?.content
 
-	return <WrittenSubmissionEditor 
-		storyId={storyId}
-		text={text}
-		setText={setText}
-		handleChange={handleChange}
-		getCachedEntry={getCachedEntry}
-		dbActive={dbActive}
-	/>
+	return (
+		<WrittenSubmissionEditor
+			storyId={storyId}
+			text={text}
+			setText={setText}
+			handleChange={handleChange}
+			getCachedEntry={getCachedEntry}
+			dbActive={dbActive}
+		/>
+	)
 }

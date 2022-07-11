@@ -15,18 +15,21 @@ export default withApiAuthRequired(async function handler(
 	if (user) {
 		const encrypted = hash(user.email)
 		const prefix = `uploads/${encrypted}`
-		const currentFiles: ListObjectsCommandOutput | undefined = await getFileList(prefix)
-		const fileNames = currentFiles?.Contents && currentFiles?.Contents.map(({ Key, LastModified }) => ({
-			Key: Key && Key.split('/').slice(-1)[0],
-			LastModified
-		}))
+		const currentFiles: ListObjectsCommandOutput | undefined =
+			await getFileList(prefix)
+		const fileNames =
+			currentFiles?.Contents &&
+			currentFiles?.Contents.map(({ Key, LastModified }) => ({
+				Key: Key && Key.split('/').slice(-1)[0],
+				LastModified
+			}))
 
 		const presignedGets = await Promise.all(
 			fileNames?.map(({ Key, LastModified }) =>
 				getPresignedUrl({
 					Key: Key as string,
 					operation: 'getObject',
-					prePath: `uploads/${encrypted}/`,
+					prePath: `uploads/${encrypted}/`
 				})
 			) || []
 		)

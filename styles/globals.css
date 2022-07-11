@@ -1,54 +1,59 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background:#0f0f0f;
-  color:rgb(216, 216, 216);
-  top:0 !important;
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+		Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	background: #0f0f0f;
+	color: rgb(216, 216, 216);
+	top: 0 !important;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+	color: inherit;
+	text-decoration: none;
 }
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, h6, .cursive {
-  font-family: 'Sriracha', cursive;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.cursive {
+	font-family: 'Sriracha', cursive;
 }
-
 
 /* MARKDOWN PAGES */
 .md-content {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding:2em;
+	max-width: 1600px;
+	margin: 0 auto;
+	padding: 2em;
 }
 
 .md-content a {
-  color: #00bcd4;
+	color: #00bcd4;
 }
 
 div.skiptranslate {
-  display: none;
+	display: none;
 }
 
 div.goog-te-gadget {
-  display: initial;
+	display: initial;
 }
 
 /* PAGE DISPLAY GLOBAL */
 .standard-page-width {
-  max-width:80vw;
+	max-width: 80vw;
 }
 
 @media (max-width: 768px) {
-  .standard-page-width {
-    max-width:100vw;
-  }
+	.standard-page-width {
+		max-width: 100vw;
+	}
 }

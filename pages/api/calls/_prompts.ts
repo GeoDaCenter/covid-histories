@@ -85,13 +85,13 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		es: { text: '', audioUrl: null }
 	},
 
-  DeletedStory:{
-    en:{
-      text:"We have deleted your story",
-      audioUrl:null,
-    },
-    es:{text:'', audioUrl:null}
-  },
+	DeletedStory: {
+		en: {
+			text: 'We have deleted your story',
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
 	TopicActions: {
 		en: {
 			text: 'To listen to your story, press 1, to re-record your story press 2, to delete your story press 3 and to record another story about a different topic, press 4',
@@ -115,155 +115,155 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		},
 		es: { text: '', audioUrl: null }
 	},
-  TopicSelectPrompt:{
-    en: {
-      text: "For a story about your community, press one, about your family press two, for your self press three and for your work pres four",
-      audioUrl:null
-    },
-    es:{text: '', audioUrl:null}
-  },
-  ZipCodeNoReply:{
-    en:{
-      text:"I didn't get a zip code there. Try typing again",
-      audioUrl:null
-    },
-    es:{text:'', audioUrl:null}
-  },
-  Thanks:{
-    en:{
-      text:"Thank you",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  CallThanksAndNext:{
-    en:{
-      text:"Thanks for your story, what would you like to do next?",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  TOSAgreement:{
-    en:{
-      text:`Thanks for agreeing to our terms of service`,
-      audioUrl:null
-    },
-    es:{
-      text:``,
-      audioUrl:null
-    }
-  },
-  TOSLinkSent:{
-    en:{
-      text:"Thanks! Look for a link sent to your phone. Read the terms of conditions and call back if you would like to agree to them",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  TOSReadOutPrelude:{
-    en:{
-      text:"You can stop playback and return to the menu at any time by pressing 0",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  CountyNotFound:{
-    en:{
-      text:"We could not find a county that mapped your zip code",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  WhatCountyAreYouPartOf:{
-    en:{
-      text:"What county are you part of?",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  },
-  PressOneFor:{
-    en:{
-      text:"Press one for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressTwoFor:{
-    en:{
-      text:"Press two for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressThreeFor:{
-    en:{
-      text:"Press three for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressFourFor:{
-    en:{
-      text:"Press four for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  PressFiveFor:{
-    en:{
-      text:"Press five for ",
-      audioUrl: null
-    },
-    es:{
-      text:"",
-      audioUrl: null
-    }
-  },
-  TOSSMS:{
-    en:{
-      text: "You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license",
-      audioUrl:null
-    },
-    es:{
-      text:"",
-      audioUrl:null
-    }
-  }
+	TopicSelectPrompt: {
+		en: {
+			text: 'For a story about your community, press one, about your family press two, for your self press three and for your work pres four',
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
+	ZipCodeNoReply: {
+		en: {
+			text: "I didn't get a zip code there. Try typing again",
+			audioUrl: null
+		},
+		es: { text: '', audioUrl: null }
+	},
+	Thanks: {
+		en: {
+			text: 'Thank you',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	CallThanksAndNext: {
+		en: {
+			text: 'Thanks for your story, what would you like to do next?',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSAgreement: {
+		en: {
+			text: `Thanks for agreeing to our terms of service`,
+			audioUrl: null
+		},
+		es: {
+			text: ``,
+			audioUrl: null
+		}
+	},
+	TOSLinkSent: {
+		en: {
+			text: 'Thanks! Look for a link sent to your phone. Read the terms of conditions and call back if you would like to agree to them',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSReadOutPrelude: {
+		en: {
+			text: 'You can stop playback and return to the menu at any time by pressing 0',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	CountyNotFound: {
+		en: {
+			text: 'We could not find a county that mapped your zip code',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	WhatCountyAreYouPartOf: {
+		en: {
+			text: 'What county are you part of?',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressOneFor: {
+		en: {
+			text: 'Press one for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressTwoFor: {
+		en: {
+			text: 'Press two for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressThreeFor: {
+		en: {
+			text: 'Press three for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressFourFor: {
+		en: {
+			text: 'Press four for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	PressFiveFor: {
+		en: {
+			text: 'Press five for ',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	},
+	TOSSMS: {
+		en: {
+			text: 'You can find the Terms of Service for the Covid Atlas Stories project at this link https://stories.uscovidatlas.org/license',
+			audioUrl: null
+		},
+		es: {
+			text: '',
+			audioUrl: null
+		}
+	}
 }
 
-export const PromptLanguage: Prompt= {
-		text: 'To continue in english press 1, para continuar en español presione 2',
-		audioUrl: null
+export const PromptLanguage: Prompt = {
+	text: 'To continue in english press 1, para continuar en español presione 2',
+	audioUrl: null
 }
 
 export const prompts = [
@@ -294,23 +294,28 @@ export const prompts = [
 	}
 ]
 
+export const Welcome =
+	'Welcome to the Covid Atlas Histories project. We are collecting oral histories about peoples experince of the pandemic.'
 
-export const Welcome="Welcome to the Covid Atlas Histories project. We are collecting oral histories about peoples experince of the pandemic."
+export const ZipCodePrompt =
+	'We would like to place your stories in context on a map. To do so we need your zip code. Type it on your phone keypad now'
+export const ZipCodeRecap = 'You previously told us your zip code was '
+export const InvalidZip =
+	'I am sorry, that zip code was invalid. Please enter another'
 
-export const ZipCodePrompt = "We would like to place your stories in context on a map. To do so we need your zip code. Type it on your phone keypad now"
-export const ZipCodeRecap = "You previously told us your zip code was "
-export const InvalidZip = "I am sorry, that zip code was invalid. Please enter another"
+export const ValidZip = 'Thanks for entering your zip code'
 
-export const ValidZip = "Thanks for entering your zip code"
-  
-export const ReviewPrevious= `It looks like you have already contributed to the project. You can  stories for the following categories `
+export const ReviewPrevious = `It looks like you have already contributed to the project. You can  stories for the following categories `
 
-export const PromptText = "To record a story "
-export const ZipSuccess = "Thanks for tell us your zip code"
-export const PreviousRecording = "It looks like you previously submitted a recording for this topic."
+export const PromptText = 'To record a story '
+export const ZipSuccess = 'Thanks for tell us your zip code'
+export const PreviousRecording =
+	'It looks like you previously submitted a recording for this topic.'
 
-export const ZipOrTopicOptions = "To change your zipcode press 1, to record a new story of update an exising one press 2"
-export const FirstRecording = "Simply tell us your story and then once your done, press the hash key"
+export const ZipOrTopicOptions =
+	'To change your zipcode press 1, to record a new story of update an exising one press 2'
+export const FirstRecording =
+	'Simply tell us your story and then once your done, press the hash key'
 
-export const TopicActions= "To listen to your story, press 1, to re-record your story press 2, to delete your story press 3 and to record another story about a different topic, press 4"
-
+export const TopicActions =
+	'To listen to your story, press 1, to re-record your story press 2, to delete your story press 3 and to record another story about a different topic, press 4'

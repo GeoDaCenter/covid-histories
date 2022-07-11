@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3'
-import { getFileList, getPresignedUrl,upload } from '../pages/api/files/utils'
+import { getFileList, getPresignedUrl, upload } from '../pages/api/files/utils'
 import 'dotenv/config'
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
 import { writeFileSync, readFileSync } from 'fs'
@@ -77,10 +77,17 @@ async function main() {
 		const doTranscode = async (filePath: string, isVideo: boolean) => {
 			ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(filePath))
 			await ffmpeg.run('-i', 'input.mp4', '-c', 'copy', 'output.mp4')
-			isVideo && await ffmpeg.run('-i', 'input.mp4', '-vf','scale=320:-1, fps=1', 'output.gif')
+			isVideo &&
+				(await ffmpeg.run(
+					'-i',
+					'input.mp4',
+					'-vf',
+					'scale=320:-1, fps=1',
+					'output.gif'
+				))
 			return {
 				media: ffmpeg.FS('readFile', 'output.mp4'),
-				gif: isVideo && ffmpeg.FS('readFile', 'output.gif'),
+				gif: isVideo && ffmpeg.FS('readFile', 'output.gif')
 			}
 		}
 
@@ -99,7 +106,7 @@ async function main() {
 				})
 					.then((r) => r.url!)
 					.then((url) => doTranscode(url, isVideo))
-					.then(({media, gif}) => {
+					.then(({ media, gif }) => {
 						isVideo && upload(s3, `previewGifs/${id}.gif`, 'image/gif', gif)
 						const mediaResponse = upload(s3, Key, mimeType, media)
 						return mediaResponse

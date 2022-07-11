@@ -1,5 +1,5 @@
 export interface UploadFileToS3Specs {
-	url: string,
+	url: string
 	file: any
 }
 

@@ -84,14 +84,14 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 			deviceId
 		})
 	}
-	const handleToggleToast = () => setShowSuccessToast(prev => !prev)
+	const handleToggleToast = () => setShowSuccessToast((prev) => !prev)
 	const onStop = async (_blobUrl: string, blob: Blob) => {
 		try {
 			handleToggleToast()
 			handleCacheStory(blob)
 			setCachedStory('')
 		} catch (error) {
-			console.log("error: ", error);
+			console.log('error: ', error)
 		}
 	}
 
@@ -156,9 +156,9 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 
 	useEffect(() => {
 		async function getMedia(constraints: MediaStreamConstraints) {
-			let stream = null;
+			let stream = null
 			try {
-				stream = await navigator.mediaDevices.getUserMedia(constraints);
+				stream = await navigator.mediaDevices.getUserMedia(constraints)
 				/* use the stream */
 			} catch (err) {
 				// @ts-ignore
@@ -166,19 +166,29 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 					// @ts-ignore
 					switch (err.name) {
 						case 'NotAllowedError':
-							setMediaError('You must allow access to your microphone and/or camera to record your story.')
-							break;
+							setMediaError(
+								'You must allow access to your microphone and/or camera to record your story.'
+							)
+							break
 						case 'NotFoundError':
-							setMediaError('Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.')
-							break;
+							setMediaError(
+								'Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.'
+							)
+							break
 						case 'NotReadableError':
-							setMediaError("We couldn't access your device for recording, please make sure no other application is using your camera.")
-							break;
+							setMediaError(
+								"We couldn't access your device for recording, please make sure no other application is using your camera."
+							)
+							break
 						case 'OverconstrainedError':
-							setMediaError('Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.')
-							break;
+							setMediaError(
+								'Your device does not have a microphone or camera. Please check the "advanced settings" button to change your settings.'
+							)
+							break
 						default:
-							setMediaError("We weren't able to access your microphone or camera. Please make sure your browser allows microphone or camera access, and check the 'advanced settings' button to change your settings.")
+							setMediaError(
+								"We weren't able to access your microphone or camera. Please make sure your browser allows microphone or camera access, and check the 'advanced settings' button to change your settings."
+							)
 					}
 				}
 			}
@@ -195,10 +205,10 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 					video: videoConstraints
 				} as MediaStreamConstraints)
 			}
-		} else if (status === "recording") {
+		} else if (status === 'recording') {
 			setMediaError('')
 		}
-	}, [status, JSON.stringify({audioConstraints, videoConstraints, useVideo})])
+	}, [status, JSON.stringify({ audioConstraints, videoConstraints, useVideo })])
 
 	return (
 		<RecorderContainer>
@@ -249,12 +259,23 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 					</Typography>
 					<br />
 					<Typography>
-						Privacy Notice: When you click record, the audio and video (if selected) will be recorded to your device. Your recording will be sent to the Atlas Stories servers when you submit during the next step.
+						Privacy Notice: When you click record, the audio and video (if
+						selected) will be recorded to your device. Your recording will be
+						sent to the Atlas Stories servers when you submit during the next
+						step.
 					</Typography>
 
-					<Snackbar open={hasRecorded && showSuccessToast} autoHideDuration={10000} onClose={handleToggleToast}>
-						<Alert onClose={handleToggleToast} severity="success" variant="filled" sx={{ width: '100%', maxWidth: '400px' }}>
-
+					<Snackbar
+						open={hasRecorded && showSuccessToast}
+						autoHideDuration={10000}
+						onClose={handleToggleToast}
+					>
+						<Alert
+							onClose={handleToggleToast}
+							severity="success"
+							variant="filled"
+							sx={{ width: '100%', maxWidth: '400px' }}
+						>
 							Your story has been recorded! You can review your recording on
 							this page, and when you are happy with it please proceed to the
 							next step.
@@ -327,4 +348,4 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 	)
 }
 
-export default AvSubmission;
+export default AvSubmission

@@ -52,14 +52,14 @@ const str2blob = (txt: string): Blob =>
 	new Blob([txt], { type: 'text/markdown' })
 
 const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
-	const {
-		storyType,
-		fileType,
-		storyId
-	} = uploadSpec;
+	const { storyType, fileType, storyId } = uploadSpec
 
 	const response = await fetch(
-		`/api/files/request_upload?storyType=${encodeURIComponent(storyType)}&storyId=${encodeURIComponent(storyId)}&fileType=${encodeURIComponent(fileType)}`
+		`/api/files/request_upload?storyType=${encodeURIComponent(
+			storyType
+		)}&storyId=${encodeURIComponent(storyId)}&fileType=${encodeURIComponent(
+			fileType
+		)}`
 	).then((res) => res.json())
 	return response?.uploadURL
 }
@@ -179,7 +179,9 @@ export const Submit: React.FC<StepComponentProps> = ({
 						fileType: blob.type,
 						storyId: storyId
 					}
-					const additionalContentURL = await getSubmissionUrl(additionalContentUploadSpec)
+					const additionalContentURL = await getSubmissionUrl(
+						additionalContentUploadSpec
+					)
 					if (additionalContentURL) {
 						handleSendFile(blob, additionalContentURL, true)
 					}
@@ -193,7 +195,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 					storyType,
 					theme,
 					tags,
-					date: new Date().toISOString(),
+					date: new Date().toISOString()
 					// additionalTags
 				}
 				const metaBlob = str2blob(JSON.stringify(meta))
@@ -207,10 +209,10 @@ export const Submit: React.FC<StepComponentProps> = ({
 					handleSendFile(metaBlob, metaUploadURL, true)
 				}
 
-
-				const contentBlob = typeof (entry.content) === 'string'
-					? str2blob(entry.content)
-					: entry.content
+				const contentBlob =
+					typeof entry.content === 'string'
+						? str2blob(entry.content)
+						: entry.content
 
 				const contentUploadSpec = {
 					storyType: storyType,
@@ -227,12 +229,13 @@ export const Submit: React.FC<StepComponentProps> = ({
 		}
 	}
 
-
 	return (
 		<>
 			<Grid container spacing={2}>
 				<Grid item xs={12} md={6}>
-					<Typography variant="h2" sx={{ marginBottom: '.5em' }}>Submit Your Story</Typography>
+					<Typography variant="h2" sx={{ marginBottom: '.5em' }}>
+						Submit Your Story
+					</Typography>
 					<CountySelect onChange={handleCounty} value={county} />
 					<TextField
 						label="What would you like to title your story? (optional)"
@@ -251,13 +254,20 @@ export const Submit: React.FC<StepComponentProps> = ({
 							<Typography>We can publish your story</Typography>
 						</li>
 						<li>
-							<Typography>You agree to the <Link href="/license"><a target="_blank" style={{ textDecoration: 'underline' }}>full license terms</a></Link></Typography>
+							<Typography>
+								You agree to the{' '}
+								<Link href="/license">
+									<a target="_blank" style={{ textDecoration: 'underline' }}>
+										full license terms
+									</a>
+								</Link>
+							</Typography>
 						</li>
 					</ul>
 					<Typography>
-						You get to keep your story, and use it however you’d like. At any time
-						you want to remove it, come back here, login, and mark the story for
-						removal.
+						You get to keep your story, and use it however you’d like. At any
+						time you want to remove it, come back here, login, and mark the
+						story for removal.
 					</Typography>
 					<FormGroup>
 						<FormControlLabel
@@ -266,8 +276,8 @@ export const Submit: React.FC<StepComponentProps> = ({
 						/>
 					</FormGroup>
 					<Typography>
-						If you’d like to be considered for paid research opportunities in the
-						future. If I am selected to participate, I would receive $50
+						If you’d like to be considered for paid research opportunities in
+						the future. If I am selected to participate, I would receive $50
 						compensation for my time.
 					</Typography>
 					<FormGroup>
@@ -304,7 +314,11 @@ export const Submit: React.FC<StepComponentProps> = ({
 
 					<TabPanel value={tab} index={0}>
 						<Box sx={{ marginBottom: '2em' }}>
-							<StoryPreview type={storyType} content={content} additionalContent={additionalContent} />
+							<StoryPreview
+								type={storyType}
+								content={content}
+								additionalContent={additionalContent}
+							/>
 						</Box>
 					</TabPanel>
 					<TabPanel value={tab} index={1}>

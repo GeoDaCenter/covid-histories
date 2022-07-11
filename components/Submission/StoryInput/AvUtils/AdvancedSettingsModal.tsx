@@ -1,17 +1,17 @@
 import React from 'react'
 import {
-    FormControl,
-    MenuItem,
-    Select,
-    InputLabel,
-    Grid,
-    Typography,
-    Button,
-    Box,
-    Modal
-} from '@mui/material';
-import colors from '../../../../config/colors';
-import { MediaDevices } from '../../../../hooks/useGetMediaDevices';
+	FormControl,
+	MenuItem,
+	Select,
+	InputLabel,
+	Grid,
+	Typography,
+	Button,
+	Box,
+	Modal
+} from '@mui/material'
+import colors from '../../../../config/colors'
+import { MediaDevices } from '../../../../hooks/useGetMediaDevices'
 
 interface AdvancedModalProps {
 	availableDevices: MediaDevices
@@ -30,7 +30,7 @@ const advancedModalStyle = {
 	top: '50%',
 	transform: 'translate(-50%,-50%)',
 	background: colors.darkgray,
-	padding: '2em',
+	padding: '2em'
 }
 
 export const AdvancedSettingsModal: React.FC<AdvancedModalProps> = ({
@@ -42,8 +42,12 @@ export const AdvancedSettingsModal: React.FC<AdvancedModalProps> = ({
 	open,
 	handleClose
 }) => {
-	const videoSource = availableDevices.video.find(f => f.deviceId === videoConstraints.deviceId)
-	const audioSource = availableDevices.video.find(f => f.deviceId === audioConstraints.deviceId)
+	const videoSource = availableDevices.video.find(
+		(f) => f.deviceId === videoConstraints.deviceId
+	)
+	const audioSource = availableDevices.video.find(
+		(f) => f.deviceId === audioConstraints.deviceId
+	)
 
 	return (
 		<Modal
@@ -63,7 +67,9 @@ export const AdvancedSettingsModal: React.FC<AdvancedModalProps> = ({
 				<Grid container spacing={1}>
 					<Grid item xs={12} md={6}>
 						<FormControl size="small" fullWidth sx={{ margin: '1em 0' }}>
-							<InputLabel id="video-select-small">Select Video Source</InputLabel>
+							<InputLabel id="video-select-small">
+								Select Video Source
+							</InputLabel>
 							<Select
 								labelId="video-select-small"
 								id="video-select-small"
@@ -85,7 +91,9 @@ export const AdvancedSettingsModal: React.FC<AdvancedModalProps> = ({
 					</Grid>
 					<Grid item xs={12} md={6}>
 						<FormControl size="small" fullWidth sx={{ margin: '1em 0' }}>
-							<InputLabel id="audio-select-small">Select Audio Source</InputLabel>
+							<InputLabel id="audio-select-small">
+								Select Audio Source
+							</InputLabel>
 							<Select
 								labelId="audio-select-small"
 								id="audio-select-small"
@@ -106,7 +114,17 @@ export const AdvancedSettingsModal: React.FC<AdvancedModalProps> = ({
 						</FormControl>
 					</Grid>
 				</Grid>
-				<Button variant="text" color="primary" onClick={handleClose} sx={{ position: 'absolute', top: '.5em', right: '.5em', fontWeight:"bold" }}>
+				<Button
+					variant="text"
+					color="primary"
+					onClick={handleClose}
+					sx={{
+						position: 'absolute',
+						top: '.5em',
+						right: '.5em',
+						fontWeight: 'bold'
+					}}
+				>
 					&times;
 				</Button>
 			</Box>

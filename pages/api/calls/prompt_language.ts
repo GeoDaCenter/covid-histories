@@ -1,30 +1,36 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import twilio from "twilio";
-import {PromptLanguage} from "./_prompts"
-import {VoiceForLanguage} from "./_utils";
-const VoiceResponse = twilio.twiml.VoiceResponse;
+import { NextApiRequest, NextApiResponse } from 'next'
+import twilio from 'twilio'
+import { PromptLanguage } from './_prompts'
+import { VoiceForLanguage } from './_utils'
+const VoiceResponse = twilio.twiml.VoiceResponse
 
 export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<string>
+	req: NextApiRequest,
+	res: NextApiResponse<string>
 ) {
-  if (req.method === 'POST') {
-      const twiml = new VoiceResponse();
+	if (req.method === 'POST') {
+		const twiml = new VoiceResponse()
 
-      if(PromptLanguage.audioUrl){
-        twiml.gather({numDigits:1, action:"/api/calls/selected_language", bargeIn:true}).play(
-          PromptLanguage.audioUrl 
-        )
+		if (PromptLanguage.audioUrl) {
+			twiml
+				.gather({
+					numDigits: 1,
+					action: '/api/calls/selected_language',
+					bargeIn: true
+				})
+				.play(PromptLanguage.audioUrl)
+		} else {
+			twiml
+				.gather({
+					numDigits: 1,
+					action: '/api/calls/selected_language',
+					bargeIn: true
+				})
+				.say(VoiceForLanguage['en'], PromptLanguage.text)
+		}
 
-      }
-      else{
-        twiml.gather({numDigits:1, action:"/api/calls/selected_language", bargeIn:true}).say(
-          VoiceForLanguage['en'], PromptLanguage.text, 
-        )
-      }
-
-      // Render the response as XML in reply to the webhook request
-      res.setHeader("content-type",'text/xml');
-      res.send(twiml.toString());
-  }
+		// Render the response as XML in reply to the webhook request
+		res.setHeader('content-type', 'text/xml')
+		res.send(twiml.toString())
+	}
 }

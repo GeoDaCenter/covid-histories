@@ -26,7 +26,7 @@ export default withApiAuthRequired(async function handler(
 		} else {
 			res.status(200).json(
 				JSON.stringify({
-                    success: true
+					success: true
 				})
 			)
 		}

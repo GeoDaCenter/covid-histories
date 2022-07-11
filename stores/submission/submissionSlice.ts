@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { nanoid } from '@reduxjs/toolkit'
-import { CustomerProfilesEntityAssignmentsPage } from 'twilio/lib/rest/trusthub/v1/customerProfiles/customerProfilesEntityAssignments';
-import { canProgressFns, canGoBackFns } from '../../components/Submission/SubmissionPage';
+import { CustomerProfilesEntityAssignmentsPage } from 'twilio/lib/rest/trusthub/v1/customerProfiles/customerProfilesEntityAssignments'
+import {
+	canProgressFns,
+	canGoBackFns
+} from '../../components/Submission/SubmissionPage'
 
 export type SubmissionTypes = 'audio' | 'video' | 'written' | 'photo' | 'phone'
 
@@ -42,12 +45,13 @@ const initialState: SubmissionState = {
 	uploadProgress: 0,
 	tags: [],
 	hasEnteredContent: false,
-	emailVerified:false,
+	emailVerified: false,
 	canProgress: true,
 	canGoBack: true
 }
 
-const onlyUnique = (value: string, index: number, self: string[]) => self.indexOf(value) === index
+const onlyUnique = (value: string, index: number, self: string[]) =>
+	self.indexOf(value) === index
 
 export const submissionSlice = createSlice({
 	name: 'submission',
@@ -140,7 +144,7 @@ export const submissionSlice = createSlice({
 			state.hasEnteredContent = true
 			state.canProgress = canProgressFns[state.step](state)
 			state.canGoBack = canGoBackFns[state.step]()
-		},
+		}
 	}
 })
 
@@ -168,6 +172,7 @@ export const selectors = {
 	selectUploadProgress: (state: SubmissionStateOuter) =>
 		state.submission.uploadProgress,
 	selectTags: (state: SubmissionStateOuter) => state.submission.tags,
-	selectCanProgress: (state: SubmissionStateOuter) => state.submission.canProgress,
-	selectCanGoBack: (state: SubmissionStateOuter) => state.submission.canGoBack,
+	selectCanProgress: (state: SubmissionStateOuter) =>
+		state.submission.canProgress,
+	selectCanGoBack: (state: SubmissionStateOuter) => state.submission.canGoBack
 }

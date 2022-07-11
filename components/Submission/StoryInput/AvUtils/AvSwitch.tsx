@@ -1,23 +1,20 @@
 import React from 'react'
 import {
-    FormControl,
-    FormLabel,
-    FormGroup,
-    FormControlLabel,
-    FormHelperText,
-    Switch
+	FormControl,
+	FormLabel,
+	FormGroup,
+	FormControlLabel,
+	FormHelperText,
+	Switch
 } from '@mui/material'
 import Link from 'next/link'
 
-export const AvSwitch: React.FC<{ useVideo: boolean; toggleUseVideo: () => void }> = ({
-	useVideo,
-	toggleUseVideo
-}) => {
+export const AvSwitch: React.FC<{
+	useVideo: boolean
+	toggleUseVideo: () => void
+}> = ({ useVideo, toggleUseVideo }) => {
 	return (
-		<FormControl
-			component="fieldset"
-			variant="standard"
-		>
+		<FormControl component="fieldset" variant="standard">
 			<FormLabel component="legend">Record video and audio?</FormLabel>
 			<FormGroup>
 				<FormControlLabel

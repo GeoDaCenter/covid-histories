@@ -23,12 +23,12 @@ export const db = new SubmissionDB()
 
 interface ResetDbProps {
 	storyId?: string
-	storyType?: SubmissionTypes 
+	storyType?: SubmissionTypes
 }
 export function resetDatabase({
-	storyId='',
-	storyType='video'
-}: ResetDbProps ) {
+	storyId = '',
+	storyType = 'video'
+}: ResetDbProps) {
 	return db.transaction('rw', db.submissions, async () => {
 		await Promise.all(db.tables.map((table) => table.clear())).then(() => {
 			db.submissions.add({

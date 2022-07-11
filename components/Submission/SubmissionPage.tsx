@@ -21,7 +21,11 @@ import { SubmissionStepper } from './SubmissionStepper'
 import * as Steps from './Steps'
 import { SubmissionDraft } from '../../stores/indexdb/SubmissionDraft'
 import { SubmissionUploadModal } from './SubmissionUploadModal'
-import { SubmissionState, SubmissionStateOuter, SubmissionTypes } from '../../stores/submission/submissionSlice'
+import {
+	SubmissionState,
+	SubmissionStateOuter,
+	SubmissionTypes
+} from '../../stores/submission/submissionSlice'
 import { useRouter } from 'next/router'
 
 const stepsText = [
@@ -86,53 +90,55 @@ export const SubmissionPage: React.FC = () => {
 	const handleNext = () => {
 		typeof window !== undefined && window.scrollTo(0, 0)
 		dispatch(incrementStep())
-	}	
+	}
 	const handleReset = () => {
 		dispatch(resetSubmission('video'))
 		resetDatabase({})
 		handleCloseToast()
 	}
 
-	
 	// handle query params
 	const router = useRouter()
-	const { type } = router.query	
+	const { type } = router.query
 	useEffect(() => {
 		if (type && storyType !== type && typeof type === 'string') {
 			dispatch(resetSubmission(type as SubmissionTypes))
 		}
-	},[type])
+	}, [type])
 
 	useEffect(() => {
-		if (activeStep !== 0){
+		if (activeStep !== 0) {
 			setUnfinished(true)
 		}
-	},[])
+	}, [])
 
-	const dbActive = typeof db	
+	const dbActive = typeof db
 	const handleCacheStory = (content: string | Blob) => {
 		if (typeof content === 'string' && !content.length) {
 			console.log('No Content')
-			return;
+			return
 		}
 		if (typeof content !== 'string' && !content?.type.length) {
 			console.log('No type')
-			return;
+			return
 		}
 		if (db) {
 			db.submissions.update(0, { content })
 		}
 		dispatch(setHasEnteredContent())
 	}
-	
+
 	const handleCacheAdditionalContent = (additionalContent: string | Blob) => {
 		if (typeof additionalContent === 'string' && !additionalContent.length) {
 			console.log('No Content')
-			return;
+			return
 		}
-		if (typeof additionalContent !== 'string' && !additionalContent?.type.length) {
+		if (
+			typeof additionalContent !== 'string' &&
+			!additionalContent?.type.length
+		) {
 			console.log('No type')
-			return;
+			return
 		}
 		if (db) {
 			db.submissions.update(0, { additionalContent })
@@ -188,7 +194,10 @@ export const SubmissionPage: React.FC = () => {
 	// @ts-ignore
 	const CurrentStepComponent = stepComponents[activeStep]
 	return (
-		<Box sx={{ minHeight: '100vh', margin: '1.5em auto' }} className="standard-page-width">
+		<Box
+			sx={{ minHeight: '100vh', margin: '1.5em auto' }}
+			className="standard-page-width"
+		>
 			<CurrentStepComponent
 				handleNext={handleNext}
 				storyId={storyId}
@@ -204,11 +213,28 @@ export const SubmissionPage: React.FC = () => {
 				handleNext={handleNext}
 				handleReset={handleReset}
 			/>
-			<Snackbar open={unfinished} autoHideDuration={10000} onClose={handleCloseToast}>
-				<Alert onClose={handleCloseToast} severity="warning" variant="outlined" sx={{ width: '100%', maxWidth:'400px', background: 'black' }}>
-					You started a submission, but didn&apos;t finish it. This story is only saved to this device.
-					<br/><br/>
-					You can finish submitting this story, or <Button onClick={handleReset} sx={{padding:0, textTransform:'none'}}>click here to start over.</Button>
+			<Snackbar
+				open={unfinished}
+				autoHideDuration={10000}
+				onClose={handleCloseToast}
+			>
+				<Alert
+					onClose={handleCloseToast}
+					severity="warning"
+					variant="outlined"
+					sx={{ width: '100%', maxWidth: '400px', background: 'black' }}
+				>
+					You started a submission, but didn&apos;t finish it. This story is
+					only saved to this device.
+					<br />
+					<br />
+					You can finish submitting this story, or{' '}
+					<Button
+						onClick={handleReset}
+						sx={{ padding: 0, textTransform: 'none' }}
+					>
+						click here to start over.
+					</Button>
 				</Alert>
 			</Snackbar>
 		</Box>

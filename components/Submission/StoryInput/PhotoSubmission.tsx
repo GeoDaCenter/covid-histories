@@ -34,7 +34,9 @@ export const PhotoSubmission: React.FC<StoryInputProps> = ({
 				<PhotoLoader
 					handleCacheStory={handleCacheStory}
 					storyId={storyId}
-					getCachedEntry={(entry: SubmissionDraft | undefined) => entry?.content}
+					getCachedEntry={(entry: SubmissionDraft | undefined) =>
+						entry?.content
+					}
 					dbActive={dbActive}
 				/>
 			</Grid>

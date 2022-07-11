@@ -56,9 +56,9 @@ export default withApiAuthRequired(async function handler(
 				fileName,
 				ContentType
 			} = await getPresignedUrl({
-				Key: key, 
-				ContentType: fileType, 
-				prePath, 
+				Key: key,
+				ContentType: fileType,
+				prePath,
 				operation: 'putObject'
 			})
 			const metaResult = await uploadMeta(storyType, key, hashedEmail)

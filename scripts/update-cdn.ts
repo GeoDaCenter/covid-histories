@@ -195,7 +195,7 @@ async function main() {
 
 	const fileResults = await Promise.all(fileIndexPromises)
 	const fileMeta = fileResults.filter(({ id }) => id.length)
-	
+
 	const _fileMetaResponse = await putObject(
 		'public/index.json',
 		JSON.stringify(fileMeta)

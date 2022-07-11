@@ -17,7 +17,9 @@ interface PhotoLoaderProps {
 	handleCacheStory: (content: string) => void
 	storyId: string | undefined
 	dbActive: boolean
-	getCachedEntry: (entry: SubmissionDraft | undefined) => string | Blob | undefined
+	getCachedEntry: (
+		entry: SubmissionDraft | undefined
+	) => string | Blob | undefined
 }
 
 const ACCEPTED_FILE_TYPES = [

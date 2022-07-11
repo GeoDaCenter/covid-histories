@@ -13,14 +13,21 @@ const Container = styled(Box)`
 	}
 `
 
-const WrittenStory: React.FC<{content: string}> = ({ content }) => {
-	const fetcher = content.slice(0,5) === 'https' ? (content:string) => fetch(content).then(r => r.text()) : () => content
+const WrittenStory: React.FC<{ content: string }> = ({ content }) => {
+	const fetcher =
+		content.slice(0, 5) === 'https'
+			? (content: string) => fetch(content).then((r) => r.text())
+			: () => content
 	const { data } = useSWR(content, fetcher)
 	const text = data as string
 	return <ReactMarkdown>{text}</ReactMarkdown>
 }
 // @ts-ignore
-export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, additionalContent: any|null }> = ({ type, content, additionalContent }) => {
+export const StoryPreview: React.FC<{
+	type: SubmissionTypes
+	content: any | null
+	additionalContent: any | null
+}> = ({ type, content, additionalContent }) => {
 	if (!content) return null
 	switch (type) {
 		case 'video':
@@ -54,9 +61,9 @@ export const StoryPreview: React.FC<{ type: SubmissionTypes, content: any|null, 
 		case 'photo':
 			return (
 				<Container>
-                    <Box>
-                        <img src={content} alt="story" />
-                    </Box>
+					<Box>
+						<img src={content} alt="story" />
+					</Box>
 					<Box
 						sx={{
 							border: '1px solid white',

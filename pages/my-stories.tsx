@@ -1,5 +1,13 @@
 import React, { useState, useRef } from 'react'
-import { Button, Tabs, Tab, Box, Grid, Typography, Popover } from '@mui/material'
+import {
+	Button,
+	Tabs,
+	Tab,
+	Box,
+	Grid,
+	Typography,
+	Popover
+} from '@mui/material'
 import type { NextPage } from 'next'
 import { HomeSection } from '../components/HomeSection'
 import styles from '../styles/Home.module.css'
@@ -10,7 +18,7 @@ import useSWR from 'swr'
 import { StoryPreview } from '../components/Submission/StoryPreview'
 import CountyPreview from '../components/Submission/SubmissionUtil/CountyPreview'
 import { SubmissionTypes } from '../stores/submission/submissionSlice'
-import { SEO } from '../components/Interface/SEO';
+import { SEO } from '../components/Interface/SEO'
 
 export interface StoryProps {
 	title: string
@@ -47,9 +55,12 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 		content.length > 1 ? content.find((f) => f.fileType === 'md')?.url : null
 
 	const contentFetcher = storyType === 'written' ? mdFetcher : () => contentUrl
-	
+
 	const { data: storyContent, error } = useSWR(contentUrl, contentFetcher)
-	const { data: additionalContent, error: additionalContentError } = useSWR(additionalContentUrl, mdFetcher)
+	const { data: additionalContent, error: additionalContentError } = useSWR(
+		additionalContentUrl,
+		mdFetcher
+	)
 
 	return (
 		<StoryPreview
@@ -76,107 +87,134 @@ const StoryManager: React.FC<{ story: StoryProps }> = ({ story }) => {
 	const handleDelete = async () => {
 		const res = await fetch(`/api/files/delete_story`, {
 			method: 'POST',
-			body: story.storyId,
+			body: story.storyId
 		})
 
 		if (res.ok) {
 			setIsDeleted(true)
 			handleClose()
 		} else {
-			setError('There was an error deleting your story. Please try again later.')
+			setError(
+				'There was an error deleting your story. Please try again later.'
+			)
 			handleClose()
 		}
 	}
 	if (isDeleted) {
-		return <Grid
+		return (
+			<Grid
+				container
+				spacing={4}
+				sx={{ my: 2, pb: 5, borderBottom: '1px solid white' }}
+			>
+				<Grid item xs={12} md={4}>
+					<Typography fontWeight="bold">{title || 'Untitled Story'}</Typography>
+					<Typography>Submitted on {date.slice(0, 10)}</Typography>
+					<Typography>
+						A {storyType} story about {theme?.toLowerCase()}
+					</Typography>
+					<Typography>In {county.label}</Typography>
+					<Typography>Tags: {tags?.join(', ')}</Typography>
+				</Grid>
+				<Grid item xs={12} md={8}>
+					<Typography>
+						This story has been marked for deletion. It may take up to 7 days
+						for this change to be reflected.
+					</Typography>
+				</Grid>
+			</Grid>
+		)
+	}
+
+	return (
+		<Grid
 			container
 			spacing={4}
 			sx={{ my: 2, pb: 5, borderBottom: '1px solid white' }}
 		>
 			<Grid item xs={12} md={4}>
-				<Typography fontWeight="bold">
-					{title || 'Untitled Story'}
-				</Typography>
+				<Typography fontWeight="bold">{title || 'Untitled Story'}</Typography>
 				<Typography>Submitted on {date.slice(0, 10)}</Typography>
 				<Typography>
 					A {storyType} story about {theme?.toLowerCase()}
 				</Typography>
 				<Typography>In {county.label}</Typography>
 				<Typography>Tags: {tags?.join(', ')}</Typography>
+				<Button
+					variant="contained"
+					sx={{ my: 2, textTransform: 'none' }}
+					onClick={() => setConfirmDeleteOpen(true)}
+					ref={anchorEl}
+				>
+					Delete this story
+				</Button>
 			</Grid>
 			<Grid item xs={12} md={8}>
-				<Typography>This story has been marked for deletion. It may take up to 7 days for this change to be reflected.</Typography>
-			</Grid>
-		</Grid>
-	}
-
-	return <Grid
-		container
-		spacing={4}
-		sx={{ my: 2, pb: 5, borderBottom: '1px solid white' }}
-	>
-		<Grid item xs={12} md={4}>
-			<Typography fontWeight="bold">
-				{title || 'Untitled Story'}
-			</Typography>
-			<Typography>Submitted on {date.slice(0, 10)}</Typography>
-			<Typography>
-				A {storyType} story about {theme?.toLowerCase()}
-			</Typography>
-			<Typography>In {county.label}</Typography>
-			<Typography>Tags: {tags?.join(', ')}</Typography>
-			<Button
-				variant="contained"
-				sx={{ my: 2, textTransform: 'none' }}
-				onClick={() => setConfirmDeleteOpen(true)}
-				ref={anchorEl}
-			>
-				Delete this story
-			</Button>
-		</Grid>
-		<Grid item xs={12} md={8}>
-			<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-				<Tabs
-					value={tab}
-					onChange={handleChangeTab}
-					aria-label="basic tabs example"
-				>
-					<Tab label="Preview Your Story" {...a11yProps(0)} />
-					<Tab label="Preview Your County" {...a11yProps(1)} />
-				</Tabs>
-			</Box>
-			<TabPanel value={tab} index={0}>
-				<Box sx={{ marginBottom: '2em' }}>
-					<StoryPreviewWrapper story={story} />
+				<Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+					<Tabs
+						value={tab}
+						onChange={handleChangeTab}
+						aria-label="basic tabs example"
+					>
+						<Tab label="Preview Your Story" {...a11yProps(0)} />
+						<Tab label="Preview Your County" {...a11yProps(1)} />
+					</Tabs>
 				</Box>
-			</TabPanel>
-			<TabPanel value={tab} index={1}>
-				{county && (
-					<Box>
-						<CountyPreview county={county} />
+				<TabPanel value={tab} index={0}>
+					<Box sx={{ marginBottom: '2em' }}>
+						<StoryPreviewWrapper story={story} />
 					</Box>
-				)}
-			</TabPanel>
+				</TabPanel>
+				<TabPanel value={tab} index={1}>
+					{county && (
+						<Box>
+							<CountyPreview county={county} />
+						</Box>
+					)}
+				</TabPanel>
+			</Grid>
+			<Popover
+				id={`delete-story-popover-${story.storyId}`}
+				open={confirmDeleteOpen}
+				anchorEl={anchorEl.current}
+				onClose={handleClose}
+				anchorOrigin={{
+					vertical: 'bottom',
+					horizontal: 'left'
+				}}
+			>
+				<Typography sx={{ p: 2 }}>
+					Are you sure you want to delete this story?
+					<br />
+					<strong>This cannot be undone.</strong>
+				</Typography>
+				<Button
+					variant="contained"
+					sx={{
+						display: 'block',
+						m: 2,
+						textTransform: 'none',
+						background: 'red'
+					}}
+					onClick={handleDelete}
+				>
+					I understand, permanently delete this story.
+				</Button>
+				<Button
+					variant="contained"
+					sx={{
+						display: 'block',
+						m: 2,
+						textTransform: 'none',
+						background: 'white'
+					}}
+					onClick={handleClose}
+				>
+					Nevermind, keep this story for now.
+				</Button>
+			</Popover>
 		</Grid>
-		<Popover
-			id={`delete-story-popover-${story.storyId}`}
-			open={confirmDeleteOpen}
-			anchorEl={anchorEl.current}
-			onClose={handleClose}
-			anchorOrigin={{
-				vertical: 'bottom',
-				horizontal: 'left',
-			}}
-		>
-			<Typography sx={{ p: 2 }}>
-				Are you sure you want to delete this story?
-				<br />
-				<strong>This cannot be undone.</strong>
-			</Typography>
-			<Button variant="contained" sx={{ display: 'block', m: 2, textTransform: 'none', background: 'red' }} onClick={handleDelete}>I understand, permanently delete this story.</Button>
-			<Button variant="contained" sx={{ display: 'block', m: 2, textTransform: 'none', background: 'white' }} onClick={handleClose}>Nevermind, keep this story for now.</Button>
-		</Popover>
-	</Grid>
+	)
 }
 
 // @ts-ignore
@@ -193,14 +231,20 @@ const MyStories: NextPage = () => {
 				{user?.email ? (
 					<Grid container sx={{ width: '100%' }}>
 						<Typography variant="h1">My Stories</Typography>
-						{!data && 
+						{!data && (
 							<Grid item xs={12}>
 								<Typography variant="h2">Loading, please wait.</Typography>
-							</Grid>}
-						{(!!data && !!data?.length) && (
-							data.map((story: StoryProps, i: number) => <StoryManager story={story} key={`${story.title}-${story.date}-${i}`} />)
+							</Grid>
 						)}
-						{(!!data && !data?.length) && (
+						{!!data &&
+							!!data?.length &&
+							data.map((story: StoryProps, i: number) => (
+								<StoryManager
+									story={story}
+									key={`${story.title}-${story.date}-${i}`}
+								/>
+							))}
+						{!!data && !data?.length && (
 							<Grid item xs={12}>
 								<Typography variant="h2">(No stories yet)</Typography>
 								<br />

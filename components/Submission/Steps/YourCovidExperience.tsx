@@ -49,7 +49,13 @@ export const YourCovidExperience: React.FC = () => {
 	const handleTheme = (theme: string) => dispatch(setTheme(theme))
 
 	return (
-		<Grid container spacing={1} minHeight="75vh"  alignContent="center" alignItems="center">
+		<Grid
+			container
+			spacing={1}
+			minHeight="75vh"
+			alignContent="center"
+			alignItems="center"
+		>
 			<Grid item xs={12}>
 				<Typography variant="h2">Your Pandemic Experience</Typography>
 				<Typography>
@@ -57,9 +63,7 @@ export const YourCovidExperience: React.FC = () => {
 					prompts to think about. Feel free to any of these to get started
 					telling your story.
 				</Typography>
-				<Typography color="primary">
-					* required
-				</Typography>
+				<Typography color="primary">* required</Typography>
 			</Grid>
 			<Grid item xs={12} md={12}>
 				{Themes.map((theme, i) => (

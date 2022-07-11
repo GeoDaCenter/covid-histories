@@ -17,7 +17,7 @@ import surveyReducer from './survey/surveySlice'
 const persistConfig = {
 	key: 'root',
 	version: 1,
-	storage,
+	storage
 }
 const submissionConfig = {
 	key: 'submission',

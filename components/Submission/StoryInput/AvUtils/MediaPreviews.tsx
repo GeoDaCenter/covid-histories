@@ -6,14 +6,14 @@ const PreviewVid = styled.video`
 	aspect-ratio: 1.78;
 `
 const PreviewCanvas = styled.canvas`
-	mix-blend-mode:plus-lighter;
+	mix-blend-mode: plus-lighter;
 `
 
 interface MediaPreviewProps {
 	stream: MediaStream | null
 }
 interface MediaRef {
-    srcObject: any
+	srcObject: any
 }
 export const VideoPreview: React.FC<MediaPreviewProps> = ({ stream }) => {
 	const videoRef = useRef<MediaRef>(null)
@@ -25,7 +25,7 @@ export const VideoPreview: React.FC<MediaPreviewProps> = ({ stream }) => {
 	if (!stream) {
 		return null
 	}
-    // @ts-ignore
+	// @ts-ignore
 	return <PreviewVid ref={videoRef} autoPlay playsInline />
 }
 

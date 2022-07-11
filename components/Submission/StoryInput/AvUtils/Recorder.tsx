@@ -60,7 +60,6 @@ const RecordingButton: React.FC<RecordingButtonProps> = ({
 	)
 }
 
-
 interface RecorderProps {
 	useVideo: boolean
 	status: string

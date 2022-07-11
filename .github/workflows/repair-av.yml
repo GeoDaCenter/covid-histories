@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-      
+
       # NODE
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
@@ -39,7 +39,7 @@ jobs:
           git config --local user.name "Atlas Bot"
           git add -A
           git commit -m "Repair AV [skip ci]" -a
-          
+
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
         with:

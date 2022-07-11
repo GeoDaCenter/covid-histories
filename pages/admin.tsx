@@ -40,10 +40,32 @@ function TabPanel(props: TabPanelProps) {
 					fileId={focusedSubmission}
 					isOpen={focusedSubmission !== null}
 					onClose={() => setFocusedSubmission(null)}
-					onNext={() => console.log("Next")}
+					onNext={() => console.log('Next')}
 				/>
-				{submissions === undefined && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>Loading...</Box>}
-				{(submissions && !submissions.length) && <Box sx={{width:'100%', fontSize:'2rem', padding:'2rem', textAlign: 'center'}}>No entries.</Box>}
+				{submissions === undefined && (
+					<Box
+						sx={{
+							width: '100%',
+							fontSize: '2rem',
+							padding: '2rem',
+							textAlign: 'center'
+						}}
+					>
+						Loading...
+					</Box>
+				)}
+				{submissions && !submissions.length && (
+					<Box
+						sx={{
+							width: '100%',
+							fontSize: '2rem',
+							padding: '2rem',
+							textAlign: 'center'
+						}}
+					>
+						No entries.
+					</Box>
+				)}
 				{value === index && (
 					<Box sx={{ p: 3 }}>
 						{submissions && (

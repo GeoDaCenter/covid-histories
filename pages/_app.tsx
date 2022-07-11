@@ -54,7 +54,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<UserProvider>
 			<ThemeProvider theme={theme}>
 				<TopBar />
-				<Script type="text/javascript" src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit" />
+				<Script
+					type="text/javascript"
+					src="https://translate.google.com/translate_a/element.js? cb=googleTranslateElementInit"
+				/>
 				<Component {...pageProps} />
 				<Footer />
 			</ThemeProvider>
