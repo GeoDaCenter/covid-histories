@@ -81,7 +81,7 @@ export default withApiAuthRequired(async function handler(
 		}
 
 		if (folder === 'previewGifs') {
-			res.status(200).json(JSON.stringify(presignedGets))
+			res.status(200).json(JSON.stringify(presignedGets[0]))
 		} else {
 			res.status(200).json(JSON.stringify(mergedData))
 		}
