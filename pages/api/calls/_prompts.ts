@@ -14,7 +14,7 @@ type Prompt = {
 export const Prompts: Record<string, Record<Language, Prompt>> = {
 	Welcome: {
 		en: {
-			text: 'Welcome to Atlas Stories, a project of the US Covid Atlas, from the Healthy Regions & Policies Lab and University of Chicago. The US Covid Atlas is a non-profit research project that works to understand, archive, and represent the often unequal impact of the pandemic across the United States. With Atlas Stories, we are collecting oral histories about peoples experiences during the pandemic, to breathe life into the data and statistics of COVID-19. To learn more, visit stories dot us covid atlas dot org. ',
+			text: 'Welcome to Atlas Stories, a project of the US Covid Atlas, from the Healthy Regions & Policies Lab and University of Chicago. The US Covid Atlas is a non-profit research project that works to understand, archive, and represent the often unequal impact of the pandemic across the United States. With the Atlas Stories project, we are collecting oral histories about peoples experiences during the pandemic, to breathe life into the data and statistics of COVID-19. To learn more, visit stories dot us covid atlas dot org. ',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
@@ -32,7 +32,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 	InvalidZip: {
 		en: {
-			text: 'Im sorry, that zip code was invalid. Please enter another',
+			text: 'Im sorry, that zip code was invalid. Please enter another zip code using your phone keypad now',
 			audioUrl: null
 		},
 		es: { text: '', audioUrl: null }
