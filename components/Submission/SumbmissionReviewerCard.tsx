@@ -14,7 +14,8 @@ import {
 	FormControlLabel,
 	Grid,
 	TextField,
-	Popper
+	Popper,
+	ClickAwayListener
 } from '@mui/material'
 import { TagFilter } from '../../pages/api/files/utils'
 import { useEffect, useRef, useState } from 'react'
@@ -24,7 +25,8 @@ import { SubmissionsReviewModal } from './SubmissionReviewModal'
 
 const BlurWrapper = styled.div<{ shouldBlur: boolean }>`
 	filter: ${({ shouldBlur }) => (shouldBlur ? 'blur(10px)' : 'none')};
-	overflow-y :auto;
+	overflow-y: auto;
+
 `
 const PreviewImg = styled.img`
 	position: fixed;
@@ -87,7 +89,7 @@ const sleep = async (ms: number) => {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-const expandedStyle = { position: 'fixed', left: '50%', top: '50%', width: '90%', height: '90%', transform: 'translate(-50%,-50%)', zIndex: '500' }
+const expandedStyle = { position: 'fixed', left: '50%', top: '50%', width: '90%', height: '90%', transform: 'translate(-50%,-50%)', zIndex: '500', boxShadow: '0 0 5px black' }
 const compactStyle = { width: '100%' }
 export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	fileId,
@@ -182,122 +184,124 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	return (
 		<Grid item xs={12} sm={6} md={4} lg={3}>
 			{file && (
-				<Card sx={modalOpen ? expandedStyle : compactStyle}>
-					<CardContent>
-						<Flex>
-						<Typography variant="h6" gutterBottom>
-							{file.storyId}
-						</Typography>
-						<Button
-							onClick={() => setModalOpen(p => !p)}
-						>
-							{modalOpen ? 'Close' : 'Expand'}
-						</Button>
-						</Flex>
-						{['video', 'photo'].includes(file?.storyType) && (
-							<Grid
-								container
-								alignItems={'center'}
-								sx={{ mb: 2, borderBottom: '1px solid white' }}
-							>
-								<Grid item xs={12} sm={8}>
-									<p>
-										NSFW: {nsfwStatus.status}
-										<br />
-										Chance 😬: {nsfwStatus.confidence}%
-									</p>
-								</Grid>
-								<Grid item xs={12} sm={4}>
-									<FormGroup>
-										<FormControlLabel
-											control={
-												<Switch
-													checked={shouldBlur}
-													onChange={() => setShouldBlur((prev) => !prev)}
-												/>
-											}
-											label="Blur"
+				<ClickAwayListener onClickAway={() => setModalOpen(false)}>
+					<Card sx={modalOpen ? expandedStyle : compactStyle}>
+						<CardContent>
+							<Flex>
+								<Typography variant="h6" gutterBottom>
+									{file.storyId}
+								</Typography>
+								<Button
+									onClick={() => setModalOpen(p => !p)}
+								>
+									{modalOpen ? 'Close' : 'Expand'}
+								</Button>
+							</Flex>
+							{['video', 'photo'].includes(file?.storyType) && (
+								<Grid
+									container
+									alignItems={'center'}
+									sx={{ mb: 2, borderBottom: '1px solid white' }}
+								>
+									<Grid item xs={12} sm={8}>
+										<p>
+											NSFW: {nsfwStatus.status}
+											<br />
+											Chance 😬: {nsfwStatus.confidence}%
+										</p>
+									</Grid>
+									<Grid item xs={12} sm={4}>
+										<FormGroup>
+											<FormControlLabel
+												control={
+													<Switch
+														checked={shouldBlur}
+														onChange={() => setShouldBlur((prev) => !prev)}
+													/>
+												}
+												label="Blur"
+											/>
+										</FormGroup>
+									</Grid>
+									{['video', 'photo'].includes(file?.storyType) && (
+										<PreviewImg
+											src={gifUrl || file.url}
+											alt="preview"
+											ref={previewRef}
+											crossOrigin="anonymous"
 										/>
-									</FormGroup>
+									)}
 								</Grid>
-								{['video', 'photo'].includes(file?.storyType) && (
-									<PreviewImg
-										src={gifUrl || file.url}
-										alt="preview"
-										ref={previewRef}
-										crossOrigin="anonymous"
+							)}
+							<BlurWrapper shouldBlur={shouldBlur} style={{ maxHeight: modalOpen ? '50vh' : '300px' }}>
+								{!!file && (
+									<StoryPreview
+										type={file.storyType}
+										content={file?.content}
+										additionalContent={file?.additionalContent}
 									/>
 								)}
-							</Grid>
-						)}
-						<BlurWrapper shouldBlur={shouldBlur} style={{ maxHeight: modalOpen ? '50vh' : '300px' }}>
-							{!!file && (
-								<StoryPreview
-									type={file.storyType}
-									content={file?.content}
-									additionalContent={file?.additionalContent}
-								/>
-							)}
-						</BlurWrapper>
-						<Typography sx={{ fontSize: 14 }} gutterBottom>
-							submitted : {file.date}
-						</Typography>
-						{!!file?.tags && !!file.tags.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
-							User Tags:{' '}
-							{file.tags.map((tag: string) => <Chip label={tag} key={tag} />)}
-						</Typography>}
-						{!!adminTags?.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
-							Admin Tags:{' '}
-							<ul>
-								{adminTags.map((tag, i) => <li key={i}>{tag.Key}: {tag.Value}</li>)}
-							</ul>
-						</Typography>}
-					</CardContent>
-					<TextField sx={{ mx: 2 }} label="reason" maxRows={3} multiline value={note} onChange={handleNote} />
-					<CardActions>
-						<Button
-							size="small"
-							color="success"
-							onClick={() => handleAction('approve')}
-						>
-							👍 Approve
-						</Button>
-						<Button
-							size="small"
-							color="warning"
-							onClick={() => handleAction('reject')}
-						>
-							⚠️ Reject
-						</Button>
-						<Button
-							size="small"
-							color="info"
-							onClick={() => handleAction('unreview')}
-						>
-							↩️ Unreview
-						</Button>
-						<Button
-							size="small"
-							color="error"
-							onClick={handleClick}
-						>
-							❌ Delete
-						</Button>
-						<Popper open={deletePopperOpen} anchorEl={anchorEl}>
-							<Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-								Deleting this content will immediately remove it from the server.
-								<br />
-								<Button
-									size="small"
-									color="error"
-									onClick={() => handleAction('delete')}
-								>
-									Yes, permanently delete.
-								</Button>
-							</Box>
-						</Popper>
-					</CardActions>
-				</Card>
+							</BlurWrapper>
+							<Typography sx={{ fontSize: 14 }} gutterBottom>
+								submitted : {file.date}
+							</Typography>
+							{!!file?.tags && !!file.tags.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
+								User Tags:{' '}
+								{file.tags.map((tag: string) => <Chip label={tag} key={tag} />)}
+							</Typography>}
+							{!!adminTags?.length && <Typography sx={{ fontSize: 14 }} gutterBottom>
+								Admin Tags:{' '}
+								<ul>
+									{adminTags.map((tag, i) => <li key={i}>{tag.Key}: {tag.Value}</li>)}
+								</ul>
+							</Typography>}
+						</CardContent>
+						<TextField sx={{ mx: 2 }} label="reason" maxRows={3} multiline value={note} onChange={handleNote} />
+						<CardActions>
+							<Button
+								size="small"
+								color="success"
+								onClick={() => handleAction('approve')}
+							>
+								👍 Approve
+							</Button>
+							<Button
+								size="small"
+								color="warning"
+								onClick={() => handleAction('reject')}
+							>
+								⚠️ Reject
+							</Button>
+							<Button
+								size="small"
+								color="info"
+								onClick={() => handleAction('unreview')}
+							>
+								↩️ Unreview
+							</Button>
+							<Button
+								size="small"
+								color="error"
+								onClick={handleClick}
+							>
+								❌ Delete
+							</Button>
+							<Popper open={deletePopperOpen} anchorEl={anchorEl}>
+								<Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+									Deleting this content will immediately remove it from the server.
+									<br />
+									<Button
+										size="small"
+										color="error"
+										onClick={() => handleAction('delete')}
+									>
+										Yes, permanently delete.
+									</Button>
+								</Box>
+							</Popper>
+						</CardActions>
+					</Card>
+				</ClickAwayListener>
 			)}
 		</Grid>
 	)
