@@ -37,6 +37,7 @@ import { TagSelect } from '../SubmissionUtil/TagSelect'
 import Link from 'next/link'
 import { SubmissionUploadModal } from '../SubmissionUploadModal'
 import { useUser } from '@auth0/nextjs-auth0'
+import colors from '../../../config/colors'
 
 const CountyPreview = dynamic(() => import('../SubmissionUtil/CountyPreview'), {
 	ssr: false
@@ -273,11 +274,13 @@ export const Submit: React.FC<StepComponentProps> = ({
 						time you want to remove it, come back here, login, and mark the
 						story for removal.
 					</Typography>
-					<FormGroup>
+					<FormGroup sx={{pb: 2}}>
 						<FormControlLabel
-							control={<Checkbox onChange={handleConsent} checked={consent} />}
+							control={<Checkbox onChange={handleConsent} checked={consent} sx={{color: colors.yellow}}/>}
 							label="I agree to the license terms"
+							sx={{color: colors.yellow}}
 						/>
+						<label id="combo-box-county-label" style={{color: colors.yellow}}>* required</label>
 					</FormGroup>
 					<Typography>
 						If you’d like to be considered for paid research opportunities in

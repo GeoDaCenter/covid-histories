@@ -2,6 +2,7 @@ import * as React from 'react'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import CountyList from './CountyList.json'
+import colors from '../../../config/colors'
 
 interface ComboBoxProps {
 	onChange: (event: React.SyntheticEvent, newValue: any) => void
@@ -13,13 +14,18 @@ interface ComboBoxProps {
 
 export const CountySelect: React.FC<ComboBoxProps> = ({ onChange, value }) => {
 	return (
+		<>
 		<Autocomplete
 			disablePortal
 			onChange={onChange}
-			id="combo-box-demo"
+			id="combo-box-county"
 			options={CountyList}
 			fullWidth
 			value={value}
+			sx={{
+				color:'red',
+				borderLeft: `4px solid ${colors.yellow}`,
+			}}
 			renderInput={(params) => (
 				<TextField
 					{...params}
@@ -27,5 +33,7 @@ export const CountySelect: React.FC<ComboBoxProps> = ({ onChange, value }) => {
 				/>
 			)}
 		/>
+		<label id="combo-box-county-label" style={{color: colors.yellow}}>* required</label>
+		</>
 	)
 }
