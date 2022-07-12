@@ -12,38 +12,48 @@ const Container = styled(Box)`
 		max-width: 100%;
 	}
 `
+export interface PresignedGetOutput {
+	fileType: string;
+	url: string;
+	fileName: string;
+	ContentType: string | null
+}
 
-const WrittenStory: React.FC<{ content: string }> = ({ content }) => {
-	const fetcher =
-		content.slice(0, 5) === 'https'
-			? (content: string) => fetch(content).then((r) => r.text())
-			: () => content
+const WrittenStory: React.FC<{ content: string | PresignedGetOutput | null }> = ({ content }) => {
+	const fetcher = typeof content !== 'string' && content?.url
+		? (content: PresignedGetOutput) => fetch(content.url).then((r) => r.text())
+		: () => content
 	const { data } = useSWR(content, fetcher)
 	const text = data as string
 	return <ReactMarkdown>{text}</ReactMarkdown>
 }
+
 // @ts-ignore
 export const StoryPreview: React.FC<{
 	type: SubmissionTypes
-	content: any | null
+	content: string | PresignedGetOutput | null | undefined
 	additionalContent: any | null
 }> = ({ type, content, additionalContent }) => {
 	if (!content) return null
 	switch (type) {
-		case 'video':
+		case 'video': {
+			const contentUrl = typeof content === 'string' ? content : content.url
 			return (
 				<Container>
-					<video src={content} controls />
+					<video src={contentUrl} controls />
 				</Container>
 			)
 			break
-		case 'audio':
+		}
+		case 'audio': {
+			const contentUrl = typeof content === 'string' ? content : content.url
 			return (
 				<Container>
-					<audio src={content} controls />
+					<audio src={contentUrl} controls />
 				</Container>
 			)
 			break
+		}
 		case 'written':
 			return (
 				<Container>
@@ -58,11 +68,12 @@ export const StoryPreview: React.FC<{
 				</Container>
 			)
 			break
-		case 'photo':
+		case 'photo': {
+			const contentUrl = typeof content === 'string' ? content : content.url
 			return (
 				<Container>
 					<Box>
-						<img src={content} alt="story" />
+						<img src={contentUrl} alt="story" />
 					</Box>
 					<Box
 						sx={{
@@ -72,11 +83,12 @@ export const StoryPreview: React.FC<{
 							overflowY: 'auto'
 						}}
 					>
-						<ReactMarkdown>{additionalContent}</ReactMarkdown>
+					<WrittenStory content={additionalContent} />
 					</Box>
 				</Container>
 			)
 			break
+		}
 		default:
 			return null
 	}

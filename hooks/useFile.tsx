@@ -26,5 +26,5 @@ export const useFile = (fileId: string | null, folder?: string | null) => {
 		)
 		return await r.json()
 	}
-	return { file: file ? file[0] : null, error, updateState, mutate }
+	return { file: file ? file : null, error, updateState, mutate }
 }

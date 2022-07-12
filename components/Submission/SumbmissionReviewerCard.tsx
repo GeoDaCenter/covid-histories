@@ -24,7 +24,6 @@ import { SubmissionsReviewModal } from './SubmissionReviewModal'
 
 const BlurWrapper = styled.div<{ shouldBlur: boolean }>`
 	filter: ${({ shouldBlur }) => (shouldBlur ? 'blur(10px)' : 'none')};
-	height: 300px;
 	overflow-y :auto;
 `
 const PreviewImg = styled.img`
@@ -33,6 +32,12 @@ const PreviewImg = styled.img`
 	top: 0;
 	pointer-events: none;
 	transform: translate(-100%, -100%);
+`
+
+const Flex = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 `
 interface SubmissionReviewerCardProps {
 	fileId: string
@@ -82,6 +87,8 @@ const sleep = async (ms: number) => {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+const expandedStyle = { position: 'fixed', left: '50%', top: '50%', width: '90%', height: '90%', transform: 'translate(-50%,-50%)', zIndex: '500' }
+const compactStyle = { width: '100%' }
 export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	fileId,
 	state,
@@ -135,7 +142,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	const handleClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(anchorEl ? null : event.currentTarget);
 		setDeletePopperOpen(true)
-	  };
+	};
 
 	const handleAction = (action: 'approve' | 'reject' | 'delete' | 'unreview' | 'delete') => updateState(fileId, action, note)
 	const handleNote = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,13 +182,18 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 	return (
 		<Grid item xs={12} sm={6} md={4} lg={3}>
 			{file && (
-				<Card sx={{ width: '100%' }}>
+				<Card sx={modalOpen ? expandedStyle : compactStyle}>
 					<CardContent>
-						<CardActionArea onClick={() => setModalOpen(true)}>
-							<Typography variant="h6" gutterBottom>
-								{file.storyId}
-							</Typography>
-						</CardActionArea>
+						<Flex>
+						<Typography variant="h6" gutterBottom>
+							{file.storyId}
+						</Typography>
+						<Button
+							onClick={() => setModalOpen(p => !p)}
+						>
+							{modalOpen ? 'Close' : 'Expand'}
+						</Button>
+						</Flex>
 						{['video', 'photo'].includes(file?.storyType) && (
 							<Grid
 								container
@@ -218,12 +230,12 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 								)}
 							</Grid>
 						)}
-						<BlurWrapper shouldBlur={shouldBlur}>
-							{!!file?.content[0] && (
+						<BlurWrapper shouldBlur={shouldBlur} style={{ maxHeight: modalOpen ? '50vh' : '300px' }}>
+							{!!file && (
 								<StoryPreview
 									type={file.storyType}
-									content={file.content[0].url}
-									additionalContent={[]}
+									content={file?.content}
+									additionalContent={file?.additionalContent}
 								/>
 							)}
 						</BlurWrapper>
@@ -248,33 +260,33 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 							color="success"
 							onClick={() => handleAction('approve')}
 						>
-							Approve
+							👍 Approve
 						</Button>
 						<Button
 							size="small"
-							color="error"
+							color="warning"
 							onClick={() => handleAction('reject')}
 						>
-							Reject
+							⚠️ Reject
 						</Button>
 						<Button
 							size="small"
 							color="info"
 							onClick={() => handleAction('unreview')}
 						>
-							Return to review pool
+							↩️ Unreview
 						</Button>
 						<Button
 							size="small"
 							color="error"
 							onClick={handleClick}
 						>
-							Immediately delete
+							❌ Delete
 						</Button>
-						<Popper open={deletePopperOpen}  anchorEl={anchorEl}>
+						<Popper open={deletePopperOpen} anchorEl={anchorEl}>
 							<Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
 								Deleting this content will immediately remove it from the server.
-								<br/>
+								<br />
 								<Button
 									size="small"
 									color="error"
@@ -287,12 +299,6 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 					</CardActions>
 				</Card>
 			)}
-			<SubmissionsReviewModal
-				isOpen={modalOpen}
-				onClose={() => setModalOpen(false)}
-				updateState={updateState}
-				file={file}
-			/>
 		</Grid>
 	)
 }

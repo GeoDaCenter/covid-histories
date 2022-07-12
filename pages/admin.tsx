@@ -22,6 +22,7 @@ function TabPanel(props: TabPanelProps) {
 	if (submissions?.error){
 		return <h1>{submissions.error}</h1>
 	}
+	
 	return (
 		<NsfwProvider>
 			<div

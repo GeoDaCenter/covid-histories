@@ -17,6 +17,13 @@ const s3 = new S3Client({
 	}
 })
 
+interface PresignedGetOutput {
+	fileType: string;
+	url: string;
+	fileName: string;
+	ContentType: string | null
+}
+
 export default withApiAuthRequired(async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<string>
@@ -34,6 +41,7 @@ export default withApiAuthRequired(async function handler(
 			Key,
 			LastModified
 		}))
+		
 		const presignedGets = await Promise.all(
 			fileNames?.map(({ Key, LastModified }) =>
 				getPresignedUrl({
@@ -42,21 +50,35 @@ export default withApiAuthRequired(async function handler(
 				})
 			) || []
 		)
-		const metaData = await Promise.all(
-			presignedGets
-				.filter((f) => f.fileName?.includes('_meta.json'))
-				.map((f) => !!f.url && fetch(f.url).then((r) => r.json()))
-		)
-		const mergedData = metaData.map((meta) => ({
-			...meta,
-			content: presignedGets
-				.filter(
-					(f) =>
-						f.fileName?.includes(meta.storyId) &&
-						!f.fileName?.includes('_meta.json')
-				)
-				.map((f) => ({ ...f, fileType: f.fileName?.split('.').slice(-1)[0] }))
-		}))
+
+		const metaGet = presignedGets.find((file) => file.url.includes('meta.json'))
+		const metaData = metaGet?.url ? await fetch(metaGet.url).then((res) => res.json()) : {}
+		const contentGets = presignedGets
+			.filter((file) => !file.url.includes('meta.json'))
+			.map((f) => ({ ...f, fileType: f.fileName?.split('.').slice(-1)[0] }))
+			
+		let content = {
+			content: {},
+			additionalContent: {}
+		} as {
+			content: PresignedGetOutput | undefined
+			additionalContent: PresignedGetOutput | undefined
+		}
+		if (contentGets.length > 0) {
+			if (contentGets.length === 1) {
+				content.content = contentGets[0]
+			} else {
+				const mdContent = contentGets.find((file) => file.fileName.includes('.md'))
+				const mainContent = contentGets.find((file) => !file.fileName.includes('.md'))
+				content.content = mainContent
+				content.additionalContent = mdContent
+			}
+		}
+		
+		const mergedData = {
+			...metaData,
+			...content
+		}
 
 		if (folder === 'previewGifs') {
 			res.status(200).json(JSON.stringify(presignedGets))
