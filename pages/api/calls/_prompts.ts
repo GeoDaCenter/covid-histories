@@ -11,35 +11,43 @@ type Prompt = {
 	audioUrl: string | null
 }
 
+const BASE_PROMPT_URL = 'https://stories.uscovidatlas.org/_prompts_audio/'
+
 export const Prompts: Record<string, Record<Language, Prompt>> = {
 	Welcome: {
 		en: {
 			text: 'Welcome to Atlas Stories, a project of the US Covid Atlas, from the Healthy Regions & Policies Lab and University of Chicago. The US Covid Atlas is a non-profit research project that works to understand, archive, and represent the often unequal impact of the pandemic across the United States. With the Atlas Stories project, we are collecting oral histories about peoples experiences during the pandemic, to breathe life into the data and statistics of COVID-19. To learn more, visit stories dot us covid atlas dot org. ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'Welcome.wav'
 		},
 		es: { text: '', audioUrl: null }
 	},
 	ZipCodePrompt: {
 		en: {
 			text: ' Thanks for your interest in sharing your story. We would like to place your story in context on a map of the United States. To do so we need your zip code. Type in your 5-digit zip code on your phone keypad now',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'ZipCodePrompt.wav'
 		},
 		es: { text: '', audioUrl: null }
 	},
 	ZipCodeRecap: {
-		en: { text: 'You previously told us your zip code was', audioUrl: null },
+		en: {
+			text: 'You previously told us your zip code was',
+			audioUrl: BASE_PROMPT_URL + 'ZipCodeRecap.wav'
+		},
 		es: { text: '', audioUrl: null }
 	},
 	InvalidZip: {
 		en: {
 			text: 'Im sorry, that zip code was invalid. Please enter another zip code using your phone keypad now',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'InvalidZip.wav'
 		},
 		es: { text: '', audioUrl: null }
 	},
 
 	ValidZip: {
-		en: { text: 'Thanks for entering your zip code', audioUrl: null },
+		en: {
+			text: 'Thanks for entering your zip code',
+			audioUrl: BASE_PROMPT_URL + 'ValidZip.wav'
+		},
 		es: { text: '', audioUrl: null }
 	},
 
