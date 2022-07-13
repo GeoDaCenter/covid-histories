@@ -66,7 +66,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	ReviewPrevious: {
 		en: {
 			text: `It looks like you have already contributed to the Atlas Stories project. You can submit more stories for the following categories `,
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'ReviewPrevious.wav'
 		},
 		es: {
 			text: 'Parece que ya has contribuido al proyecto Atlas Stories. Puede enviar más historias para las siguientes categorías',
@@ -75,14 +75,17 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	},
 
 	ZipSuccess: {
-		en: { text: 'Thanks for telling us your zip code', audioUrl: null },
+		en: {
+			text: 'Thanks for telling us your zip code',
+			audioUrl: BASE_PROMPT_URL + 'ZipSuccess.wav'
+		},
 		es: { text: 'Gracias por decirnos tu código postal', audioUrl: null }
 	},
 
 	PreviousRecording: {
 		en: {
 			text: 'It looks like you previously submitted a recording for this topic.',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PreviousRecording.wav'
 		},
 		es: {
 			text: 'Parece que ya enviaste una grabación para este tema.',
@@ -93,7 +96,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	ZipOrTopicOptions: {
 		en: {
 			text: 'To change your zipcode, press 1. To record a new story or update an existing story, press 2',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'ZipOrTopicOptions.wav'
 		},
 		es: {
 			text: 'Para cambiar su código postal, presione 1. Para grabar una nueva historia o actualizar una historia existente, presione 2',
@@ -104,7 +107,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	RecordingPrelude: {
 		en: {
 			text: 'Simply tell us your story, and then, once you are finished, press the hash or pound key',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'RecordingPrelude.wav'
 		},
 		es: {
 			text: 'Simplemente cuéntenos su historia y luego, una vez que haya terminado, presione la tecla almohadilla o almohadilla',
@@ -115,14 +118,14 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	DeletedStory: {
 		en: {
 			text: 'We have deleted your story',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'DeletedStory'
 		},
 		es: { text: 'Nosotras hemos eliminado tu historia', audioUrl: null }
 	},
 	TopicActions: {
 		en: {
 			text: 'To listen to your story, press 1.  To re-record your story, press 2. To delete your story, press 3. To record another story about a different topic, press 4',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TopicActions.wav'
 		},
 		es: {
 			text: 'Para escuchar su historia, presione 1. Para volver a grabar su historia, presione 2. Para borrar su historia, presione 3. Para grabar otra historia sobre un tema diferente, presione 4',
@@ -133,7 +136,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	RecodingOptionsText: {
 		en: {
 			text: 'To listen to your story, press 1. To re-record your story, press 2. To delete your story, press 3. To record another story about a different topic, press 4',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'RecordingOptionsText.wav'
 		},
 		es: { text: '', audioUrl: null }
 	},
@@ -141,7 +144,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PermissionsText: {
 		en: {
 			text: 'Portions of this call will be recorded to share your story on the US Covid Atlas website at us covid atlas dot org. We need your permission to share your story. To agree to our Terms of Service, please press 0. To have a link to the Terms of Service texted to your phone, press 1. To hear the Terms of Service read outloud, press 2',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PermissionsText.wav'
 		},
 		es: {
 			text: 'Se grabarán partes de esta llamada para compartir su historia en el sitio web de US Covid Atlas en us covid atlas dot org. Necesitamos su permiso para compartir su historia. Para aceptar nuestros Términos de servicio, presione 0. Para recibir un enlace a los Términos de servicio en su teléfono, presione 1. Para escuchar los Términos de servicio en voz alta, presione 2',
@@ -151,7 +154,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	TopicSelectPrompt: {
 		en: {
 			text: 'To share a story about Your Community, please press 1. To share a story about Your Family, press 2. For a story about Your Self or your own experience, press 3. For a story about Your Work or School, press 4',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TopicSelectPrompt.wav'
 		},
 		es: {
 			text: 'Para compartir una historia sobre su comunidad, presione 1. Para compartir una historia sobre su familia, presione 2. Para una historia sobre usted o su propia experiencia, presione 3. Para una historia sobre su trabajo o escuela, presione 4',
@@ -161,7 +164,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	ZipCodeNoReply: {
 		en: {
 			text: "I didn't get a zip code there. Try typing it in again",
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'ZipCodeNoReply.wav'
 		},
 		es: {
 			text: 'No obtuve un código postal allí. Prueba a escribirlo de nuevo',
@@ -171,7 +174,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	Thanks: {
 		en: {
 			text: 'Thank you',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'Thanks.wav'
 		},
 		es: {
 			text: 'Gracias',
@@ -181,7 +184,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	CallThanksAndNext: {
 		en: {
 			text: 'Thanks for submitting your story. What would you like to do next?',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'CallThanksAndNext.wav'
 		},
 		es: {
 			text: 'Gracias por enviar tu historia. Que te gustaría hacer después?',
@@ -191,7 +194,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	TOSAgreement: {
 		en: {
 			text: `Thanks for agreeing to our Terms of Service`,
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TOSAgreement.wav'
 		},
 		es: {
 			text: `Gracias por aceptar nuestros Términos de servicio`,
@@ -201,7 +204,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	TOSLinkSent: {
 		en: {
 			text: 'Thanks! Look for a link sent to your phone. Read the Terms of Service and call back if you would like to agree to them. You can hang up now to read the Terms of Service.',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TOSLinkSent.wav'
 		},
 		es: {
 			text: '¡Gracias! Busque un enlace enviado a su teléfono. Lea los Términos de servicio y vuelva a llamar si desea aceptarlos. Puedes colgar ahora para leer los Términos de servicio.',
@@ -211,7 +214,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	TOSReadOutPrelude: {
 		en: {
 			text: 'You can stop playback and return to the menu at any time by pressing 0',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TOSReadOutPrelude.wav'
 		},
 		es: {
 			text: 'Puede detener la reproducción y volver al menú en cualquier momento presionando 0',
@@ -221,7 +224,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	CountyNotFound: {
 		en: {
 			text: 'We could not find a county that mapped to your zip code',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'CountyNotFound.wav'
 		},
 		es: {
 			text: 'No pudimos encontrar un condado que se asignó a su código postal',
@@ -231,7 +234,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	WhatCountyAreYouPartOf: {
 		en: {
 			text: 'What county do you live in?',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'WhatCountyAreYouPartOf.wav'
 		},
 		es: {
 			text: '¿En que país vives?',
@@ -241,7 +244,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PressOneFor: {
 		en: {
 			text: 'Press 1 for ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PressOneFor.wav'
 		},
 		es: {
 			text: 'Presione uno para',
@@ -251,7 +254,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PressTwoFor: {
 		en: {
 			text: 'Press 2 for ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PressTwoFor.wav'
 		},
 		es: {
 			text: 'Presiona dos para',
@@ -261,7 +264,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PressThreeFor: {
 		en: {
 			text: 'Press 3 for ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PressThreeFor.wav'
 		},
 		es: {
 			text: 'Presiona tres para',
@@ -271,7 +274,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PressFourFor: {
 		en: {
 			text: 'Press 4 for ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PressFourFor.wav'
 		},
 		es: {
 			text: 'Presiona cuatro para',
@@ -281,7 +284,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	PressFiveFor: {
 		en: {
 			text: 'Press 5 for ',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'PressFiveFor.wav'
 		},
 		es: {
 			text: 'Presione cinco para',
@@ -291,7 +294,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 	TOSSMS: {
 		en: {
 			text: 'You can find the Terms of Service for the US Covid Atlas Stories project at this link: https://stories.uscovidatlas.org/license',
-			audioUrl: null
+			audioUrl: BASE_PROMPT_URL + 'TOSSMS.wav'
 		},
 		es: {
 			text: 'Puede encontrar los Términos de servicio para el proyecto US Covid Atlas Stories en este enlace: https://stories.uscovidatlas.org/license',
