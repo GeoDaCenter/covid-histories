@@ -1,12 +1,13 @@
-import { Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Modal, Typography } from '@mui/material'
 import styled from 'styled-components'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { SubmissionTypes } from '../../../stores/submission/submissionSlice'
 import { selectType, setTheme, setType } from '../../../stores/submission'
 import { StepComponentProps } from './types'
 import colors from '../../../config/colors'
 import { Icons } from '../../Icons'
+import { YourCovidExperience } from './YourCovidExperience'
 interface StoryOption {
 	type: SubmissionTypes
 	label: string
@@ -31,7 +32,7 @@ const storyTypeOptions: StoryOption[] = [
 	},
 	{
 		type: 'phone',
-		label: 'Phone-based Story (NOT YET IMPLEMENTED)',
+		label: 'Phone-based Story',
 		icon: 'phone'
 	}
 ]
@@ -78,12 +79,35 @@ const StoryButton: React.FC<StoryButtonProps> = ({
 	)
 }
 
+const modalStyle = {
+	position: 'absolute',
+	top: '50%',
+	left: '50%',
+	transform: 'translate(-50%, -50%)',
+	width: '80%',
+	background: colors.darkgray,
+	borderRadius: '0.5em',
+	padding: '2em',
+	overflowY: 'auto'
+}
+
 export const StoryType: React.FC<StepComponentProps> = () => {
 	const dispatch = useDispatch()
 	const handleType = (type: SubmissionTypes) => {
 		dispatch(setType(type))
 	}
 	const activeType = useSelector(selectType)
+	const [modalOpen, setModalOpen] = React.useState(false)
+
+	useEffect(() => {
+		activeType === 'phone' && setModalOpen(true)
+	}, [activeType])
+
+	const handleModalClose = () => {
+		setModalOpen(false)
+		handleType('video')
+	}
+
 	return (
 		<Grid
 			container
@@ -109,6 +133,26 @@ export const StoryType: React.FC<StepComponentProps> = () => {
 					</Grid>
 				)
 			})}
+			<Modal
+				open={modalOpen}
+				onClose={handleModalClose}
+				>
+					<Box sx={modalStyle}>
+						<h1>
+							Thank you for choosing to share a story of the pandemic. 
+						</h1>
+						<p>
+							To start, call the number below:
+						</p>
+						<h2>
+							<a href="tel:+12179926843">217-992-6843</a>
+						</h2>
+						<p>
+							The voice prompts will guide you through the process. Below are four themes you may wish to talk about. Click a theme to see some suggested prompts or topics. 
+						</p>
+						<YourCovidExperience quiet={true} />
+					</Box>
+				</Modal>
 		</Grid>
 	)
 }

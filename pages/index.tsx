@@ -429,7 +429,7 @@ const Home: NextPage = () => {
 							<StoryTypeContainer hideBorder={true}>
 								<Icons.phone />
 								<br />
-								<CtaLink href="/phone-instructions" className="cta-button">
+								<CtaLink href="/submit?type=phone" className="cta-button">
 									Phone-based story
 								</CtaLink>
 							</StoryTypeContainer>

@@ -43,7 +43,11 @@ const Themes = [
 	}
 ]
 
-export const YourCovidExperience: React.FC = () => {
+export const YourCovidExperience: React.FC<{
+	quiet?: boolean
+}> = ({
+	quiet=false
+}) => {
 	const dispatch = useDispatch()
 	const activeTheme = useSelector(selectTheme)
 	const handleTheme = (theme: string) => dispatch(setTheme(theme))
@@ -52,11 +56,11 @@ export const YourCovidExperience: React.FC = () => {
 		<Grid
 			container
 			spacing={1}
-			minHeight="75vh"
+			minHeight={quiet ? undefined : "75vh"}
 			alignContent="center"
 			alignItems="center"
 		>
-			<Grid item xs={12}>
+			{!quiet && <Grid item xs={12}>
 				<Typography variant="h2">Your Pandemic Experience</Typography>
 				<Typography>
 					Choose one of the four themes to get started. We’ve provided a few
@@ -64,7 +68,7 @@ export const YourCovidExperience: React.FC = () => {
 					telling your story.
 				</Typography>
 				<Typography color="primary">* required</Typography>
-			</Grid>
+			</Grid>}
 			<Grid item xs={12} md={12}>
 				{Themes.map((theme, i) => (
 					<Button

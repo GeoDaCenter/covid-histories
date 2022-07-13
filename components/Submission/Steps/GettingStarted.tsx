@@ -43,7 +43,7 @@ export const GettingStarted: React.FC<StepComponentProps> = () => {
 					<Grid item xs={12} md={6}>
 						<Typography variant="h4">About Atlas Stories</Typography>
 						<Typography>
-							This project collects stories that show the experience behind the
+							This project collects stories that show the experiences behind the
 							numbers. These experiences provide a more complete understanding
 							of the pandemic to the growing Atlas archive. The perspectives
 							included aspire to accurately represent the diversity of
