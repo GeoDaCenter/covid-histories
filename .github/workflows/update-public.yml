@@ -35,6 +35,6 @@ jobs:
           git commit -m "Repair AV [skip ci]" -a
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
-        with
+        with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
