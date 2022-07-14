@@ -15,7 +15,7 @@ export default function handler(
 		twiml.record({
 			maxLength: 60,
 			finishOnKey: '#',
-			transcribe: true,
+			// transcribe: true,
 			// transcribeCallback: `/api/calls/transcription_result?topicId=${topicId}`,
 			action: `/api/calls/save_recording?topicId=${topicId}`
 		})
