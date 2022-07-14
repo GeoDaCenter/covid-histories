@@ -3,7 +3,8 @@ import {
 	PutObjectCommand,
 	GetObjectCommand,
 	ListObjectsCommand,
-  GetObjectCommandOutput
+  GetObjectCommandOutput,
+  DeleteObjectCommand
 } from '@aws-sdk/client-s3'
 import { UserCallRecord } from './_types'
 import hash from 'object-hash'
@@ -131,6 +132,26 @@ export const copyAudioFromTwillioToS3 = async (
 			fs.rmSync(tmpDir, { recursive: true })
 		}
 	}
+}
+
+
+export const deleteStory = async (phoneNo: string, storyId: string )=>{
+  
+	const { fileNames } = await listFiles(phoneNo)
+  if(! fileNames){ return 0 }
+
+  let storyFiles = fileNames.filter((f)=>f.Key!.includes(storyId))
+  await Promise.all(
+    storyFiles.map(async (f)=>{
+      let response = await s3.send(
+        new DeleteObjectCommand({
+          Bucket: config.S3_BUCKET,
+          Key : f.Key
+        })
+      )
+     })
+  )
+  return storyFiles.length
 }
 
 export const getExistingStories = async (phoneNo: string) => {

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import twilio from 'twilio'
 import { config, s3 } from '../files/_s3'
 import { prompts } from './_prompts'
-import { getPreviousCalls, getUserRecord, hashPhoneNo } from './_s3_utils'
+import { deleteStory, getPreviousCalls, getUserRecord, hashPhoneNo } from './_s3_utils'
 import { sayOrPlay } from './_utils'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
@@ -49,12 +49,14 @@ export default function handler(
 
 								// Re-record the topic
 								case 1:
+                  deleteStory(number,previousSubmission.key)
 									sayOrPlay(twiml, 'RecordingPrelude', user!.language)
 									twiml.redirect(`/api/calls/record_topic?topicId=${topicId}`)
 									break
 
 								// Delete the topic
 								case 2:
+                  deleteStory(number,previousSubmission.Key)
 									sayOrPlay(twiml, 'DeletedStory', user!.language)
 									twiml.redirect(`/api/calls/prompt_topic`)
 									break
