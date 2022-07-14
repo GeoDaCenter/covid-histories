@@ -167,6 +167,8 @@ export const saveCallStory = async (
 	const storyId = nanoid()
 	const hashedPhone = hash(phoneNo)
 
+  await new Promise(reolve =>setTimeout(()=>{},1000));
+
 	await copyAudioFromTwillioToS3(hashedPhone, storyId, audioUrl)
 
 	await s3.send(
