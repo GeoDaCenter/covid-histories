@@ -21,14 +21,14 @@ export default function handler(
 				twiml.say(
 					`thanks, that means you are in ${potential_counties[0].CountyName} county.`
 				)
+				createOrUpdateUserRecord(req.body.From, user, {
+					county: potential_counties[0].CountyFIPS
+				})
 				twiml.redirect('/api/calls/prompt_topic')
 			}
 
 			if (potential_counties.length === 0) {
 				sayOrPlay(twiml, 'CountyNotFound', user.language)
-				createOrUpdateUserRecord(req.body.From, user, {
-					county: potential_counties[0].CountyFIPS
-				})
 				twiml.redirect('/api/calls/prompt_zipcode')
 			}
 

@@ -33,7 +33,7 @@ export default function handler(
 						Bucket: config.S3_BUCKET,
 						Key: `uploads/${hashPhoneNo(
 							req.body.From
-						)}/${previousSubmission.key.replace('_meta.json', '.wav')}`
+						)}/${previousSubmission.key.replace('_meta.json', '.mp3')}`
 					})
 
 					getSignedUrl(s3, s3Params, { expiresIn: 600 }).then(
@@ -56,7 +56,7 @@ export default function handler(
 
 								// Delete the topic
 								case 2:
-                  deleteStory(number,previousSubmission.Key)
+                  deleteStory(number,previousSubmission.key)
 									sayOrPlay(twiml, 'DeletedStory', user!.language)
 									twiml.redirect(`/api/calls/prompt_topic`)
 									break
