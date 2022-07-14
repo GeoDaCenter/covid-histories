@@ -2,7 +2,8 @@ import {
 	S3Client,
 	PutObjectCommand,
 	GetObjectCommand,
-	ListObjectsCommand
+	ListObjectsCommand,
+  GetObjectCommandOutput
 } from '@aws-sdk/client-s3'
 import { UserCallRecord } from './_types'
 import hash from 'object-hash'
@@ -19,6 +20,18 @@ export const hashPhoneNo = (number: string) => {
 	return hash(number)
 }
 
+const streamToString = (stream: ReadableStream ): Promise<string> =>
+      new Promise((resolve, reject) => {
+        //@ts-ignore
+        const chunks = [];
+        //@ts-ignore
+        stream.on("data", (chunk) => chunks.push(chunk));
+        //@ts-ignore
+        stream.on("error", reject);
+        //@ts-ignore
+        stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
+      });
+
 export const getUserRecord = async (phoneNo: string) => {
 	const hashedNumber = hashPhoneNo(phoneNo)
 	console.log(
@@ -28,13 +41,17 @@ export const getUserRecord = async (phoneNo: string) => {
 		`meta/${hashedNumber}/call.json`
 	)
 	try {
-		const result = await s3.send(
+		const result : GetObjectCommandOutput = await s3.send(
 			new GetObjectCommand({
 				Bucket: config.S3_BUCKET,
 				Key: `meta/${hashedNumber}/call.json`
 			})
 		)
-		return JSON.parse(result.Body!.toString())
+    //@ts-ignore
+    const body = await streamToString(result.Body)
+    console.log("user request result" , body)
+  
+		return JSON.parse(body)
 	} catch (err) {
 		console.log('error getting user ', err)
 		return null
@@ -49,18 +66,25 @@ export const getStoryMeta = async (userHash: string, key: string) => {
 			Key: `uploads/${userHash}/${key}`
 		})
 	)
-	return { ...JSON.parse(result.Body!.toString()), key: key }
+  //@ts-ignore
+  let body = await streamToString(result.Body)
+	return { ...JSON.parse(body), key: key }
 }
 
 export const getPreviousCalls = async (phoneNo: string) => {
 	let userHash = hashPhoneNo(phoneNo)
 	let { fileNames } = await listFiles(phoneNo)
-	let result = await Promise.all(
-		fileNames!
-			.filter((f) => f.Key!.includes('_meta.json'))
-			.map((f) => getStoryMeta(userHash, f.Key!))
-	)
-	return result
+  if (fileNames){
+    let result = await Promise.all(
+      fileNames!
+        .filter((f) => f.Key!.includes('_meta.json'))
+        .map((f) => getStoryMeta(userHash, f.Key!))
+    )
+    return result
+  }
+  else{
+    return [] 
+  }
 }
 
 const downloadFile = async (
@@ -93,12 +117,16 @@ export const copyAudioFromTwillioToS3 = async (
 			new PutObjectCommand({
 				Bucket: config.S3_BUCKET,
 				ACL: 'private',
-				Key: `uploads/${hashedPhone}/${storyId}.wav`,
+				Key: `uploads/${hashedPhone}/${storyId}.mp3`,
 				Body: fs.readFileSync(file),
-				ContentType: 'audio/wav'
+				ContentType: 'audio/mp3'
 			})
 		)
-	} finally {
+	} 
+  catch {
+    console.log("Failed to upload mp3 file")
+  }
+  finally {
 		if (tmpDir) {
 			fs.rmSync(tmpDir, { recursive: true })
 		}
@@ -110,13 +138,17 @@ export const getExistingStories = async (phoneNo: string) => {
 	return Promise.all(
 		fileNames!
 			.filter((f) => f.Key?.includes('_meta.json'))
-			.map((f) =>
-				s3.send(
+			.map(async (f) =>{
+				let response = await s3.send(
 					new GetObjectCommand({
 						Bucket: config.S3_BUCKET,
 						Key: f.Key!
 					})
 				)
+        //@ts-ignore
+        let body = await streamToString(response.body)
+        return JSON.parse(body)
+        }
 			)
 	)
 }

@@ -11,7 +11,7 @@ export default function handler(
 	if (req.method === 'POST') {
 		getUserRecord(req.body.From).then((user) => {
 			const twiml = new VoiceResponse()
-			gather(twiml, 'RecodingOptionsText', user.language, {
+			gather(twiml, 'RecordingOptionsText', user.language, {
 				numDigits: 1,
 				action: `/api/calls/selected_topic_action?topicId=${req.query.topicId}`,
 				bargeIn: true

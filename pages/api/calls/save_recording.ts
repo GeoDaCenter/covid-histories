@@ -19,7 +19,10 @@ export default function handler(
 		getUserRecord(req.body.From).then((user) => {
 			if (req.body.RecordingUrl && user) {
 				console.log('Recording url is ', req.body.RecordingUrl)
-				saveCallStory(req.body.From, topic.name, req.body.RecordingUrl).then(
+        console.log("Resp is ", req.body)
+        let mp3Url =`https://api.twilio.com/2010-04-01/Accounts/${req.body.AccountSid}/Recordings/${req.body.CallSid}.mp3?Download=true`
+        console.log("mp3 url is ", mp3Url)
+				saveCallStory(req.body.From, topic.name, mp3Url).then(
 					() => {
 						twiml.say('Thanks for your recording')
 						twiml.redirect(`/api/calls/prompt_topic_options?topicId=${topicId}`)
