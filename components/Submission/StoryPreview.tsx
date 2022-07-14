@@ -54,6 +54,15 @@ export const StoryPreview: React.FC<{
 			)
 			break
 		}
+		case 'phone': {
+			const contentUrl = typeof content === 'string' ? content : content.url
+			return (
+				<Container>
+					<audio src={contentUrl} controls />
+				</Container>
+			)
+			break
+		}
 		case 'written':
 			return (
 				<Container>
