@@ -148,6 +148,9 @@ export const StoryType: React.FC<StepComponentProps> = () => {
 							<a href="tel:+12179926843">217-992-6843</a>
 						</h2>
 						<p>
+							<i>This is a toll free service for callers in the US. Carriers fees for minutes and texts may apply.</i>
+						</p>
+						<p>
 							The voice prompts will guide you through the process. Below are four themes you may wish to talk about. Click a theme to see some suggested prompts or topics. 
 						</p>
 						<YourCovidExperience quiet={true} />
