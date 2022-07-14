@@ -33,7 +33,7 @@ export default function handler(
 						Bucket: config.S3_BUCKET,
 						Key: `uploads/${hashPhoneNo(
 							req.body.From
-						)}/${previousSubmission.key.replace('_meta.json', '.mp3')}`
+						)}/${previousSubmission.key.replace('_meta.json', '.wav')}`
 					})
 
 					getSignedUrl(s3, s3Params, { expiresIn: 600 }).then(

@@ -118,9 +118,9 @@ export const copyAudioFromTwillioToS3 = async (
 			new PutObjectCommand({
 				Bucket: config.S3_BUCKET,
 				ACL: 'private',
-				Key: `uploads/${hashedPhone}/${storyId}.mp3`,
+				Key: `uploads/${hashedPhone}/${storyId}.wav`,
 				Body: fs.readFileSync(file),
-				ContentType: 'audio/mp3'
+				ContentType: 'audio/wav'
 			})
 		)
 	} 
