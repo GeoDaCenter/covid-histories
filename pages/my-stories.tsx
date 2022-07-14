@@ -19,14 +19,11 @@ import { StoryPreview } from '../components/Submission/StoryPreview'
 import CountyPreview from '../components/Submission/SubmissionUtil/CountyPreview'
 import { SubmissionTypes } from '../stores/submission/submissionSlice'
 import { SEO } from '../components/Interface/SEO'
+import { findCounty } from '../utils/findCounty'
 
 export interface StoryProps {
 	title: string
-	county: {
-		label: string
-		value: number
-		centroid: number[]
-	}
+	fips: number,
 	consent: boolean
 	storyId: string
 	storyType: SubmissionTypes
@@ -72,8 +69,9 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 }
 
 const StoryManager: React.FC<{ story: StoryProps }> = ({ story }) => {
-	const { title, date, storyType, theme, tags, county } = story
-
+	const { title, date, storyType, theme, tags, fips } = story
+	const county = findCounty(fips)
+	
 	const anchorEl = useRef(null)
 	const [tab, setTab] = useState(0)
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)

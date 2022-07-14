@@ -8,6 +8,7 @@ import {
 	listMeta,
 	listUsers
 } from '../pages/api/files/utils'
+import { findCounty } from '../utils/findCounty'
 
 const raceOptions = [
 	'Asian / Pacific Islander',
@@ -28,6 +29,7 @@ interface SurveyRow {
 	urbanicity: string
 	age: number
 	submission_ids: string
+    submission_fips: string
 	submission_counties: string
     additionalDescription?: string
 	self_race?: string
@@ -66,7 +68,8 @@ const getUserInfo = async (userId: string) => {
         opted_in: !!optedIn,
         opted_in_date: optedIn?.date,
         submission_ids: subs.map(sub => sub.storyId).join("|"),
-        submission_counties: subs.map(sub => sub?.county?.label).join("|"),
+        submission_fips: subs.map(sub => sub?.fips).join("|"),
+        submission_counties: subs.map(sub => findCounty(sub?.fips)?.label).join("|"),
         gender: survey?.genderIdentity || 'NA',
         urbanicity: survey?.placeUrbanicity || 'NA',
         age: survey?.age || -1,

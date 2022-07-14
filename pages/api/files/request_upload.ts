@@ -35,19 +35,9 @@ export default withApiAuthRequired(async function handler(
 		const hashedEmail = hash(user.email)
 		const prefix = `uploads/${hashedEmail}`
 		const metaCounts = await getSubmissionCounts(prefix)
-		// @ts-ignore
-		const cleanedStoryType: 'av' | 'written' | 'photo' = {
-			audio: 'av',
-			video: 'av',
-			written: 'written',
-			photo: 'photo'
-		}[storyType]
 
-		const canUpload =
-			(['video', 'audio'].includes(storyType) &&
-				metaCounts[cleanedStoryType] < 6) ||
-			(!['video', 'audio'].includes(storyType) &&
-				metaCounts[cleanedStoryType] < 3)
+		const canUpload = metaCounts[storyType] < 3
+				
 
 		if (canUpload) {
 			const prePath = 'uploads/' + hashedEmail + '/'

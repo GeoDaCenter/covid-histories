@@ -107,7 +107,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 		audio: audioConstraints,
 		askPermissionOnMount: false,
 		blobPropertyBag: {
-			type: useVideo ? 'video/mp4' : 'audio/mp3'
+			type: useVideo ? 'video/mp4' : 'audio/mpeg'
 		},
 		onStop
 		// mediaRecorderOptions: {
@@ -127,7 +127,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 	const hasRecorded =
 		status !== 'recording' && (mediaBlobUrl !== null || cachedStory !== '')
 	const mediaInUse = status === 'media_in_use'
-	const MIMETYPE = useVideo ? 'video/mp4' : 'audio/mp3'
+	const MIMETYPE = useVideo ? 'video/mp4' : 'audio/mpeg'
 
 	// useEffect(() => {
 	// 	if (status === 'stopped' && mediaBlobUrl !== null) {

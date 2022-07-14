@@ -49,6 +49,19 @@ interface UploadSpec {
 	storyId: string
 }
 
+interface MetaSpec {
+	title: string | null,
+	fips: number,
+	consent: boolean,
+	optInResearch: boolean
+	storyId: string,
+	storyType: 'video' | 'audio' | 'written' | 'photo' | 'phone',
+	theme: string,
+	tags: string[],
+	date: string,
+	email: string
+}
+
 // helpers
 const str2blob = (txt: string): Blob =>
 	new Blob([txt], { type: 'text/markdown' })
@@ -189,10 +202,10 @@ export const Submit: React.FC<StepComponentProps> = ({
 						handleSendFile(blob, additionalContentURL, true)
 					}
 				}
-
-				const meta = {
+				const email = user!.email!
+				const meta: MetaSpec = {
 					title,
-					county,
+					fips: county?.value,
 					consent,
 					optInResearch,
 					storyId,
@@ -200,9 +213,9 @@ export const Submit: React.FC<StepComponentProps> = ({
 					theme,
 					tags,
 					date: new Date().toISOString(),
-					email: user?.email
-					// additionalTags
+					email
 				}
+
 				const metaBlob = str2blob(JSON.stringify(meta))
 				const metaUploadSpec = {
 					storyType: storyType,

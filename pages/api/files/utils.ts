@@ -86,6 +86,7 @@ const fileExtensionMap: { [fileType: string]: string } = {
 	'audio/webm': '.webm',
 	'video/webm': '.webm',
 	'audio/mp3': '.mp3',
+	'audio/mpeg': '.mp3',
 	'video/mp4': '.mp4',
 	'text/markdown': '.md',
 	'application/json': '_meta.json'
@@ -421,7 +422,8 @@ export async function getSubmissionCounts(prefix: string) {
 
 	const baseCounts = {
 		written: 0,
-		av: 0,
+		audio: 0,
+		video: 0,
 		photo: 0
 	}
 
@@ -439,7 +441,6 @@ export async function getSubmissionCounts(prefix: string) {
 		.map((id) => {
 			let type
 			const fileList = fileNameList.filter((f) => f.includes(id))
-
 			if (fileList.length === 3) {
 				// photo -- meta, caption, and image
 				type = 'photo'
@@ -447,11 +448,13 @@ export async function getSubmissionCounts(prefix: string) {
 			if (
 				fileList.length === 2 &&
 				(fileList.includes(`${id}.webm`) ||
-					fileList.includes(`${id}.mp4`) ||
-					fileList.includes(`${id}.mp3`))
+					fileList.includes(`${id}.mp4`))
 			) {
 				// av + legacy formats and meta file
-				type = 'av'
+				type = 'video'
+			}
+			if (fileList.length === 2 && fileList.includes(`${id}.mp3`)) {
+				type = "audio"
 			}
 			if (fileList.length === 2 && fileList.includes(`${id}.md`)) {
 				type = 'written'
@@ -467,8 +470,8 @@ export async function getSubmissionCounts(prefix: string) {
 			case 'written':
 				acc.written++
 				break
-			case 'av':
-				acc['av']++
+			case 'audio':
+				acc['audio']++
 				break
 			case 'photo':
 				acc.photo++

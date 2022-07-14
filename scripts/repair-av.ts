@@ -96,7 +96,7 @@ async function main() {
 			const Key = uploadContents[i].Key!
 			const id = uploadContents[i].id!
 			const fileType = uploadContents[i].fileType!
-			const mimeType = fileType === 'mp4' ? 'video/mp4' : 'audio/mp3'
+			const mimeType = fileType === 'mp4' ? 'video/mp4' : 'audio/mpeg'
 			const isVideo = fileType === 'mp4'
 			try {
 				const response = await getPresignedUrl({

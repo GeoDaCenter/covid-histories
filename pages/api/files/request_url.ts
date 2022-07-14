@@ -28,7 +28,7 @@ export default withApiAuthRequired(async function handler(
 
 	if (user) {
 		const hashedEmail = hash(user.email)
-		const prefix = `meta/${hashedEmail}`
+		const prefix = `uploads/${hashedEmail}`
 		const metaCounts = await getSubmissionCounts(prefix)
 
 		if (metaCounts[storyType] !== undefined && metaCounts[storyType] < 3) {

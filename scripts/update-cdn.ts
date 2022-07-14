@@ -43,9 +43,8 @@ interface DistributionMeta {
 export interface PublicSubmission {
 	type: string
 	theme: string
-	county: string
 	id: string
-	centroid: number[]
+	fips: number
 	title: string
 	tags: string[]
 }
@@ -66,6 +65,7 @@ async function main() {
 			LastModified,
 			id: Key && Key.split('/').slice(-1)[0].split('.')[0]
 		}))
+
 	const publicContents: FileObject[] | undefined =
 		publicFileList?.Contents?.filter(
 			({ Key }) => !!Key && !Key.includes('index.json')
@@ -75,7 +75,6 @@ async function main() {
 			id: Key && Key.split('/').slice(-1)[0].split('.')[0]
 		}))
 	let publicFiles: { id: string; Key: string; fileType: string }[] = []
-
 	// early return if no bueno
 	if (uploadContents === undefined || publicContents === undefined) {
 		console.log('Error: Could not get file list')
@@ -100,13 +99,19 @@ async function main() {
 		)
 		const approvalStatus = TagSet?.find((f) => f.Key === 'status')?.Value
 
-		if (approvalStatus === 'approved')
-			publicFiles.push({ id: id!, Key: Key!, fileType: fileType! })
-
+		if (approvalStatus === 'approved') {
+			const uploadCounts = uploadContents.filter(f => f.id === id)
+			if (uploadCounts.length === 1) {
+				publicFiles.push({ id: id!, Key: Key!, fileType: fileType! })
+			}
+			if (uploadCounts.length > 1 && fileType !== '.md') {
+				publicFiles.push({ id: id!, Key: Key!, fileType: fileType! })
+			}
+		}
 		if (approvalStatus === 'approved' && publicFile !== undefined) {
 			continue
 		} else if (approvalStatus === 'approved' && publicFile === undefined) {
-			const _response = await copyObject(Key!, `public/${id}.${fileType}`)
+			const _response = await copyObject(Key!, `public/${id}${fileType}`)
 		} else if (approvalStatus !== 'approved' && publicFile !== undefined) {
 			const _response = await deleteObject(publicFile.Key!)
 		}
@@ -136,7 +141,10 @@ async function main() {
 					(res) => res.data as Promise<PublicSubmission[]>
 			  )
 			: []
-	)
+	).catch(e => {
+		console.log(e)
+		return []
+	})
 
 	const fileIndexPromises: Promise<PublicSubmission>[] = publicFiles.map(
 		async ({ id, Key, fileType }) => {
@@ -164,12 +172,11 @@ async function main() {
 					})
 					.then((submission) => {
 						if (submission) {
-							const { title, county, storyType, theme, tags } = submission
+							const { title, fips, storyType, theme, tags } = submission
 							return {
 								id,
 								title,
-								county: county?.label,
-								centroid: county?.centroid,
+								fips,
 								theme,
 								tags: tags || [],
 								type: storyType,
@@ -179,8 +186,7 @@ async function main() {
 							return {
 								id: '',
 								title: '',
-								county: '',
-								centroid: [0, 0],
+								fips:-1,
 								theme: '',
 								tags: [],
 								type: '',

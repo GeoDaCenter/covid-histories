@@ -12,7 +12,7 @@ export default withApiAuthRequired(async function handler(
 	const { user } = getSession(req, res)
 	if (user) {
 		const encrypted = hash(user.email)
-		const prefix = `meta/${encrypted}`
+		const prefix = `uploads/${encrypted}`
 		const metaCounts = await getSubmissionCounts(prefix)
 
 		res.status(200).json(JSON.stringify(metaCounts))
