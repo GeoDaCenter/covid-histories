@@ -91,18 +91,13 @@ export const getPreviousCalls = async (phoneNo: string) => {
 const downloadFile = async (
 	tmpDir: string,
 	audioUrl: string
-): Promise<string> => {
+): Promise<Blob> => {
 	const parsed = url.parse(audioUrl)
 	const fileName = path.basename(parsed.pathname!)
 	const destinationFile = path.join(tmpDir, fileName)
 	const response = await fetch(audioUrl)
-	const fileStream = fs.createWriteStream(destinationFile)
-	await new Promise((resolve, reject) => {
-		response!.body!.pipe(fileStream)
-		response!.body!.on('error', reject)
-		fileStream.on('finish', resolve)
-	})
-	return destinationFile
+  const data = await response.blob();
+	return data 
 }
 
 export const copyAudioFromTwillioToS3 = async (
@@ -113,13 +108,13 @@ export const copyAudioFromTwillioToS3 = async (
 	let tmpDir
 	try {
 		tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'covid_calls'))
-		let file = await downloadFile(tmpDir, audioUrl)
+		let fileBlob = await downloadFile(tmpDir, audioUrl)
 		await s3.send(
 			new PutObjectCommand({
 				Bucket: config.S3_BUCKET,
 				ACL: 'private',
 				Key: `uploads/${hashedPhone}/${storyId}.wav`,
-				Body: fs.readFileSync(file),
+				Body: fileBlob,
 				ContentType: 'audio/wav'
 			})
 		)
