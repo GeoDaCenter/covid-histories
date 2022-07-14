@@ -20,7 +20,7 @@ export default function handler(
 			if (req.body.RecordingUrl && user) {
 				console.log('Recording url is ', req.body.RecordingUrl)
         console.log("Resp is ", req.body)
-				saveCallStory(req.body.From, topic.name, req.body.RecordingUrl).then(
+				saveCallStory(req.body.From, topic.name, req.body.RecordingUrl, user.county).then(
 					() => {
 						twiml.say('Thanks for your recording')
 						twiml.redirect(`/api/calls/prompt_topic_options?topicId=${topicId}`)

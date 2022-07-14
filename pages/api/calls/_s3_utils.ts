@@ -162,7 +162,8 @@ export const getExistingStories = async (phoneNo: string) => {
 export const saveCallStory = async (
 	phoneNo: string,
 	topicId: string,
-	audioUrl: string
+	audioUrl: string,
+	fips: string
 ) => {
 	const storyId = nanoid()
 	const hashedPhone = hash(phoneNo)
@@ -170,7 +171,7 @@ export const saveCallStory = async (
   await new Promise(resolve =>setTimeout(resolve,1000));
 
 	await copyAudioFromTwillioToS3(hashedPhone, storyId, audioUrl)
-
+	
 	await s3.send(
 		new PutObjectCommand({
 			Bucket: config.S3_BUCKET,
@@ -178,8 +179,16 @@ export const saveCallStory = async (
 			Key: `uploads/${hashedPhone}/${storyId}_meta.json`,
 			Body: JSON.stringify({
 				type: 'audio',
-				topicId,
-				uploadTimestamp: new Date().toISOString()
+				theme: topicId,
+				tags: [],
+				title: '',
+				consent: true,
+				optInResearch: '?',
+				date: new Date().toISOString(),
+				email: "NA",
+				storyType: 'phone',
+				fips,
+				storyId
 			}),
 			ContentType: 'application/json'
 		})
