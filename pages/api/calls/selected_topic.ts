@@ -24,7 +24,6 @@ export default function handler(
 				)
 
 				if (selectedOption < prompts.length) {
-					twiml.say(defaultVoice, `Thanks! You selected ${selectedTopic.name}`)
 					if (previousSubmission) {
 						// If the user has previously submitted a recording,
 						// give them options
@@ -33,7 +32,7 @@ export default function handler(
 							`/api/calls/prompt_topic_options?topicId=${selectedOption}`
 						)
 					} else {
-						sayOrPlay(twiml, 'FirstRecording', user.language)
+						sayOrPlay(twiml, 'RecordingPrelude', user.language)
 						twiml.redirect(
 							{ method: 'POST' },
 							`/api/calls/record_topic?topicId=${selectedOption}`

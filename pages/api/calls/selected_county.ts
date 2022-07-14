@@ -23,7 +23,7 @@ export default function handler(
 			} else {
 				sayOrPlay(twiml, 'Thanks', user.language)
 				createOrUpdateUserRecord(req.body.From, user, {
-					county: potential_counties[selection].CountyName
+					county: potential_counties[selection].CountyFIPS
 				})
 				twiml.redirect('/api/calls/prompt_topic')
 			}

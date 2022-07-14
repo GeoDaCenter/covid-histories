@@ -27,7 +27,7 @@ export default function handler(
 			if (potential_counties.length === 0) {
 				sayOrPlay(twiml, 'CountyNotFound', user.language)
 				createOrUpdateUserRecord(req.body.From, user, {
-					county: potential_counties[0].CountyName
+					county: potential_counties[0].CountyFIPS
 				})
 				twiml.redirect('/api/calls/prompt_zipcode')
 			}

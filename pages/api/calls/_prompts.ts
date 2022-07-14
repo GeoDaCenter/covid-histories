@@ -133,7 +133,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 		}
 	},
 
-	RecodingOptionsText: {
+	RecordingOptionsText: {
 		en: {
 			text: 'To listen to your story, press 1. To re-record your story, press 2. To delete your story, press 3. To record another story about a different topic, press 4',
 			audioUrl: BASE_PROMPT_URL + 'RecordingOptionsText.wav'
