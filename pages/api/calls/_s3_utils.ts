@@ -90,9 +90,9 @@ export const getPreviousCalls = async (phoneNo: string) => {
 
 const downloadFile = async (
 	audioUrl: string
-): Promise<Blob> => {
+): Promise<ArrayBuffer> => {
 	const response = await fetch(audioUrl)
-  const data = await response.blob();
+  const data = await response.arrayBuffer();
 	return data 
 }
 
@@ -108,6 +108,7 @@ export const copyAudioFromTwillioToS3 = async (
 				Bucket: config.S3_BUCKET,
 				ACL: 'private',
 				Key: `uploads/${hashedPhone}/${storyId}.wav`,
+        //@ts-ignore
 				Body: fileBlob,
 				ContentType: 'audio/wav'
 			})
