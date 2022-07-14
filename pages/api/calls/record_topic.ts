@@ -13,10 +13,8 @@ export default function handler(
 		const twiml = new VoiceResponse()
 
 		twiml.record({
-			maxLength: 60,
+			maxLength: 600,
 			finishOnKey: '#',
-			// transcribe: true,
-			// transcribeCallback: `/api/calls/transcription_result?topicId=${topicId}`,
 			action: `/api/calls/save_recording?topicId=${topicId}`
 		})
 
