@@ -20,7 +20,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'Welcome.wav'
 		},
 		es: {
-			text: 'Bienvenido a Atlas Stories, un proyecto del US Covid Atlas, del Healthy Regions & Policies Lab y la Universidad de Chicago. El US Covid Atlas es un proyecto de investigación sin fines de lucro que trabaja para comprender, archivar y representar el impacto a menudo desigual de la pandemia en los Estados Unidos. Con el proyecto Atlas Stories, estamos recopilando historias orales sobre las experiencias de las personas durante la pandemia, para dar vida a los datos y estadísticas de COVID-19. Para obtener más información, visite stories dot us covid atlas dot org.',
+			text: 'Bienvenido a Atlas Stories, un proyecto del US Covid Atlas, del Laboratorio de Polizas y de Regiones de Buena Salud y la Universidad de Chicago. El US Covid Atlas es un proyecto de investigación sin fines de lucro que trabaja para comprender, archivar y representar el impacto de la pandemia que suele ser desigual en los Estados Unidos. Con el proyecto Atlas Stories, estamos recopilando historias orales sobre las experiencias de las personas durante la pandemia, para dar vida a los datos y estadísticas de COVID-19. Para obtener más información, visite stories punto us covid atlas punto org.',
 			audioUrl: null
 		}
 	},
@@ -30,7 +30,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'ZipCodePrompt.wav'
 		},
 		es: {
-			text: 'Gracias por tu interés en compartir tu historia. Nos gustaría ubicar su historia en contexto en un mapa de los Estados Unidos. Para ello necesitamos tu código postal. Escriba su código postal de 5 dígitos en el teclado de su teléfono ahora',
+			text: 'Gracias por su interés en compartir su historia. Nos gustaría ubicar su historia en contexto en un mapa de los Estados Unidos. Para ello necesitamos su código postal. Presione su código postal de 5 dígitos en el teclado de su teléfono ahora',
 			audioUrl: null
 		}
 	},
@@ -69,7 +69,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'ReviewPrevious.wav'
 		},
 		es: {
-			text: 'Parece que ya has contribuido al proyecto Atlas Stories. Puede enviar más historias para las siguientes categorías',
+			text: 'Parece que ya has contribuido al proyecto Atlas Stories. Puede contribuir más historias para las siguientes categorías',
 			audioUrl: null
 		}
 	},
@@ -88,7 +88,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'PreviousRecording.wav'
 		},
 		es: {
-			text: 'Parece que ya enviaste una grabación para este tema.',
+			text: 'Parece que ya contribuiste una grabación sobre este tema.',
 			audioUrl: null
 		}
 	},
@@ -110,7 +110,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'RecordingPrelude.wav'
 		},
 		es: {
-			text: 'Simplemente cuéntenos su historia y luego, una vez que haya terminado, presione la tecla almohadilla o almohadilla',
+			text: 'Simplemente cuéntenos su historia y cuando haya terminado, presione la tecla numeral o “hashtag”',
 			audioUrl: null
 		}
 	},
@@ -120,7 +120,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			text: 'We have deleted your story',
 			audioUrl: BASE_PROMPT_URL + 'DeletedStory'
 		},
-		es: { text: 'Nosotras hemos eliminado tu historia', audioUrl: null }
+		es: { text: 'Hemos borrado tu historia', audioUrl: null }
 	},
 	TopicActions: {
 		en: {
@@ -128,7 +128,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'TopicActions.wav'
 		},
 		es: {
-			text: 'Para escuchar su historia, presione 1. Para volver a grabar su historia, presione 2. Para borrar su historia, presione 3. Para grabar otra historia sobre un tema diferente, presione 4',
+			text: 'Para escuchar su historia, presione 1. Para grabar su historia de nuevo, presione 2. Para borrar su historia, presione 3. Para grabar otra historia sobre un tema diferente, presione 4',
 			audioUrl: null
 		}
 	},
@@ -147,7 +147,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'PermissionsText.wav'
 		},
 		es: {
-			text: 'Se grabarán partes de esta llamada para compartir su historia en el sitio web de US Covid Atlas en us covid atlas dot org. Necesitamos su permiso para compartir su historia. Para aceptar nuestros Términos de servicio, presione 0. Para recibir un enlace a los Términos de servicio en su teléfono, presione 1. Para escuchar los Términos de servicio en voz alta, presione 2',
+			text: 'Se grabarán partes de esta llamada para compartir su historia en el sitio web de US Covid Atlas en us covid atlas punto org. Necesitamos su permiso para compartir su historia. Para aceptar nuestros Términos de servicio, presione 0. Para recibir un texto sobre los Términos de servicio en su teléfono, presione 1. Para escuchar los Términos de servicio en voz alta, presione 2',
 			audioUrl: null
 		}
 	},
@@ -157,7 +157,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'TopicSelectPrompt.wav'
 		},
 		es: {
-			text: 'Para compartir una historia sobre su comunidad, presione 1. Para compartir una historia sobre su familia, presione 2. Para una historia sobre usted o su propia experiencia, presione 3. Para una historia sobre su trabajo o escuela, presione 4',
+			text: 'Para compartir una historia sobre su comunidad, presione 1. Para compartir una historia sobre su familia, presione 2. Para compartir una historia sobre usted o su propia experiencia, presione 3. Para compartir una historia sobre su trabajo o escuela, presione 4',
 			audioUrl: null
 		}
 	},
@@ -167,7 +167,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'ZipCodeNoReply.wav'
 		},
 		es: {
-			text: 'No obtuve un código postal allí. Prueba a escribirlo de nuevo',
+			text: 'No recibi un código postal. Intente teclarlo de nuevo',
 			audioUrl: null
 		}
 	},
@@ -187,7 +187,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'CallThanksAndNext.wav'
 		},
 		es: {
-			text: 'Gracias por enviar tu historia. Que te gustaría hacer después?',
+			text: 'Gracias por contribuir su historia. Que le desea hacer?',
 			audioUrl: null
 		}
 	},
@@ -207,7 +207,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'TOSLinkSent.wav'
 		},
 		es: {
-			text: '¡Gracias! Busque un enlace enviado a su teléfono. Lea los Términos de servicio y vuelva a llamar si desea aceptarlos. Puedes colgar ahora para leer los Términos de servicio.',
+			text: '¡Gracias! Busque un texto enviado a su teléfono. Lea los Términos de servicio y al termino llame de nuevo para aceptarlos. Puede colgar ahora para leer los Términos de servicio.',
 			audioUrl: null
 		}
 	},
@@ -217,7 +217,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'TOSReadOutPrelude.wav'
 		},
 		es: {
-			text: 'Puede detener la reproducción y volver al menú en cualquier momento presionando 0',
+			text: 'Puede parar la grabacion y regresar al menú en cualquier momento presionando 0',
 			audioUrl: null
 		}
 	},
@@ -227,7 +227,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'CountyNotFound.wav'
 		},
 		es: {
-			text: 'No pudimos encontrar un condado que se asignó a su código postal',
+			text: 'No pudimos encontrar un condado que corresponda a su código postal',
 			audioUrl: null
 		}
 	},
@@ -237,7 +237,7 @@ export const Prompts: Record<string, Record<Language, Prompt>> = {
 			audioUrl: BASE_PROMPT_URL + 'WhatCountyAreYouPartOf.wav'
 		},
 		es: {
-			text: '¿En que país vives?',
+			text: '¿En que condado vive?',
 			audioUrl: null
 		}
 	},
