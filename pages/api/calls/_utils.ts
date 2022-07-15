@@ -7,12 +7,12 @@ type VoiceOptions = {
 }
 export const VoiceForLanguage: Record<Language, VoiceOptions> = {
 	en: {
-		voice: 'alice',
+		voice: 'Polly.Kendra',
 		language: 'en-US'
 	},
 	es: {
-		voice: 'alice',
-		language: 'en-US'
+		voice: 'Polly.Mia',
+		language: 'es-MX'
 	}
 }
 export const gather = (
