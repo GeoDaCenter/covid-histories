@@ -51,12 +51,10 @@ export const Intro: React.FC<StepComponentProps> = ({ handleNext }) => {
 					Share your story
 				</Typography>
 				<Typography>
-					We know that the pandemic has impacted everyone&apos;s life. And
-					essentially everyone has a story to tell about their experience. By
-					participating in this oral history, whether you decide to do a video,
-					write, audio, or upload a picture you will ultimately be lifting up
-					your story behind the data and allow us to humanize the statistics
-					within the pandemic experience.
+					We know that the pandemic has impacted everyone&apos;s life. And everyone has a story to tell about their pandemic experience. By
+					participating in this oral histories project -- whether by sharing a video or audio story,
+					written account, photo or image, or calling in via phone -- you will be lifting up
+					the stories behind the data and humanizing the statistics of the pandemic.
 				</Typography>
 				<br />
 				<Typography fontWeight="bold">
