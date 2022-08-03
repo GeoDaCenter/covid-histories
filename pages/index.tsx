@@ -1,11 +1,11 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Box, Button, Grid, Typography } from '@mui/material'
+import { Box, Button, Grid, Modal, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import styled from 'styled-components'
 import { HomeSection } from '../components/HomeSection'
 import colors from '../config/colors'
 import styles from '../styles/Home.module.css'
-import { CtaLink, QuietCtaLink } from '../components/Interface/CTA'
+import { CtaButton, CtaLink, QuietCtaLink } from '../components/Interface/CTA'
 import Head from 'next/head'
 import Image from 'next/image'
 import { Icons } from '../components/Icons'
@@ -35,6 +35,40 @@ const StoryTypeContainer = styled(Box)<{ hideBorder?: boolean }>`
 	}
 `
 
+const VideoModalBox = styled(Box)`
+	position:absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 50vw;
+	background: ${colors.darkgray};
+	border: 1px solid ${colors.black};
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);
+	padding:2em;
+	iframe {
+		width: 100%;
+		max-width:100%;
+		aspect-ratio:16/9;
+	}
+	@media (max-width: 900px) {
+		width: 100vw;
+	}
+`
+const VideoModalInner = styled.div`
+	width:100%;
+	height:100%;
+	position:relative;
+	h3 {
+		margin:.5em 0;
+	}
+`
+const CloseButton = styled(Button)`
+	position:absolute;
+	top:0;
+	right:0;
+	background: ${colors.darkgray};
+	outline:none;
+`
 const ProgressIndicatorBar = styled.span<{ Progress: number }>`
 	position: fixed;
 	bottom: 0;
@@ -172,6 +206,7 @@ const FadeInPhoto: React.FC<FadeInPhotoProps> = ({
 }
 
 const Home: NextPage = () => {
+	const [videoModal, setVideoModal] = useState(false)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const [homeRef, homeInView] = useInView({ threshold: 0.5 })
 	const [exampleMapRef, exampleMapInView] = useInView({ threshold: 0.5 })
@@ -261,6 +296,9 @@ const Home: NextPage = () => {
 						<CtaLink href="/submit" className="cta-button">
 							Share your story
 						</CtaLink>
+						<CtaButton onClick={() => setVideoModal(true)}>
+							<div className="icon">&#9656;</div> Learn more
+						</CtaButton>
 						<Typography>
 							Learn more by scrolling down, or jump to a topic below.
 						</Typography>
@@ -516,6 +554,31 @@ const Home: NextPage = () => {
 					</Grid>
 				</Grid>
 			</HomeSection>
+			<Modal
+				open={videoModal}
+				onClose={() => setVideoModal(false)}
+				aria-labelledby="video-modal"
+				aria-describedby="video-modal-description"
+				// className={styles.videoModal}
+			>
+				<VideoModalBox>
+					<VideoModalInner>
+					<h3>
+						Intro: US Covid Atlas and Atlas Stories
+					</h3>
+					<iframe
+						src="https://www.youtube.com/embed/uaB-PacriyA"
+						title="Overview - Atlas Stories"
+						frameBorder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+						allowFullScreen
+					/>
+					<CloseButton onClick={() => setVideoModal(false)}>
+						&times;
+					</CloseButton>
+					</VideoModalInner>
+				</VideoModalBox>
+			</Modal>
 		</div>
 	)
 }
