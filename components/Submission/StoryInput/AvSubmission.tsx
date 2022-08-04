@@ -15,7 +15,8 @@ import { useReactMediaRecorder } from 'react-media-recorder'
 import { useGetMediaDevices } from '../../../hooks/useGetMediaDevices'
 import { AdvancedSettingsModal } from './AvUtils/AdvancedSettingsModal'
 import { AvSwitch } from './AvUtils/AvSwitch'
-
+import { CtaButton } from '../../Interface/CTA'
+import { VideoModal } from '../../Interface/VideoModal'
 const Recorder = dynamic(() => import('./AvUtils/Recorder'), {
 	loading: () => <p>...</p>,
 	ssr: false
@@ -66,6 +67,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 	const [showAdvancedModal, setShowAdvancedModal] = useState<boolean>(false)
 	const toggleAdvancedModal = () => setShowAdvancedModal((prev) => !prev)
 	const [cachedStory, setCachedStory] = useState<string>('')
+	const [videoModal, setVideoModal] = useState<boolean>(false)
 
 	const [videoConstraints, setVideoConstraints] =
 		useState<MediaTrackConstraints>(initialVideoConstraints)
@@ -214,6 +216,16 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 		<RecorderContainer>
 			<Grid container spacing={3}>
 				<Grid item xs={12} md={6}>
+					<CtaButton onClick={() => setVideoModal(true)}>
+						<div className="icon">&#9656;</div> Watch Tips Video
+					</CtaButton>
+
+						<VideoModal
+							open={videoModal}
+							onClose={() => setVideoModal(false)}
+							title="Atlas Stories Submission Tips"
+							videoUrl="https://www.youtube.com/embed/EjEyfCqh_dA"
+						/>
 					<Typography>
 						Here are some tips to help you share your story:
 					</Typography>

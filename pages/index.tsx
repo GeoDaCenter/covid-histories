@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { Icons } from '../components/Icons'
 import { useInView } from 'react-intersection-observer'
 import { SEO } from '../components/Interface/SEO'
+import { VideoModal } from '../components/Interface/VideoModal'
 
 const StoryTypeContainer = styled(Box)<{ hideBorder?: boolean }>`
 	padding-top: 2em;
@@ -35,40 +36,6 @@ const StoryTypeContainer = styled(Box)<{ hideBorder?: boolean }>`
 	}
 `
 
-const VideoModalBox = styled(Box)`
-	position:absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	width: 50vw;
-	background: ${colors.darkgray};
-	border: 1px solid ${colors.black};
-	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.35);
-	padding:2em;
-	iframe {
-		width: 100%;
-		max-width:100%;
-		aspect-ratio:16/9;
-	}
-	@media (max-width: 900px) {
-		width: 100vw;
-	}
-`
-const VideoModalInner = styled.div`
-	width:100%;
-	height:100%;
-	position:relative;
-	h3 {
-		margin:.5em 0;
-	}
-`
-const CloseButton = styled(Button)`
-	position:absolute;
-	top:0;
-	right:0;
-	background: ${colors.darkgray};
-	outline:none;
-`
 const ProgressIndicatorBar = styled.span<{ Progress: number }>`
 	position: fixed;
 	bottom: 0;
@@ -554,31 +521,12 @@ const Home: NextPage = () => {
 					</Grid>
 				</Grid>
 			</HomeSection>
-			<Modal
+			<VideoModal
 				open={videoModal}
 				onClose={() => setVideoModal(false)}
-				aria-labelledby="video-modal"
-				aria-describedby="video-modal-description"
-				// className={styles.videoModal}
-			>
-				<VideoModalBox>
-					<VideoModalInner>
-					<h3>
-						Intro: US Covid Atlas and Atlas Stories
-					</h3>
-					<iframe
-						src="https://www.youtube.com/embed/uaB-PacriyA"
-						title="Overview - Atlas Stories"
-						frameBorder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-						allowFullScreen
-					/>
-					<CloseButton onClick={() => setVideoModal(false)}>
-						&times;
-					</CloseButton>
-					</VideoModalInner>
-				</VideoModalBox>
-			</Modal>
+				title="Intro: US Covid Atlas and Atlas Stories"
+				videoUrl="https://www.youtube.com/embed/uaB-PacriyA"
+			/>
 		</div>
 	)
 }
