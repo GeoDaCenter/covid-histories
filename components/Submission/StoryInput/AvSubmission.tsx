@@ -224,7 +224,7 @@ const AvSubmission: React.FC<StoryInputProps> = ({
 							open={videoModal}
 							onClose={() => setVideoModal(false)}
 							title="Atlas Stories Submission Tips"
-							videoUrl="https://www.youtube.com/embed/EjEyfCqh_dA"
+							videoUrl="https://www.youtube.com/embed/-3GDwEYg0CI"
 						/>
 					<Typography>
 						Here are some tips to help you share your story:
