@@ -20,21 +20,23 @@ const NavUl = styled.ul`
 		}
 	}
 `
+const FooterEl = styled(Box)`
+	background: ${colors.teal};
+	width:100%;
+	min-height: 50vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2em 0;
+	a {
+		text-decoration: underline;
+	}
+`
 
 export const Footer: React.FC = () => {
 	const { user } = useUser()
 	return (
-		<Box
-			sx={{
-				background: colors.teal,
-				width: '100%',
-				minHeight: '50vh',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				py: 2
-			}}
-		>
+		<FooterEl>
 			<Box>
 				<Grid container spacing={5} className="standard-page-width">
 					<Grid item xs={12} md={6}>
@@ -120,10 +122,13 @@ export const Footer: React.FC = () => {
 						)}
 					</Grid>
 					<Grid item xs={12} md={6}>
-						Atlas Stories is run by the US Covid Atlas, a project by the Healthy
+						Atlas Stories is run by the US Covid Atlas, a project led by the Healthy
 						Regions and Policy Lab and the Center for Spatial Data Science at
 						the University of Chicago. The US Covid Atlas is funded in part by
 						the Robert Wood Johnson Foundation.
+						<br />
+						<br />
+						Atlas Stories is co-produced with <a href="https://truthanddocumentary.org/" target="_blank" rel="noopener noreferrer">Truth &amp; Documentary</a>, a production company serving non-profits, artists, journalism outlets and documentary filmmakers, based in Chicago.
 						<br />
 						<br />
 						<a
@@ -139,6 +144,6 @@ export const Footer: React.FC = () => {
 					</Grid>
 				</Grid>
 			</Box>
-		</Box>
+		</FooterEl>
 	)
 }
