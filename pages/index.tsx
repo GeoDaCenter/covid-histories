@@ -525,7 +525,7 @@ const Home: NextPage = () => {
 				open={videoModal}
 				onClose={() => setVideoModal(false)}
 				title="Intro: US Covid Atlas and Atlas Stories"
-				videoUrl="https://www.youtube.com/embed/uaB-PacriyA"
+				videoUrl="https://www.youtube.com/embed/pjswdUvwbFE"
 			/>
 		</div>
 	)
