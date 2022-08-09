@@ -128,7 +128,7 @@ export const Footer: React.FC = () => {
 						the Robert Wood Johnson Foundation.
 						<br />
 						<br />
-						Atlas Stories is co-produced with <a href="https://truthanddocumentary.org/" target="_blank" rel="noopener noreferrer">Truth &amp; Documentary</a>, a production company serving non-profits, artists, journalism outlets and documentary filmmakers, based in Chicago.
+						Atlas Stories partners with <a href="https://truthanddocumentary.org/" target="_blank" rel="noopener noreferrer">Truth &amp; Documentary</a>, a production company serving non-profits, artists, journalism outlets and documentary filmmakers, based in Chicago.
 						<br />
 						<br />
 						<a
