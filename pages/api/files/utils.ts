@@ -369,18 +369,23 @@ export async function upload(
 export async function uploadMeta(
 	type: SubmissionType | null,
 	key: string,
-	hashedEmail: string
+	hashedEmail: string,
+	body?: any
 ) {
 	const now = new Date()
-	const uploadTimestamp = now.toISOString()
+	const bodyJson = typeof body === 'string'
+		? JSON.parse(body)
+		: body
 
+	const uploadTimestamp = now.toISOString()
 	const uploadResult = await upload(
 		s3,
 		`meta/${hashedEmail}/${key}.json`,
 		'application/json',
 		JSON.stringify({
 			storyType: type,
-			uploadTimestamp
+			uploadTimestamp,
+			...bodyJson
 		})
 	)
 

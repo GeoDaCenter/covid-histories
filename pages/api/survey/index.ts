@@ -12,11 +12,10 @@ export default withApiAuthRequired(async function handler(
 	const { body } = req
 	const session = getSession(req, res)
 	const user = session?.user
-
 	if (user) {
 		const hashedEmail = hash(user.email)
-		const key = 'meta/' + hashedEmail + '/' + 'survey.json'
-		const metaResult = await uploadMeta(null, key, body)
+		const key = '/survey.json'
+		const metaResult = await uploadMeta(null, key, hashedEmail, body)
 		if (!metaResult) {
 			res.status(500).json(
 				JSON.stringify({
