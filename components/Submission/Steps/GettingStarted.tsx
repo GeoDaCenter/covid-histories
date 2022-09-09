@@ -65,8 +65,13 @@ export const GettingStarted: React.FC<StepComponentProps> = () => {
 							Oral histories represent individual experiences. The US Covid
 							Atlas team reserves the right to limit misinformation, racism,
 							xenophobia, gender or sexual biases and other harmful types of
-							content. The views expressed do not necessarily reflect the views
-							of the US Covid Atlas, T&D, University of Chicago, RWJF.
+							content. Also, we may be unable to publish your story due to issues 
+							such as promotion of organizations/businesses or promotional linking, 
+							or a story that does not reflect your personal experience. 
+							Please avoid these in your submission.
+							<br /><br />
+							The views expressed do not necessarily reflect the views
+							of the US Covid Atlas, T&amp;D, University of Chicago, RWJF.
 						</Typography>
 					</Grid>
 				</Grid>
