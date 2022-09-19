@@ -45,9 +45,7 @@ const Themes = [
 
 export const YourCovidExperience: React.FC<{
 	quiet?: boolean
-}> = ({
-	quiet=false
-}) => {
+}> = ({ quiet = false }) => {
 	const dispatch = useDispatch()
 	const activeTheme = useSelector(selectTheme)
 	const handleTheme = (theme: string) => dispatch(setTheme(theme))
@@ -56,19 +54,21 @@ export const YourCovidExperience: React.FC<{
 		<Grid
 			container
 			spacing={1}
-			minHeight={quiet ? undefined : "75vh"}
+			minHeight={quiet ? undefined : '75vh'}
 			alignContent="center"
 			alignItems="center"
 		>
-			{!quiet && <Grid item xs={12}>
-				<Typography variant="h2">Your Pandemic Experience</Typography>
-				<Typography>
-					Choose one of the four themes to get started. We’ve provided a few
-					prompts to think about. Feel free to any of these to get started
-					telling your story.
-				</Typography>
-				<Typography color="primary">* required</Typography>
-			</Grid>}
+			{!quiet && (
+				<Grid item xs={12}>
+					<Typography variant="h2">Your Pandemic Experience</Typography>
+					<Typography>
+						Choose one of the four themes to get started. We’ve provided a few
+						prompts to think about. Feel free to any of these to get started
+						telling your story.
+					</Typography>
+					<Typography color="primary">* required</Typography>
+				</Grid>
+			)}
 			<Grid item xs={12} md={12}>
 				{Themes.map((theme, i) => (
 					<Button
@@ -88,19 +88,21 @@ export const YourCovidExperience: React.FC<{
 					</Button>
 				))}
 			</Grid>
-			<Grid item xs={12} md={9}>
-				{!!activeTheme && (
-					<ul>
-						{Themes.find((f) => f.title === activeTheme)?.questions.map(
-							(question, i) => (
-								<li key={`${question}-${i}`}>
-									<Typography>{question}</Typography>
-								</li>
-							)
-						)}
-					</ul>
-				)}
-			</Grid>
+			{!quiet && (
+				<Grid item xs={12} md={9}>
+					{!!activeTheme && (
+						<ul>
+							{Themes.find((f) => f.title === activeTheme)?.questions.map(
+								(question, i) => (
+									<li key={`${question}-${i}`}>
+										<Typography>{question}</Typography>
+									</li>
+								)
+							)}
+						</ul>
+					)}
+				</Grid>
+			)}
 		</Grid>
 	)
 }
