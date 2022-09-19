@@ -14,7 +14,7 @@ interface StoryOption {
 	icon: string
 }
 
-const storyTypeOptions: StoryOption[] = [
+export const storyTypeOptions: StoryOption[] = [
 	{
 		type: 'video',
 		label: 'Video or Audio Diary',

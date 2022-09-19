@@ -88,7 +88,7 @@ export const YourCovidExperience: React.FC<{
 					</Button>
 				))}
 			</Grid>
-			<Grid item xs={12} md={9}>
+			{!quiet && <Grid item xs={12} md={9}>
 				{!!activeTheme && (
 					<ul>
 						{Themes.find((f) => f.title === activeTheme)?.questions.map(
@@ -100,7 +100,7 @@ export const YourCovidExperience: React.FC<{
 						)}
 					</ul>
 				)}
-			</Grid>
+			</Grid>}
 		</Grid>
 	)
 }
