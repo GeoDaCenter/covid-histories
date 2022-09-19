@@ -55,9 +55,10 @@ const surveyFetcher = (url: string) =>
 		.then((jsonRes) => jsonRes?.hasCompleted)
 
 const SurveyForm: React.FC<{
-	handleNext: () => void
-	allowSubmit?: boolean
-}> = ({ handleNext, allowSubmit = true }) => {
+	handleNext: () => void,
+	allowSubmit?: boolean,
+	isAdmin?: boolean
+}> = ({ handleNext, allowSubmit = true, isAdmin = false }) => {
 	const dispatch = useDispatch()
 
 	const { user } = useUser()
@@ -87,7 +88,7 @@ const SurveyForm: React.FC<{
 	}, [user]) // eslint-disable-line
 
 	useEffect(() => {
-		if (hasCompletedSurvey && allowSubmit) {
+		if (hasCompletedSurvey && allowSubmit && !isAdmin) {
 			handleNext()
 		}
 	}, [hasCompletedSurvey, allowSubmit])
@@ -111,7 +112,7 @@ const SurveyForm: React.FC<{
 			handleNext()
 		}
 	}
-	if (hasCompletedSurvey && allowSubmit) {
+	if (hasCompletedSurvey && allowSubmit && !isAdmin) {
 		return (
 			<Button onClick={handleNext} variant="contained" color="primary">
 				Continue to the next step
@@ -119,7 +120,7 @@ const SurveyForm: React.FC<{
 		)
 	}
 
-	if (hasCompletedSurvey) {
+	if (hasCompletedSurvey && !isAdmin) {
 		return null
 	}
 
@@ -302,12 +303,14 @@ const SurveyForm: React.FC<{
 }
 
 interface SurveyProps extends StepComponentProps {
-	allowSubmit?: boolean
+	allowSubmit?: boolean,
+	isAdmin?: boolean
 }
 
 export const Survey: React.FC<SurveyProps> = ({
 	handleNext,
-	allowSubmit = true
+	allowSubmit = true,
+	isAdmin = false
 }) => {
-	return <SurveyForm handleNext={handleNext} allowSubmit={allowSubmit} />
+	return <SurveyForm handleNext={handleNext} allowSubmit={allowSubmit} isAdmin={isAdmin} />
 }
