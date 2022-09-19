@@ -1,4 +1,4 @@
-import { withPageAuthRequired } from '@auth0/nextjs-auth0'
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0'
 import type { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
 import {
@@ -10,6 +10,7 @@ import {
 	Modal,
 	Select,
 	Stack,
+	Grid,
 	TextField
 } from '@mui/material'
 import React, { useCallback, useState, useEffect } from 'react'
@@ -45,6 +46,7 @@ import colors from '../config/colors'
 import objectHash from 'object-hash'
 import { SubmissionTypes } from '../stores/submission/submissionSlice'
 import { storyTypeOptions } from '../components/Submission/Steps/StoryType'
+import { useRouter } from 'next/router'
 
 // helpers
 const str2blob = (txt: string): Blob =>
@@ -64,11 +66,11 @@ interface FileSource {
 }
 
 const CORRECT_FILE_TYPES = {
-    "written": [".md"],
-    "audio": [".mp3"],
-    "phone": [".mp3"],
-    "photo": [".jpg", ".jpeg", ".png", ".gif", "or others"],
-    "video": [".mp4"],
+	"written": [".md"],
+	"audio": [".mp3"],
+	"phone": [".mp3"],
+	"photo": [".jpg", ".jpeg", ".png", ".gif", "or others"],
+	"video": [".mp4"],
 }
 
 const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
@@ -102,7 +104,7 @@ const ManualFileUpload: React.FC<{
 	})
 
 	return (
-		<>
+		<Box sx={{ width: '100%', flexGrow: 1 }}>
 			{!!fileSource?.url && (
 				<Box>
 					<p>
@@ -127,7 +129,6 @@ const ManualFileUpload: React.FC<{
 						<br />
 						Drop your file here.
 						<br />
-						<br />
 					</p>
 				) : (
 					<p>
@@ -138,7 +139,7 @@ const ManualFileUpload: React.FC<{
 					</p>
 				)}
 			</Button>
-		</>
+		</Box>
 	)
 }
 
@@ -233,26 +234,26 @@ const AdminInner: React.FC = () => {
 			}
 			const surveyUploadURL = await getSubmissionUrl(surveyUploadSpec)
 			await handleSendFile(surveyBlob, surveyUploadURL)
-            
-            if (storyType === "photo"){
-                // story content
-                const data = await fetch(additionalFileSource.url).then((r) => r.blob())
-                const contentBlob = new Blob([data], { type: additionalFileSource.type })
-                const contentUploadSpec = {
-                    key: `${storyId}.${additionalFileSource.name.split('.').pop()}`,
-                    folder: 'uploads',
-                    fileType: contentBlob.type,
-                    email: userEmail
-                }
-                const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
-                await handleSendFile(contentBlob, contentUploadUrl)
-            }
+
+			if (storyType === "photo") {
+				// story content
+				const data = await fetch(additionalFileSource.url).then((r) => r.blob())
+				const contentBlob = new Blob([data], { type: additionalFileSource.type })
+				const contentUploadSpec = {
+					key: `${storyId}.${additionalFileSource.name.split('.').slice(-1,)[0]}`,
+					folder: 'uploads',
+					fileType: contentBlob.type,
+					email: userEmail
+				}
+				const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
+				await handleSendFile(contentBlob, contentUploadUrl)
+			}
 
 			// story content
 			const data = await fetch(fileSource.url).then((r) => r.blob())
 			const contentBlob = new Blob([data], { type: fileSource.type })
 			const contentUploadSpec = {
-				key: `${storyId}.${fileSource.name.split('.').pop()}`,
+				key: `${storyId}.${fileSource.name.split('.').slice(-1,)[0]}`,
 				folder: 'uploads',
 				fileType: contentBlob.type,
 				email: userEmail
@@ -321,47 +322,55 @@ const AdminInner: React.FC = () => {
 							</FormControl>
 						</Box>
 					</Stack>
-
-					<Stack direction="row" gap={3}>
-						<Box>
+					<Grid container>
+						<Grid item xs={12} md={storyType === "photo" ? 6 : 12}>
 							<h2>Media / Story File</h2>
 							<ManualFileUpload
 								setFileSource={setFileSource}
 								fileSource={fileSource}
-                                />
-                            <h3>({CORRECT_FILE_TYPES?.[storyType].join(", ")})</h3>
-						</Box>
+							/>
+							<h3>({CORRECT_FILE_TYPES?.[storyType].join(", ")})</h3>
+						</Grid>
 						{storyType === 'photo' && (
-                            <Box>
+							<Grid item xs={12} md={6}>
 								<h2>Caption File</h2>
 								<ManualFileUpload
 									setFileSource={setAdditionalFileSource}
 									fileSource={additionalFileSource}
-                                    />
-                                <h3>({CORRECT_FILE_TYPES?.['written'].join(", ")})</h3>
-							</Box>
+								/>
+								<h3>({CORRECT_FILE_TYPES?.['written'].join(", ")})</h3>
+							</Grid>
 						)}
-						{storyType === 'photo' && <Box></Box>}
-					</Stack>
-					<h2>Topic</h2>
-					<YourCovidExperience quiet />
-					<h2>Submission Info</h2>
-					<SubmissionForm handleNext={() => {}} storyId={storyId} quiet />
-					<h2>Survey</h2>
-					{/* @ts-ignore */}
-					<Survey allowSubmit={false} isAdmin={true} />
-					<Button
-						variant="contained"
-						onClick={() => handleSubmit().then(() => setIsUploading(false))}
-					>
-						Submit
-					</Button>
+					</Grid>
+
 				</Stack>
+				<h2>Topic</h2>
+				<YourCovidExperience quiet />
+				<h2>Submission Info</h2>
+				<SubmissionForm handleNext={() => { }} storyId={storyId} quiet />
+				<h2>Survey</h2>
+				{/* @ts-ignore */}
+				<Survey allowSubmit={false} isAdmin={true} />
+				<Button
+					variant="contained"
+					onClick={() => handleSubmit().then(() => setIsUploading(false))}
+				>
+					Submit
+				</Button>
 			</Box>
 		</div>
 	)
 }
 const AdminOuter: NextPage<{ accessToken: string }> = ({ accessToken }) => {
+	const { user } = useUser()
+	const isAdmin = //@ts-ignore
+		user && user?.['https://stories.uscovidatlas.org/roles']?.includes('Admin')
+	const router = useRouter()
+	console.log(objectHash('test@test.com'))
+	if (!isAdmin) {
+		typeof window !== 'undefined' && router.push('/')
+		return <div>Not authorized</div>
+	}
 	return (
 		<Provider store={store}>
 			<AdminInner />
