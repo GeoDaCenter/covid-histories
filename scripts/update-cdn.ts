@@ -165,7 +165,7 @@ async function main() {
 									return res.data as Promise<StoryProps>
 								}
 								return null
-							})
+							}).catch(e => console.log(fileMetaUrl.url))
 						} else {
 							throw new Error('Error: Could not get file meta')
 						}
@@ -200,7 +200,6 @@ async function main() {
 
 	const fileResults = await Promise.all(fileIndexPromises)
 	const fileMeta = fileResults.filter(({ id }) => id.length)
-
 	const _fileMetaResponse = await putObject(
 		'public/index.json',
 		JSON.stringify(fileMeta)
