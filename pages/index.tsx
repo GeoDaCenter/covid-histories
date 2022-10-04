@@ -34,6 +34,28 @@ const StoryTypeContainer = styled(Box)<{ hideBorder?: boolean }>`
 	@media (max-width: 900px) {
 		border: none;
 	}
+	position: relative;
+`
+
+const StoryCTA = styled.p`
+	background: ${colors.yellow};
+	color: ${colors.black};
+	font-weight: bold;
+	border-radius: 1em;
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(1em, -100%);
+	padding: 0.5em;
+	box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.5);
+
+	&:before {
+		content: '🌟';
+		position: absolute;
+		left: -1em;
+		top: -50%;
+		font-size: 2em;
+	}
 `
 
 const ProgressIndicatorBar = styled.span<{ Progress: number }>`
@@ -376,7 +398,7 @@ const Home: NextPage = () => {
 					down for more information.
 				</Typography>
 				{/* @ts-ignore */}
-				<Grid container ref={storyTypesScrollRef}>
+				<Grid container ref={storyTypesScrollRef} sx={{ py: 5 }}>
 					<Grid item xs={12} sm={6} md={3}>
 						<span
 							className={
@@ -389,6 +411,7 @@ const Home: NextPage = () => {
 								<CtaLink href="/submit?type=video" className="cta-button">
 									Video or audio diary
 								</CtaLink>
+								<StoryCTA>Share a video receive $20</StoryCTA>
 							</StoryTypeContainer>
 						</span>
 					</Grid>
@@ -440,6 +463,10 @@ const Home: NextPage = () => {
 							</StoryTypeContainer>
 						</span>
 					</Grid>
+					<Typography sx={{ pt: 5 }}>
+						* If your video submission is approved, you will receive a $20 gift card. Limited to 50
+						submissions. Ends midnight CST 10/31/2022.
+					</Typography>
 				</Grid>
 			</HomeSection>
 			<HomeSection

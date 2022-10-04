@@ -47,8 +47,8 @@ const getUserInfo = async (userId: string) => {
             error: err,
             nosurvey:true
         }))
-
-    const subMeta = await listMeta(userId)    
+    
+    const subMeta = await listMeta(userId)
 	const subs = subMeta 
         ? await Promise.all(
             subMeta.map(
@@ -60,6 +60,7 @@ const getUserInfo = async (userId: string) => {
             )
         : []
 
+    console.log(subMeta)
     const optedIn = subs?.find(sub => sub.optInResearch === true)
     const email = survey.email || subs?.find(sub => sub.email)?.email
     let surveyResponse = {
