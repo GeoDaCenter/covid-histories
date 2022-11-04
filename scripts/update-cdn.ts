@@ -93,6 +93,8 @@ async function main() {
 	for (let i = 0; i < uploadContents.length; i++) {
 		const { Key, id } = uploadContents[i]
 		const fileType = '.' + Key?.split('.').slice(-1)[0]
+		if (fileType === "vtt") continue
+		
 		const { TagSet } = uploadTags[i] || {}
 		const publicFile = publicContents.find(
 			({ id: publicId }) => publicId === id
