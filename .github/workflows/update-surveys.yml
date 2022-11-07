@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Update Surveys Sheet
+name: Update Surveys Sheet v2
 # description: manage the public CDN
 
 on:
@@ -24,3 +24,21 @@ jobs:
         env:
           DB_SURVEY_READ_URL: ${{secrets.DB_SURVEY_READ_URL}}
           DB_SURVEY_WRITE_URL: ${{secrets.DB_SURVEY_WRITE_URL}}
+        
+      - name: timestamp update
+        run: yarn timestamp-update
+        env:
+          TIMESTAMP_PATH: ./.github/workflows/surveys-last-run.txt
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Atlas Bot"
+          git add -A
+          git commit -m "Repair AV [skip ci]" -a
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

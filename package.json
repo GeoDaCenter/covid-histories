@@ -9,7 +9,8 @@
 		"lint": "next lint",
 		"update-cdn": "ts-node ./scripts/update-cdn.ts",
 		"crawl-surveys": "ts-node ./scripts/update-survey.ts",
-		"repair-av": "node --experimental-wasm-threads --experimental-wasm-bulk-memory -r ts-node/register ./scripts/repair-av.ts"
+		"repair-av": "node --experimental-wasm-threads --experimental-wasm-bulk-memory -r ts-node/register ./scripts/repair-av.ts",
+		"timestamp-update": "ts-node ./scripts/last-updated"
 	},
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^1.7.0",

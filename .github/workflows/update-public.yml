@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Update Public CDN 0.0.3
+name: Update Public CDN 0.0.4
 # description: manage the public CDN
 
 on:
@@ -13,12 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
+
       - name: install node packages
         run: npm install
+
       - name: Update CDN
         run: yarn update-cdn
         env:
@@ -27,12 +30,19 @@ jobs:
           APP_AWS_ACCOUNT_ID: ${{secrets.APP_AWS_ACCOUNT_ID}}
           APP_AWS_ACCESS_KEY_ID: ${{secrets.APP_AWS_ACCESS_KEY_ID}}
           APP_AWS_SECRET_ACCESS_KEY: ${{secrets.APP_AWS_SECRET_ACCESS_KEY}}
+          
+      - name: timestamp update
+        run: yarn timestamp-update
+        env:
+          TIMESTAMP_PATH: ./.github/workflows/update-cdn-last-run.txt
+
       - name: commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Atlas Bot"
           git add -A
           git commit -m "Repair AV [skip ci]" -a
+
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
