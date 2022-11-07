@@ -93,7 +93,6 @@ async function main() {
 	for (let i = 0; i < uploadContents.length; i++) {
 		const { Key, id } = uploadContents[i]
 		const fileType = '.' + Key?.split('.').slice(-1)[0]
-		if (fileType === "vtt") continue
 		
 		const { TagSet } = uploadTags[i] || {}
 		const publicFile = publicContents.find(
@@ -124,6 +123,10 @@ async function main() {
 	// if so, delete
 	for (let i = 0; i < publicContents.length; i++) {
 		const { Key, id } = publicContents[i]
+
+		const fileType = '.' + Key?.split('.').slice(-1)[0]
+		if (fileType === ".vtt") continue
+		
 		const uploadFile = uploadContents.find(
 			({ id: uploadId }) => uploadId === id
 		)
