@@ -177,7 +177,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 				classify()
 			}
 		}
-	}, [gifUrl, file?.storyType, nsfwReady])
+	}, [gifUrl, file?.storyType, nsfwReady, nsfw, nsfwStatus.status])
 
 	if (hasInteracted) return null
 
