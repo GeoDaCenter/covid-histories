@@ -20,7 +20,7 @@ export const storyTypeOptions: StoryOption[] = [
 		type: 'video',
 		label: 'Video or Audio Diary',
 		icon: 'video',
-		cta: 'Share a video receive $20'
+		// cta: 'Share a video receive $20'
 	},
 	{
 		type: 'written',
@@ -159,10 +159,10 @@ export const StoryType: React.FC<StepComponentProps> = () => {
 				)
 			})}
 			<Grid item xs={12}>
-				<Typography variant="body1" sx={{ py: 5 }}>
+				{/* <Typography variant="body1" sx={{ py: 5 }}>
 					* If your video submission is approved, you will receive a $20 gift card. Limited to 50
 						submissions. Ends midnight CST 10/31/2022.
-				</Typography>
+				</Typography> */}
 			</Grid>
 			<Modal open={modalOpen} onClose={handleModalClose}>
 				<Box sx={modalStyle}>
