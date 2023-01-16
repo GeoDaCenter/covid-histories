@@ -57,7 +57,7 @@ export const submissionSlice = createSlice({
 	name: 'submission',
 	initialState,
 	reducers: {
-		resetSubmission: (state, action?: PayloadAction<SubmissionTypes>) => {
+		resetSubmission: (state, action: PayloadAction<SubmissionTypes>) => {
 			state.step = 0
 			state.type = action?.payload || 'video'
 			state.theme = ''
