@@ -411,7 +411,7 @@ const Home: NextPage = () => {
 								<CtaLink href="/submit?type=video" className="cta-button">
 									Video or audio diary
 								</CtaLink>
-								<StoryCTA>Share a video receive $20</StoryCTA>
+								{/* <StoryCTA>Share a video receive $20</StoryCTA> */}
 							</StoryTypeContainer>
 						</span>
 					</Grid>
@@ -463,10 +463,10 @@ const Home: NextPage = () => {
 							</StoryTypeContainer>
 						</span>
 					</Grid>
-					<Typography sx={{ pt: 5 }}>
+					{/* <Typography sx={{ pt: 5 }}>
 						* If your video submission is approved, you will receive a $20 gift card. Limited to 50
 						submissions. Ends midnight CST 10/31/2022.
-					</Typography>
+					</Typography> */}
 				</Grid>
 			</HomeSection>
 			<HomeSection
