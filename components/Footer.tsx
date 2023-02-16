@@ -122,10 +122,9 @@ export const Footer: React.FC = () => {
 						)}
 					</Grid>
 					<Grid item xs={12} md={6}>
-						Atlas Stories is run by the US Covid Atlas, a project led by the Healthy
-						Regions and Policy Lab and the Center for Spatial Data Science at
-						the University of Chicago. The US Covid Atlas is funded in part by
-						the Robert Wood Johnson Foundation.
+					Atlas Stories is run by the US Covid Atlas, a project led by the Healthy Regions and Policy Lab, 
+					based out of the University of Illinois at Urbana-Champaign, in collaboration with the University of Chicago. 
+					The US Covid Atlas is funded in part by the Robert Wood Johnson Foundation.
 						<br />
 						<br />
 						Atlas Stories partners with <a href="https://truthanddocumentary.org/" target="_blank" rel="noopener noreferrer">Truth &amp; Documentary</a>, a production company serving non-profits, artists, journalism outlets and documentary filmmakers, based in Chicago.
