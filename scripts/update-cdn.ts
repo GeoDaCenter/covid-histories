@@ -212,7 +212,7 @@ async function main() {
 
 	// invalidate cache
 	const invalidationParams: CreateInvalidationCommandInput = {
-		DistributionId: process.env.APP_AWS_CLOUDFRONT_DISTRIBUTION_ID!,
+		DistributionId: "E39KVETXMSLZRB",
 		InvalidationBatch: {
 			CallerReference: `${Date.now()}`,
 			Paths: {
