@@ -75,8 +75,8 @@ const CORRECT_FILE_TYPES = {
 
 const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
 	const { fileType, key, email, folder } = uploadSpec
-	console.log("uploadspec in getSubmissionUrl")
-	console.log(uploadspec)
+	console.log("uploadSpec in getSubmissionUrl")
+	console.log(uploadSpec)
 
 	const response = await fetch(
 		`/api/admin/upload?key=${encodeURIComponent(key)}
