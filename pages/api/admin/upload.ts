@@ -39,6 +39,7 @@ export default withApiAuthRequired(async function handler(
 		const hashedEmail = hash(email)
         const prePath = folder + '/' + hashedEmail + '/'
         console.log(prePath, key)
+	console.log(fileType)
         const {
             url: uploadURL,
             fileName,
@@ -49,7 +50,9 @@ export default withApiAuthRequired(async function handler(
             prePath,
             operation: 'putObject'
         })
-
+	console.log(uploadURL)
+	console.log("fileName: " + fileName + "<end>")
+	console.log(ContentType)
         res.status(200).json(
             JSON.stringify({
                 uploadURL,
