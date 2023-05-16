@@ -216,7 +216,7 @@ const AdminInner: React.FC = () => {
 			}
 			console.log(metaUploadSpec)
 			const metaUploadURL = await getSubmissionUrl(metaUploadSpec)
-			console.log(metaUploadUrl)
+			console.log(metaUploadURL)
 			await handleSendFile(metaBlob, metaUploadURL)
 			// survey
 			const survey = {
