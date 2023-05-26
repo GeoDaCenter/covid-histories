@@ -107,6 +107,8 @@ export const SEO: React.FC<SeoProps> = ({
 					href="favicon/favicon-16x16.png"
 				/>
 			</Head>
+			{/* <!-- Plausible Analytics --> */}
+			<script defer data-domain="stories.uscovidatlas.org" src="https://plausible.io/js/script.js"></script>
 			{/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
 			<Script
 				src="https://www.googletagmanager.com/gtag/js?id=G-XLJZKEX996"
