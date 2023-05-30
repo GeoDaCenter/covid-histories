@@ -4,8 +4,8 @@ name: Repair AV files v3
 # description: an hourly script to fix duration bugs with generated MP4 and MP3 files
 
 on:
-  schedule:
-    - cron: '0 * * * *'
+  #schedule:
+  #  - cron: '0 * * * *'
   workflow_dispatch:
 
 jobs:
