@@ -49,6 +49,11 @@ async function main() {
 		'./scripts/completed-repairs.txt',
 		'utf8'
 	).split(',')
+	let filesToSkip = readFileSync(
+		'./scripts/skip-repairs.txt',
+		'utf8'
+	).split(',')
+	completedRepairs.push.apply(completedRepairs, filesToSkip)
 	// get a list of files, slim to essential
 	// filter for files needing repairs (mp4/mp3) and have not been repaired
 	const uploadContents: FileObject[] = uploadFileList?.Contents?.filter(
