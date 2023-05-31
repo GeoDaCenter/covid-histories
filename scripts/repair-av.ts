@@ -76,6 +76,7 @@ async function main() {
 		const ffmpeg = await initFfmpeg()
 		console.log("ffmpeg initialized");
 		const doTranscode = async (filePath: string, isVideo: boolean) => {
+			console.log("transcoding:", filePath)
 			ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(filePath))
 			await ffmpeg.run('-i', 'input.mp4', '-c', 'copy', 'output.mp4')
 			isVideo &&
@@ -109,10 +110,7 @@ async function main() {
 					operation: 'getObject'
 				})
 					.then((r) => r.url!)
-					.then((url) => {
-						console.log(url);
-						doTranscode(url, isVideo);
-					})
+					.then((url) => doTranscode(url, isVideo))
 					.then(({ media, gif }) => {
 						isVideo && upload(s3, `previewGifs/${id}.gif`, 'image/gif', gif)
 						const mediaResponse = upload(s3, Key, mimeType, media)
