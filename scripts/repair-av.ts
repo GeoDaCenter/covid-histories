@@ -52,7 +52,7 @@ async function main() {
 	let filesToSkip = readFileSync(
 		'./scripts/skip-repairs.txt',
 		'utf8'
-	).split(',')
+	).split('/\r?\n/')
 	console.log(filesToSkip.length, "video ids marked to be skipped:", filesToSkip)
 	// get a list of files, slim to essential
 	// filter for files needing repairs (mp4/mp3) and have not been repaired
