@@ -53,7 +53,7 @@ async function main() {
 		'./scripts/skip-repairs.txt',
 		'utf8'
 	).split(',')
-	completedRepairs.push.apply(completedRepairs, filesToSkip)
+	console.log(filesToSkip.length, "video ids marked to be skipped:", filesToSkip)
 	// get a list of files, slim to essential
 	// filter for files needing repairs (mp4/mp3) and have not been repaired
 	const uploadContents: FileObject[] = uploadFileList?.Contents?.filter(
@@ -108,6 +108,10 @@ async function main() {
 			const isVideo = fileType === 'mp4'
 			console.log(Key)
 			console.log(id)
+			if (filesToSkip.includes(id!)) { 
+				console.log("skipping this file per skip-repairs.txt")
+				continue
+			}
 			try {
 				const response = await getPresignedUrl({
 					Key,
