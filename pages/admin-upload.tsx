@@ -79,10 +79,7 @@ const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
 	console.log(uploadSpec)
 
 	const response = await fetch(
-		`/api/admin/upload?key=${encodeURIComponent(key)}
-            &fileType=${encodeURIComponent(fileType)}
-            &email=${encodeURIComponent(email)}
-            &folder=${encodeURIComponent(folder)}`
+		`/api/admin/upload?key=${encodeURIComponent(key)}&fileType=${encodeURIComponent(fileType)}&email=${encodeURIComponent(email)}&folder=${encodeURIComponent(folder)}`
 	).then((res) => res.json())
 
 	return response?.uploadURL
