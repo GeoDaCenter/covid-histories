@@ -107,20 +107,6 @@ export const SEO: React.FC<SeoProps> = ({
 					href="favicon/favicon-16x16.png"
 				/>
 			</Head>
-			{/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
-			<Script
-				src="https://www.googletagmanager.com/gtag/js?id=G-XLJZKEX996"
-				strategy="afterInteractive"
-			/>
-			<Script id="google-analytics" strategy="afterInteractive">
-				{`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'G-XLJZKEX996');
-            `}
-			</Script>
 		</>
 	)
 }
