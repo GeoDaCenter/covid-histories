@@ -49,6 +49,11 @@ async function main() {
 		'./scripts/completed-repairs.txt',
 		'utf8'
 	).split(',')
+	let filesToSkip = readFileSync(
+		'./scripts/skip-repairs.txt',
+		'utf8'
+	).split('\n')
+	console.log(filesToSkip.length, "video ids marked to be skipped:", filesToSkip)
 	// get a list of files, slim to essential
 	// filter for files needing repairs (mp4/mp3) and have not been repaired
 	const uploadContents: FileObject[] = uploadFileList?.Contents?.filter(
@@ -74,7 +79,9 @@ async function main() {
 		// init ffmpeg and transcode function
 		// for mp4 files, this will also generate a gif
 		const ffmpeg = await initFfmpeg()
+		console.log("ffmpeg initialized");
 		const doTranscode = async (filePath: string, isVideo: boolean) => {
+			console.log("transcoding:", filePath)
 			ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(filePath))
 			await ffmpeg.run('-i', 'input.mp4', '-c', 'copy', 'output.mp4')
 			isVideo &&
@@ -90,6 +97,7 @@ async function main() {
 				gif: isVideo && ffmpeg.FS('readFile', 'output.gif')
 			}
 		}
+		console.log("beginning loop...");
 
 		// loop through, fetch file, transcode, upload
 		for (let i = 0; i < uploadContents.length; i++) {
@@ -98,6 +106,12 @@ async function main() {
 			const fileType = uploadContents[i].fileType!
 			const mimeType = fileType === 'mp4' ? 'video/mp4' : 'audio/mpeg'
 			const isVideo = fileType === 'mp4'
+			console.log(Key)
+			console.log(id)
+			if (filesToSkip.includes(id!)) { 
+				console.log("skipping this file per skip-repairs.txt")
+				continue
+			}
 			try {
 				const response = await getPresignedUrl({
 					Key,
@@ -111,6 +125,7 @@ async function main() {
 						const mediaResponse = upload(s3, Key, mimeType, media)
 						return mediaResponse
 					})
+				console.log(response)
 				if (response['$metadata'].httpStatusCode === 200) {
 					completedRepairs.push(id)
 					writeFileSync(

@@ -75,12 +75,11 @@ const CORRECT_FILE_TYPES = {
 
 const getSubmissionUrl = async (uploadSpec: UploadSpec): Promise<string> => {
 	const { fileType, key, email, folder } = uploadSpec
+	console.log("uploadSpec in getSubmissionUrl")
+	console.log(uploadSpec)
 
 	const response = await fetch(
-		`/api/admin/upload?key=${encodeURIComponent(key)}
-            &fileType=${encodeURIComponent(fileType)}
-            &email=${encodeURIComponent(email)}
-            &folder=${encodeURIComponent(folder)}`
+		`/api/admin/upload?key=${encodeURIComponent(key)}&fileType=${encodeURIComponent(fileType)}&email=${encodeURIComponent(email)}&folder=${encodeURIComponent(folder)}`
 	).then((res) => res.json())
 
 	return response?.uploadURL
@@ -212,7 +211,9 @@ const AdminInner: React.FC = () => {
 				email: userEmail,
 				folder: 'uploads'
 			}
+			console.log(metaUploadSpec)
 			const metaUploadURL = await getSubmissionUrl(metaUploadSpec)
+			console.log(metaUploadURL)
 			await handleSendFile(metaBlob, metaUploadURL)
 			// survey
 			const survey = {
@@ -232,6 +233,7 @@ const AdminInner: React.FC = () => {
 				email: userEmail,
 				folder: 'meta'
 			}
+
 			const surveyUploadURL = await getSubmissionUrl(surveyUploadSpec)
 			await handleSendFile(surveyBlob, surveyUploadURL)
 

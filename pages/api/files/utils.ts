@@ -309,7 +309,7 @@ export async function getPresignedUrl({
 }: PresignedUrlParams): Promise<PresignedUrlResponse> {
 	if (operation === 'putObject') {
 		const ext: string = fileExtensionMap[ContentType]
-		const fileName: string = `${Key || nanoid()}${!!ext ? ext : ''}`
+		const fileName: string = `${Key || nanoid()}${!!Key ? '' : (!!ext ? ext : '')}`
 		// Get signed URL from S3
 		const s3Params: PutObjectCommandInput = {
 			Bucket: config.S3_BUCKET!,
