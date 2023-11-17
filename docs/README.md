@@ -2,11 +2,13 @@
 
 ## Getting Started
 
-Create `.env.local` from example and update variables as needed:
+Create `.env` from example and update variables as needed:
 
 ```bash
-cp .env.local.example .env.local
+cp .env.example .env
 ```
+
+Update variables as needed (see [Environment Variables](#environment-variables))
 
 Install dependencies:
 
@@ -67,34 +69,15 @@ feedback and contributions are welcome!
 
 The following resources must be provisioned in AWS. Enviroment variables will be used to connect to these resources.
 
-### Prerequisites
+### Prerequisite Resources
 
-#### IAM user
-
-An IAM user must exist that had the following permissions:
-
-- CloudFront
-    - `CreateInvalidation`
-- S3
-    - `GetObject`
-    - `GetObjectTagging`
-    - `DeleteObject`
-    - `PutObject`
-    - `ListBucket`
-    - `PutObjectTagging`
-    - `PutObjectAcl`
-  
-For best practices, create a new Role `s3PresignedUploader` and attach these permissions to that role. Then create a new user `S3HistoriesUploader` (do not enable console access) and attach the new Role to the user.
-
-Create an access key and download it. You will use these credentials in the `APP_AWS_ACCESS_KEY_ID` and `APP_AWS_SECRET_ACCESS_KEY` environment variables.
+Set up the following resources ahead of time. You will be putting information from these resource into environement variables (`.env.local`).
 
 #### S3 Bucket
 
-Create a new S3 bucket. In the Permissions tab, do the following:
+Create a new S3 bucket. During creation, leave ACLs disabled and disable the "Block *all* public access" setting. Once created, do the following:
 
-1. Disable `Block public access`
-2. Edit the bucket policy directly, and use this the following. Make sure to update `<bucket-name>` appropriately.
-
+1. Edit the bucket policy directly with the following content. Make sure to update `<bucket-name>` appropriately.
     ```
     {
       "Version": "2012-10-17",
@@ -116,8 +99,7 @@ Create a new S3 bucket. In the Permissions tab, do the following:
       ]
     }
     ```
-3. Edit the CORS policy:
-
+2. Edit the CORS policy:
     ```
     [
       {
@@ -137,12 +119,43 @@ Create a new S3 bucket. In the Permissions tab, do the following:
       }
     ]
     ```
+3. Finally, create a new folder in the root of the bucket called `public`. (Other folders will be created automatically as needed.)
+
+The name of this bucket and the region it was created should be placed in the `APP_AWS_BUCKET` and `APP_AWS_REGION` environment variables, respectively.
 
 #### CloudFront Distribution
 
-Create a new CloudFront distribution with an origin that points to the S3 bucket. Set the origin path to `/public`.
+Create a new CloudFront distribution with an origin that points to the S3 bucket. Set the origin path to `/public`. WAF: Do not enable security protections.
 
-The id should be placed in `APP_AWS_CLOUDFRONT_DISTRIBUTION_ID` (todo: determine if this env variable is necessary??)
+The id should be placed in `APP_AWS_CLOUDFRONT_DISTRIBUTION_ID`.
+
+#### IAM user
+
+An IAM user must exist with the following permissions:
+
+- CloudFront
+    - Actions Allowed
+        - `CreateInvalidation`
+    - Resources
+        - distribution: Distribution ID from above.
+- S3
+    - Actions Allowed
+        - `ListBucket`
+        - `GetObject`
+        - `GetObjectTagging`
+        - `DeleteObject`
+        - `PutObject`
+        - `PutObjectTagging`
+        - `PutObjectAcl`
+    - Resources
+        - bucket: `<bucket-name>`
+        - object: *Any* 
+  
+For best practices, create a new policy `s3PresignedUploader` and attach these permissions to it.
+
+Then create a new user `S3HistoriesUploader` (do not enable console access) and attach this policy to the user.
+
+Create an access key (CLI). Copy the credentials from this key into your local `APP_AWS_ACCESS_KEY_ID` and `APP_AWS_SECRET_ACCESS_KEY` environment variables.
 
 ### Workflows Involving S3
 
@@ -153,3 +166,36 @@ The story submission and approval process uses tags on the objects that are uplo
 Presigned URLs are used to allow user upload directly to S3
 
 ![s3 presigned url diagram](./img/s3-presigned-flow.jpg)
+
+## Environment Variables
+
+AWS configs, see above.
+
+- `APP_AWS_ACCOUNT_ID`
+- `APP_AWS_ACCESS_KEY_ID`
+- `APP_AWS_SECRET_ACCESS_KEY`
+- `APP_AWS_REGION`
+- `APP_AWS_BUCKET`
+- `APP_AWS_CLOUDFRONT_DISTRIBUTION_ID`
+
+Mapbox API token
+
+- `NEXT_PUBLIC_MAPBOX_TOKEN`
+
+Google Sheet read/write script endpoints for survey submissions and retrieval
+
+- `DB_SURVEY_READ_URL`
+- `DB_SURVEY_WRITE_URL`
+
+Auth0, see [Auth0 docs](https://github.com/auth0/nextjs-auth0#configure-the-application) for more info.
+
+- `AUTH0_SECRET`
+- `AUTH0_BASE_URL`
+- `AUTH0_ISSUER_BASE_URL`
+- `AUTH0_CLIENT_ID`
+- `AUTH0_CLIENT_SECRET`
+
+Twilio configs (a currently disabled component of the app)
+
+- `TWILIO_ACCOUNT_AUTH`
+- `TWILIO_ACCOUNT_SID`
