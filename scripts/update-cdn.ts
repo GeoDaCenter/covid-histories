@@ -76,6 +76,8 @@ async function main() {
 		}))
 	let publicFiles: { id: string; Key: string; fileType: string }[] = []
 	// early return if no bueno
+	console.log(publicContents)
+	console.log(uploadContents)
 	if (uploadContents === undefined || publicContents === undefined) {
 		console.log('Error: Could not get file list')
 		return
@@ -212,7 +214,7 @@ async function main() {
 
 	// invalidate cache
 	const invalidationParams: CreateInvalidationCommandInput = {
-		DistributionId: "E39KVETXMSLZRB",
+		DistributionId: process.env.APP_AWS_CLOUDFRONT_DISTRIBUTION_ID,
 		InvalidationBatch: {
 			CallerReference: `${Date.now()}`,
 			Paths: {
