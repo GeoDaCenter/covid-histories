@@ -106,7 +106,7 @@ async function main() {
 					'-i',
 					'input.mp4',
 					'-vf',
-					'scale=320:-1, fps=1',
+					'scale=320:-1',
 					'-ss',
 					'1',
 					'-vframes',
