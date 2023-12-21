@@ -32,7 +32,7 @@ jobs:
           APP_AWS_ACCOUNT_ID: ${{secrets.APP_AWS_ACCOUNT_ID}}
           APP_AWS_ACCESS_KEY_ID: ${{secrets.APP_AWS_ACCESS_KEY_ID}}
           APP_AWS_SECRET_ACCESS_KEY: ${{secrets.APP_AWS_SECRET_ACCESS_KEY}}
-          REPAIR_AV_FILE_LIMIT: 5
+          REPAIR_AV_FILE_LIMIT: 10
 
       - name: timestamp update
         run: yarn timestamp-update
