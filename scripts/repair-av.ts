@@ -91,7 +91,7 @@ async function main() {
 				'input.mp4',
 				// force H.264 encoding, better for streaming and compression
 				'-c:v',
-				'copy',
+				'libx264',
 				// using the aac audio encoder threw a "Pthread aborting at Error"
 				// error during testing, so just using copy
 				'-c:a',
