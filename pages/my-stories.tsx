@@ -64,6 +64,7 @@ const StoryPreviewWrapper: React.FC<{ story: StoryProps }> = ({ story }) => {
 			type={story.storyType}
 			content={storyContent}
 			additionalContent={additionalContent}
+			previewUrl={''}
 		/>
 	)
 }

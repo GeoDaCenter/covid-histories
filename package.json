@@ -7,10 +7,10 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"update-cdn": "ts-node ./scripts/update-cdn.ts",
-		"crawl-surveys": "ts-node ./scripts/update-survey.ts",
-		"repair-av": "node --experimental-wasm-threads --experimental-wasm-bulk-memory -r ts-node/register ./scripts/repair-av.ts",
-		"timestamp-update": "ts-node ./scripts/last-updated"
+		"update-cdn": "node -r ts-node/register ./scripts/update-cdn.ts",
+		"crawl-surveys": "node -r ts-node/register ./scripts/update-survey.ts",
+		"repair-av": "node -r ts-node/register --experimental-wasm-threads ./scripts/repair-av.ts",
+		"timestamp-update": "node -r ts-node/register ./scripts/last-updated.ts"
 	},
 	"dependencies": {
 		"@auth0/nextjs-auth0": "^1.7.0",

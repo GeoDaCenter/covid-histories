@@ -95,6 +95,7 @@ export const Submit: React.FC<StepComponentProps> = ({
 								type={storyType}
 								content={content}
 								additionalContent={additionalContent}
+								previewUrl={''}
 							/>
 						</Box>
 					</TabPanel>

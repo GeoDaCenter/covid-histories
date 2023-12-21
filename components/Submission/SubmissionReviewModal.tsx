@@ -62,6 +62,7 @@ export const SubmissionsReviewModal: React.FC<SubmissionsReviewModalProps> = ({
 						type={file.storyType}
 						content={file.content[0].url}
 						additionalContent={[]}
+						previewUrl={''}
 					/>
 					<Typography sx={{ fontSize: 14 }} gutterBottom>
 						submitted : {file.date}
