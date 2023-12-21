@@ -120,9 +120,11 @@ async function main() {
 			}
 		}
 		console.log("beginning loop...");
+		console.log(process.env.REPAIR_AV_FILE_LIMIT)
 
 		// loop through, fetch file, transcode, upload
 		for (let i = 0; i < uploadContents.length; i++) {
+			if (process.env.REPAIR_AV_FILE_LIMIT != "0" && i.toString() == process.env.REPAIR_AV_FILE_LIMIT) {break}
 			const Key = uploadContents[i].Key!
 			const id = uploadContents[i].id!
 			const fileType = uploadContents[i].fileType!
