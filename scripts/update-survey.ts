@@ -37,6 +37,7 @@ interface SurveyRow {
 }
 
 const getUserInfo = async (userId: string) => {
+    console.log("getUserInfo...")
 	const survey = await getPresignedUrl({
 		Key: `meta/${userId}/survey.json`,
 		operation: 'getObject'
@@ -47,7 +48,8 @@ const getUserInfo = async (userId: string) => {
             error: err,
             nosurvey:true
         }))
-    
+    console.log("survey:")
+    console.log(survey)
     const subMeta = await listMeta(userId)
 	const subs = subMeta 
         ? await Promise.all(
@@ -60,6 +62,7 @@ const getUserInfo = async (userId: string) => {
             )
         : []
 
+    console.log("subMeta:")
     console.log(subMeta)
     const optedIn = subs?.find(sub => sub.optInResearch === true)
     const email = survey.email || subs?.find(sub => sub.email)?.email
@@ -78,6 +81,9 @@ const getUserInfo = async (userId: string) => {
         self_race: JSON.stringify(survey.selfIdentifiedRace),
         perc_race: JSON.stringify(survey.perceivedIdentifiedRace),
     } as SurveyRow
+
+    console.log("surveyResponse:")
+    console.log(surveyResponse)
 
     if (survey){
         const perceivedRaceCategories =  ['self','perc']
@@ -100,7 +106,7 @@ const getUserInfo = async (userId: string) => {
             }
         })
     }
-
+    console.log("getUserInfo completed.")
     return surveyResponse    
 }
 
@@ -122,14 +128,17 @@ async function main() {
 	const filteredUsers = userList.filter((user) => !includedUsers.includes(user))
 
     for (const user of filteredUsers) {
+        console.log("user: " + user)
         const userInfo = await getUserInfo(user)
         const postUrl = generateUrl(userInfo)
+        console.log("posting...")
         await axios(
             postUrl,
             {
                 method: 'GET'
             }
         )
+        console.log("complete.")
     }
 }
 
