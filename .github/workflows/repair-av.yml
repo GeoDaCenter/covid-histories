@@ -22,7 +22,7 @@ jobs:
           node-version: 16.x
 
       - name: install node packages
-        run: npm install
+        run: yarn install
 
       - name: get data
         run: yarn repair-av
