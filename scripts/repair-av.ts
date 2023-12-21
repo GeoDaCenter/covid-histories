@@ -105,6 +105,7 @@ async function main() {
 				(await ffmpeg.run(
 					'-i',
 					'input.mp4',
+					'-threads',
 					'-vf',
 					'scale=320:-1',
 					'-ss',
