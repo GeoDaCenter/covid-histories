@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16.x
       - name: install node packages
-        run: npm install
+        run: yarn install
       - name: Update Surveys
         run: yarn crawl-surveys
         env:
