@@ -16,10 +16,10 @@ jobs:
       - uses: actions/checkout@master
 
       # NODE
-      - name: Use Node.js 18.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
-          node-version: 18.x
+          node-version: 16.x
 
       - name: install node packages
         run: yarn install
