@@ -125,9 +125,9 @@ The name of this bucket and the region it was created should be placed in the `A
 
 #### CloudFront Distribution
 
-Create a new CloudFront distribution with an origin that points to the S3 bucket. Set the origin path to `/public`. WAF: Do not enable security protections.
+Create a new CloudFront distribution with an origin that points to the S3 bucket. Set the origin path to `/public`. Leave all other default settings. In the WAF section, "Do not enable security precautions".
 
-The id should be placed in `APP_AWS_CLOUDFRONT_DISTRIBUTION_ID`.
+The id of the new distribution should be placed in `APP_AWS_CLOUDFRONT_DISTRIBUTION_ID`.
 
 #### IAM user
 
@@ -149,9 +149,38 @@ An IAM user must exist with the following permissions:
         - `PutObjectAcl`
     - Resources
         - bucket: `<bucket-name>`
-        - object: *Any* 
+        - object: *Any*
   
-For best practices, create a new policy `s3PresignedUploader` and attach these permissions to it.
+For best practices, create a new policy `s3PresignedUploader` and attach these permissions to it. Here is the full set of permissions to attach to the policy in JSON format:
+
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "VisualEditor0",
+			"Effect": "Allow",
+			"Action": [
+				"s3:PutObject",
+				"s3:GetObject",
+				"s3:GetObjectTagging",
+				"s3:ListBucket",
+				"s3:PutObjectTagging",
+				"s3:DeleteObject",
+				"cloudfront:CreateInvalidation",
+				"s3:PutObjectAcl"
+			],
+			"Resource": [
+				"arn:aws:s3:::<bucket-name>",
+				"arn:aws:s3:::<bucket-name>/*",
+				"arn:aws:cloudfront::<account-number>:distribution/<distribution-id>"
+			]
+		}
+	]
+}
+```
+
+Update the `<bucket-name>`, `<account-number>`, and `<distribution-id>` appropriately.
 
 Then create a new user `S3HistoriesUploader` (do not enable console access) and attach this policy to the user.
 
