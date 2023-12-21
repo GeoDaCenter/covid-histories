@@ -25,7 +25,7 @@ jobs:
         run: yarn install
 
       - name: get data
-        run: yarn repair-av
+        run: node -r ts-node/register --experimental-wasm-threads --experimental-wasm-bulk-memory ./scripts/repair-av.ts
         env:
           APP_AWS_BUCKET: ${{secrets.APP_AWS_BUCKET}}
           APP_AWS_REGION: ${{secrets.APP_AWS_REGION}}
