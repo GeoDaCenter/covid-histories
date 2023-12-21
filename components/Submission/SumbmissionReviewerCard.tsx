@@ -239,6 +239,7 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 										type={file.storyType}
 										content={file?.content}
 										additionalContent={file?.additionalContent}
+										previewUrl={gifUrl}
 									/>
 								)}
 							</BlurWrapper>

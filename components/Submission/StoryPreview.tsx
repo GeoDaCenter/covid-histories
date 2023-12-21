@@ -33,14 +33,16 @@ export const StoryPreview: React.FC<{
 	type: SubmissionTypes
 	content: string | PresignedGetOutput | null | undefined
 	additionalContent: any | null
-}> = ({ type, content, additionalContent }) => {
+	previewUrl: string | undefined
+}> = ({ type, content, additionalContent, previewUrl }) => {
 	if (!content) return null
 	switch (type) {
 		case 'video': {
 			const contentUrl = typeof content === 'string' ? content : content.url
+			console.log(additionalContent)
 			return (
 				<Container>
-					<video src={contentUrl} controls />
+					<video src={contentUrl} autoPlay={false} preload={"none"} poster={previewUrl} controls />
 				</Container>
 			)
 			break
