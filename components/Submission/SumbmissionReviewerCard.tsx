@@ -189,7 +189,8 @@ export const SubmissionReviewerCard: React.FC<SubmissionReviewerCardProps> = ({
 						<CardContent>
 							<Flex>
 								<Typography variant="h6" gutterBottom>
-									{file.storyId}
+									<span><em style={{fontSize:'.8em'}}>{file.content.fileName.split("/")[1]}</em><br/>
+									{file.storyId}</span>
 								</Typography>
 								<Button
 									onClick={() => setModalOpen(p => !p)}
