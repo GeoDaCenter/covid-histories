@@ -47,6 +47,7 @@ export interface PublicSubmission {
 	fips: number
 	title: string
 	tags: string[]
+	shortPresent: boolean
 }
 
 async function main() {
@@ -118,6 +119,8 @@ async function main() {
 		}
 	}
 
+	const shortVideos: String[] = []
+
 	// loop through public files
 	// if missing from uplodas, this means they were delete
 	// if so, delete
@@ -126,6 +129,14 @@ async function main() {
 
 		const fileType = '.' + Key?.split('.').slice(-1)[0]
 		if (fileType === ".vtt") continue
+
+		// look for "...-short" videos, add to lookup array, and don't delete
+		if (Key?.includes("-short")) {
+			let vidId: String
+			vidId = id ? id.split("-")[0] : ""
+			shortVideos.push(vidId)
+			continue
+		}
 		
 		const uploadFile = uploadContents.find(
 			({ id: uploadId }) => uploadId === id
@@ -156,6 +167,7 @@ async function main() {
 					.then((submission) => {
 						if (submission) {
 							const { title, fips, storyType, theme, tags } = submission
+							const shortPresent = shortVideos.includes(id);
 							return {
 								id,
 								title,
@@ -163,7 +175,8 @@ async function main() {
 								theme,
 								tags: tags || [],
 								type: storyType,
-								fileType
+								fileType,
+								shortPresent,
 							}
 						} else {
 							return {
@@ -173,11 +186,11 @@ async function main() {
 								theme: '',
 								tags: [],
 								type: '',
-								fileType: ''
+								fileType: '',
+								shortPresent: false,
 							}
 						}
 					})
-			}
 		}
 	)
 
