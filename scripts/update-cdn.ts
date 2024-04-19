@@ -48,6 +48,8 @@ export interface PublicSubmission {
 	title: string
 	tags: string[]
 	shortPresent: boolean
+	followupPresent: boolean
+	followupShortPresent: boolean
 }
 
 async function main() {
@@ -120,6 +122,8 @@ async function main() {
 	}
 
 	const shortVideos: String[] = []
+	const followupVideos: String[] = []
+	const followupShortVideos: String[] = []
 
 	// loop through public files
 	// if missing from uplodas, this means they were delete
@@ -130,11 +134,23 @@ async function main() {
 		const fileType = '.' + Key?.split('.').slice(-1)[0]
 		if (fileType === ".vtt") continue
 
+		let vidId: String
 		// look for "...-short" videos, add to lookup array, and don't delete
 		if (Key?.includes("-short")) {
-			let vidId: String
-			vidId = id ? id.split("-")[0] : ""
+			vidId = id ? id.split("-short")[0] : ""
 			shortVideos.push(vidId)
+			continue
+		}
+		// look for "...-followup" videos, add to lookup array, and don't delete
+		if (Key?.includes("-followup")) {
+			vidId = id ? id.split("-followup")[0] : ""
+			followupVideos.push(vidId)
+			continue
+		}
+		// look for "...-followup-short" videos, add to lookup array, and don't delete
+		if (Key?.includes("-followup-short")) {
+			vidId = id ? id.split("-followup-short")[0] : ""
+			followupShortVideos.push(vidId)
 			continue
 		}
 		
@@ -168,6 +184,8 @@ async function main() {
 						if (submission) {
 							const { title, fips, storyType, theme, tags } = submission
 							const shortPresent = shortVideos.includes(id);
+							const followupPresent = followupVideos.includes(id);
+							const followupShortPresent = followupShortVideos.includes(id);
 							return {
 								id,
 								title,
@@ -177,6 +195,8 @@ async function main() {
 								type: storyType,
 								fileType,
 								shortPresent,
+								followupPresent,
+								followupShortPresent,
 							}
 						} else {
 							return {
@@ -188,6 +208,8 @@ async function main() {
 								type: '',
 								fileType: '',
 								shortPresent: false,
+								followupPresent: false,
+								followupShortPresent: false,
 							}
 						}
 					})
