@@ -4,8 +4,8 @@ name: Update Public CDN 0.0.5
 # description: manage the public CDN
 
 on:
-  schedule:
-    - cron: '45 0 * * *'
+  #schedule:
+  #  - cron: '45 0 * * *'
   workflow_dispatch:
 
 jobs:
