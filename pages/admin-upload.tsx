@@ -264,7 +264,7 @@ const AdminInner: React.FC = () => {
 			}
 			const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
 			await handleSendFile(contentBlob, contentUploadUrl)
-			alert("completed")
+			alert("completed\n" + contentUploadUrl)
 		} catch {
 			alert('upload failed')
 		}
