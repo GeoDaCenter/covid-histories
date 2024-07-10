@@ -235,6 +235,8 @@ const AdminInner: React.FC = () => {
 			}
 
 			const surveyUploadURL = await getSubmissionUrl(surveyUploadSpec)
+			console.log(1)
+			console.log(surveyUploadURL)
 			await handleSendFile(surveyBlob, surveyUploadURL)
 
 			if (storyType === "photo") {
@@ -262,6 +264,7 @@ const AdminInner: React.FC = () => {
 			}
 			const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
 			await handleSendFile(contentBlob, contentUploadUrl)
+			alert("completed")
 		} catch {
 			alert('upload failed')
 		}
