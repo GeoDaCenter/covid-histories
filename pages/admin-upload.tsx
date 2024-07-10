@@ -211,9 +211,7 @@ const AdminInner: React.FC = () => {
 				email: userEmail,
 				folder: 'uploads'
 			}
-			console.log(metaUploadSpec)
 			const metaUploadURL = await getSubmissionUrl(metaUploadSpec)
-			console.log(metaUploadURL)
 			await handleSendFile(metaBlob, metaUploadURL)
 			// survey
 			const survey = {
@@ -235,8 +233,6 @@ const AdminInner: React.FC = () => {
 			}
 
 			const surveyUploadURL = await getSubmissionUrl(surveyUploadSpec)
-			console.log(1)
-			console.log(surveyUploadURL)
 			await handleSendFile(surveyBlob, surveyUploadURL)
 
 			if (storyType === "photo") {
@@ -264,7 +260,7 @@ const AdminInner: React.FC = () => {
 			}
 			const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
 			await handleSendFile(contentBlob, contentUploadUrl)
-			alert("completed\n" + contentUploadUrl)
+			alert("completed, uploaded file url:\n" + contentUploadUrl.split("?")[0] + "\nplease refresh page before submitting the next survey")
 		} catch {
 			alert('upload failed')
 		}
