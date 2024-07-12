@@ -260,7 +260,7 @@ const AdminInner: React.FC = () => {
 			}
 			const contentUploadUrl = await getSubmissionUrl(contentUploadSpec)
 			await handleSendFile(contentBlob, contentUploadUrl)
-			alert("completed, uploaded file url:\n" + contentUploadUrl.split("?")[0] + "\nplease refresh page before submitting the next survey")
+			alert(contentUploadUrl.split("?")[0])
 		} catch {
 			alert('upload failed')
 		}
