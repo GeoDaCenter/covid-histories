@@ -3,6 +3,7 @@ import { Box, Button, Grid, Modal, Typography } from '@mui/material'
 import type { NextPage } from 'next'
 import styled from 'styled-components'
 import { HomeSection } from '../components/HomeSection'
+import {SubmissionDisabledNotice} from '../components/Submission/SubmissionDisabledNotice';
 import colors from '../config/colors'
 import styles from '../styles/Home.module.css'
 import { CtaButton, CtaLink, QuietCtaLink } from '../components/Interface/CTA'
@@ -12,6 +13,8 @@ import { Icons } from '../components/Icons'
 import { useInView } from 'react-intersection-observer'
 import { SEO } from '../components/Interface/SEO'
 import { VideoModal } from '../components/Interface/VideoModal'
+
+const submitEnabled = process.env.NEXT_PUBLIC_ENABLE_STORY_SUBMISSION == "true"
 
 const StoryTypeContainer = styled(Box)<{ hideBorder?: boolean }>`
 	padding-top: 2em;
@@ -235,6 +238,7 @@ const Home: NextPage = () => {
 		<div className={styles.container} style={{ background }} ref={containerRef}>
 			<SEO title="Atlas Stories :: Home" />
 			<ProgressIndicator containerRef={containerRef} />
+			{!submitEnabled && <SubmissionDisabledNotice/>}
 			<HomeSection
 				ref={homeRef}
 				fadeout={1}

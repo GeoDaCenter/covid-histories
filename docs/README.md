@@ -198,6 +198,10 @@ Presigned URLs are used to allow user upload directly to S3
 
 ## Environment Variables
 
+Enable stories submission. If false, the submission workflow will be hidden, and a notice is shown.
+
+- `NEXT_PUBLIC_ENABLE_STORY_SUBMISSION=true|false`
+
 AWS configs, see above.
 
 - `APP_AWS_ACCOUNT_ID`

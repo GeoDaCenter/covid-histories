@@ -18,6 +18,7 @@ import { db, resetDatabase } from '../../stores/indexdb/db'
 import { Alert, Box, Button, Snackbar } from '@mui/material'
 // COMPONENTS
 import { SubmissionStepper } from './SubmissionStepper'
+import { SubmissionDisabledNotice } from './SubmissionDisabledNotice'
 import * as Steps from './Steps'
 import { SubmissionDraft } from '../../stores/indexdb/SubmissionDraft'
 import { SubmissionUploadModal } from './SubmissionUploadModal'
@@ -27,6 +28,8 @@ import {
 	SubmissionTypes
 } from '../../stores/submission/submissionSlice'
 import { useRouter } from 'next/router'
+
+const submitEnabled = process.env.NEXT_PUBLIC_ENABLE_STORY_SUBMISSION == "true"
 
 const stepsText = [
 	'Intro',
@@ -198,6 +201,7 @@ export const SubmissionPage: React.FC = () => {
 			sx={{ minHeight: '100vh', margin: '1.5em auto' }}
 			className="standard-page-width"
 		>
+			{!submitEnabled && <SubmissionDisabledNotice/>}
 			<CurrentStepComponent
 				handleNext={handleNext}
 				storyId={storyId}
@@ -206,13 +210,15 @@ export const SubmissionPage: React.FC = () => {
 				handleRetrieveStory={handleRetrieveStory}
 				dbActive={dbActive}
 			/>
-			<SubmissionStepper
-				steps={stepsText}
-				activeStep={activeStep}
-				handleBack={handleBack}
-				handleNext={handleNext}
-				handleReset={handleReset}
-			/>
+			{submitEnabled &&
+				<SubmissionStepper
+					steps={stepsText}
+					activeStep={activeStep}
+					handleBack={handleBack}
+					handleNext={handleNext}
+					handleReset={handleReset}
+				/>
+			}
 			<Snackbar
 				open={unfinished}
 				autoHideDuration={10000}
