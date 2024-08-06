@@ -1,6 +1,8 @@
 import React from 'react'
 import { Box, Container, useMediaQuery, useTheme } from '@mui/material'
 
+const submitEnabled = process.env.NEXT_PUBLIC_ENABLE_STORY_SUBMISSION == "true"
+
 interface HomeSectionProps {
 	sx?: { [key: string]: any }
 	children?: React.ReactChild[] | React.ReactChild
@@ -24,7 +26,7 @@ export const HomeSection = React.forwardRef(
 					justifyContent: 'center',
 					top: 0,
 					paddingBottom: lg ? '25vh' : 0,
-					paddingTop: lg ? '12.5vh' : 0,
+					paddingTop: lg && submitEnabled ? '12.5vh' : 0,
 					minHeight: '100vh',
 					transition: '250ms opacity',
 					transitionDelay: '250ms visibility',

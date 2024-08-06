@@ -238,12 +238,12 @@ const Home: NextPage = () => {
 		<div className={styles.container} style={{ background }} ref={containerRef}>
 			<SEO title="Atlas Stories :: Home" />
 			<ProgressIndicator containerRef={containerRef} />
-			{!submitEnabled && <SubmissionDisabledNotice/>}
 			<HomeSection
 				ref={homeRef}
 				fadeout={1}
 				triggerFade={currSectionName === 'homeInView'}
-			>
+				>
+				{!submitEnabled ? <SubmissionDisabledNotice/> : <></>}
 				<Grid container spacing={2} alignContent="center" alignItems="center">
 					<Grid item xs={12} md={6}>
 						<a
