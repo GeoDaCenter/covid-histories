@@ -169,6 +169,7 @@ async function main() {
 					operation: 'getObject'
 				})
 					.then((fileMetaUrl) => {
+						if (fileMetaUrl?.url.includes("-short")) {return null}
 						if (fileMetaUrl && fileMetaUrl?.url) {
 							return axios(fileMetaUrl.url).then((res) => {
 								if (res && res.data) {
